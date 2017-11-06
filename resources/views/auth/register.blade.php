@@ -23,9 +23,20 @@
             //$('#user').append("<img src=\"http://trello-avatars.s3.amazonaws.com/"+data.avatarHash+"/50.png\" style=\"width: 25px; height: 25px;\"> "+data.fullName+" <b class=\"caret\"></b>")
             $('#trelloId').val(data.id);
             $('#name').val(data.fullName);
-            var src1 = 'https://trello-avatars.s3.amazonaws.com/' + data.avatarHash + '/50.png';
-            $("#hash").attr("src", src1);
-            $('#avatarHash').val(data.avatarHash);
+
+            
+            if(data.avatarHash != ""){
+                var src1 = 'https://trello-avatars.s3.amazonaws.com/' + data.avatarHash + '/50.png';
+                $("#hash").attr("src", src1);
+                $('#avatarHash').val(data.avatarHash);
+            }else{
+                var src1 = 'https://trello-avatars.s3.amazonaws.com/10e3fec8aee92d177b22290b7cff669d/50.png';
+                $("#hash").attr("src", src1);
+                $('#avatarHash').val("10e3fec8aee92d177b22290b7cff669d");
+            }
+            
+            
+            
         };
 
         Trello.get("members/" + id, {fields: "avatarHash,fullName,url,username,email"}, retrieveSuccess);

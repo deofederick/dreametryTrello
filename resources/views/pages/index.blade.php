@@ -1,12 +1,11 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="jumbotron">
-  <h1 class="display-3">Hello, world!</h1>
-  <p class="lead"></p>
-  <hr class="my-4">
-  <p class="lead">
-    <a class="btn btn-primary btn-lg" href="{{ route('login') }}" role="button">login</a>
-  </p>
+<div class="container">
+  <div class="jumbotron text-center">
+    <h1>Welcome</h1>
+    <p>This is a App for Dreametry Trello Task Counter</p>
+    <p><a class="btn btn-lg btn-primary" href="/register" role="button">Register</a> <a class="btn btn-lg btn-success" href="/login" role="button">Login</a></p>
+  </div>
 </div>
 @endsection
