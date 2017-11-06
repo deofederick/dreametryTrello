@@ -12,8 +12,23 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+
+      <!-- Scripts -->
+    <script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+    <script src="https://api.trello.com/1/client.js?key=27ce3163d5fa2133085b16e6b36689c7"></script>
+
 </head>
 <body>
+  <script>
+
+        function logout() {
+            Trello.deauthorize();
+            event.preventDefault();
+            document.getElementById('logout-form').submit();
+        }
+
+    </script>
+
     <div id="app">
     @include('inc.navbar')
     <div class="container">

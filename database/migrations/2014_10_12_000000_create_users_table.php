@@ -17,7 +17,11 @@ class CreateUsersTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->string('email')->unique();
-            $table->string('password');
+            $table->string('password');   
+            $table->string('trelloId');
+            $table->string('avatarHash');
+            $table->string('apikey');
+            $table->string('apitoken');
             $table->rememberToken();
             $table->timestamps();
         });
