@@ -11,7 +11,7 @@ class PagesController extends Controller
          if(Auth::guest()){
             return view('pages.index');
         }else{
-            return view('home');
+            return view('pages.index');
         }
     }
 }
