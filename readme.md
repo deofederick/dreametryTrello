@@ -3,8 +3,6 @@
 This is an application created by the developers from [Dreametry](http://dreametry.ph/).
 This is one of the first App created with laravel and git.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).
-
 <p align="center"><img src="https://laravel.com/assets/img/components/logo-laravel.svg"></p>
 
 <p align="center">
