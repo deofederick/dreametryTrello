@@ -4,11 +4,22 @@ This is an application created by the developers from [Dreametry](http://dreamet
 This is one of the first App created with laravel and git.
 
 After cloning create .env file from .env.example
+Setup you .env required information
+
+Then run this in your terminal
 ```terminal
-
     composer update
-
 ```
+or
+```terminal
+    composer install
+```
+Then
+```terminal
+    php artisan key:generate
+    php artisan config:clear
+```
+
 
 
 <p align="center"><img src="https://laravel.com/assets/img/components/logo-laravel.svg"></p>
