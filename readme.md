@@ -3,6 +3,14 @@
 This is an application created by the developers from [Dreametry](http://dreametry.ph/).
 This is one of the first App created with laravel and git.
 
+After cloning create .env file from .env.example
+```terminal
+
+    composer update
+
+```
+
+
 <p align="center"><img src="https://laravel.com/assets/img/components/logo-laravel.svg"></p>
 
 <p align="center">
