@@ -25,7 +25,7 @@
             $('#name').val(data.fullName);
 
             
-            if(data.avatarHash != ""){
+            if(data.avatarHash != null){
                 var src1 = 'https://trello-avatars.s3.amazonaws.com/' + data.avatarHash + '/50.png';
                 $("#hash").attr("src", src1);
                 $('#avatarHash').val(data.avatarHash);
