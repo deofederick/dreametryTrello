@@ -21,4 +21,9 @@ Route::get('/load', 'PagesController@load')->name('load');
 Route::get('/taskload', 'PagesController@taskload')->name('load');
 Route::get('/livecounter', 'PagesController@counter')->name('counter');
 
-Route::resource('registerlist', 'ListsController');
+Route::get('/search',['uses' => 'CardsController@report','as' => 'search']);
+
+Route::get('/test', 'CardsController@index')->name('load');
+Route::get('/reports','CardsController@report');
+
+Route::resource('trello', 'ListsController');

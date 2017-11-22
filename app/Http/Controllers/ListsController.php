@@ -91,9 +91,9 @@ class ListsController extends Controller
               'unRegBoards' => $unRegBoard
           );
   
-          //\Log::info($data);
-          return $data;
-         // return view('trello.registerList')->with($data);
+          \Log::info($data);
+          //return $data;
+         return view('trello.registerList')->with($data);
 
     }
 
