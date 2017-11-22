@@ -9720,7 +9720,11 @@ a.text-dark:hover {
 }
 
 body {
-  padding-top: 70px;
+  padding-top: 56px;
+}
+
+#homie {
+  padding-top: 14px;
 }
 
 /*!
@@ -14207,6 +14211,10 @@ body[data-aos-easing="ease-in-out-quart"] [data-aos],
 #sidebar .list-group-item {
   border-radius: 0;
   white-space: nowrap;
+}
+
+#sidebar .textcolor {
+  color: white !important;
 }
 
 @media (max-width: 768px) {

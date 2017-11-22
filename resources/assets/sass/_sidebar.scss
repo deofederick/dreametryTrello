@@ -12,6 +12,10 @@
     white-space: nowrap;
 }
 
+#sidebar .textcolor {
+    color: white !important;
+}
+
 @media (max-width:768px) {
     #sidebar {
         min-width: 35px;

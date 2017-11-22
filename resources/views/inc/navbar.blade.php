@@ -20,13 +20,13 @@
         <a class="navbar-brand" href="{{ route('home') }}">
           {{ config('app.name', 'Dreametry') }}
         </a>
-        <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+        <!-- <div class="collapse navbar-collapse" id="navbarsExampleDefault">
           <ul class="navbar-nav">
             <li class="nav-item"><a class="nav-link" href="{{ route('home') }}">My Task</a></li>
             <li class="nav-item"><a class="nav-link" href="#">Live Counter</a></li>
             <li class="nav-item"><a class="nav-link" href="#">Trello</a></li>
           </ul>
-          </div>
+          </div> -->
 
 
 
@@ -39,6 +39,9 @@
                 <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
                 <!-- <a href="#" class="dropdown-item" data-target="#sidebar" data-toggle="collapse" aria-expanded="false" aria-controls="sidebar">Dashboard</a> -->
                 <a href="{{route('board')}}" class="dropdown-item">Dashboard</a>
+
+                <a href="#" class="dropdown-item" data-target="#sidebar" data-toggle="collapse" aria-expanded="false" aria-controls="sidebar">Toggle Dashboard</a>
+
               </div>
 
                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">{{ csrf_field() }}

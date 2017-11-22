@@ -1,7 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
+@include('inc.sidebar')
+<div class="container" id="homie">
     <div class="row">
         <div class="col-md-6">
             <div class="card">
