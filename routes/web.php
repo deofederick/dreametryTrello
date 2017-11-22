@@ -1,5 +1,4 @@
 <?php
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -20,5 +19,15 @@ Route::get('/task', 'PagesController@task')->name('task');
 Route::get('/load', 'PagesController@load')->name('load');
 Route::get('/taskload', 'PagesController@taskload')->name('load');
 Route::get('/livecounter', 'PagesController@counter')->name('counter');
+Route::get('/dashboard', 'PagesController@dashboard')->name('board');
+
 
 Route::resource('registerlist', 'ListsController');
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');

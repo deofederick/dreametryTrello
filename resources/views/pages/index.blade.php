@@ -17,4 +17,10 @@
       </div>
     </div>
   @endif
+
+ <!--  <script type="text/javascript">
+   $.get('/registerlist', function(json) {
+     console.log(json['object']);
+   });
+ </script> -->
 @endsection

@@ -460,4 +460,8 @@ class PagesController extends Controller
         
         return $data;
     }
+
+    public function dashboard(){
+        return view('pages.dashboard');
+    }
 }
