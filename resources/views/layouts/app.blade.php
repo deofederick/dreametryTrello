@@ -41,6 +41,7 @@
             @include('inc.message')
         </div>
         @yield('content')
+
     </div>
 
     <!-- Scripts -->
