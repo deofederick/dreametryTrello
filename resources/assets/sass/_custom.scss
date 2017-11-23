@@ -7,3 +7,17 @@ body
 {
 	padding-top: 14px;
 }
+
+#overflows .list-group
+{
+	overflow-y: auto;
+	height: 30rem; 
+}
+
+#tasktoday .centered
+{
+	position: absolute;
+    top: 39%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}

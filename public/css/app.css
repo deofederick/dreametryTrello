@@ -9727,6 +9727,19 @@ body {
   padding-top: 14px;
 }
 
+#overflows .list-group {
+  overflow-y: auto;
+  height: 30rem;
+}
+
+#tasktoday .centered {
+  position: absolute;
+  top: 39%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+}
+
 /*!
  *  Font Awesome 4.7.0 by @davegandy - http://fontawesome.io - @fontawesome
  *  License - http://fontawesome.io/license (Font: SIL OFL 1.1, CSS: MIT License)
