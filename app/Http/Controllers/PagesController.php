@@ -468,4 +468,8 @@ class PagesController extends Controller
     public function boardreg(){
         return view('pages.boardreg');
     }
+
+    public function tasks(){
+        return view('pages.tasks');
+    }
 }

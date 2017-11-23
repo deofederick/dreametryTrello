@@ -21,6 +21,7 @@ Route::get('/taskload', 'PagesController@taskload')->name('load');
 Route::get('/livecounter', 'PagesController@counter')->name('counter');
 Route::get('/dashboard', 'PagesController@dashboard')->name('board');
 Route::get('/register-board', 'PagesController@boardreg')->name('regb');
+Route::get('/tasks', 'PagesController@tasks')->name('tasks');
 
 
 
