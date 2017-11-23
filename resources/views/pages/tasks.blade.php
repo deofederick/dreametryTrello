@@ -11,25 +11,29 @@
                 <h3 class="panel-hero-title justify-content-center"><i class="fa fa-tasks"></i> 999999</h3>
                 <p class="card-text">items</p>
               </div>
-              <ul class="list-group list-group-flush">
+              <ul class="list-group list-group-flush" id="overflows">
                 <li class="list-group-item">
-                    <p class="card-text">Lorem ipsum dolor sit amet</br>
+                    <p class="notice notice-l1 card-text">Lorem ipsum dolor sit amet</br>
                     <small class="text-muted">November 16, 2017</small>
                 </li>
             
                 <li class="list-group-item">
-                    <p class="card-text">Lorem ipsum dolor sit amet</br>
+                    <p class="notice notice-l2 card-text">Lorem ipsum dolor sit amet</br>
                     <small class="text-muted">November 16, 2017</small>
                 </li>
                 <li class="list-group-item">
-                    <p class="card-text">Lorem ipsum dolor sit amet</br>
+                    <p class="notice notice-l3 card-text">Lorem ipsum dolor sit amet</br>
+                    <small class="text-muted">November 16, 2017</small>
+                </li>
+                <li class="list-group-item">
+                    <p class="notice notice-l4 card-text">Lorem ipsum dolor sit amet</br>
+                    <small class="text-muted">November 16, 2017</small>
+                </li>
+                <li class="list-group-item">
+                    <p class="notice notice-l5 card-text">Lorem ipsum dolor sit amet</br>
                     <small class="text-muted">November 16, 2017</small>
                 </li>
               </ul>
-
-              <div class="card-footer text-center">
-                <a href="#">See all</a>
-              </div>
             </div>
         </div>
 
