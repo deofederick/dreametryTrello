@@ -66,7 +66,7 @@ class PagesController extends Controller
                          //   \Log::info($cards);
 
                             
-                            foreach ($cards as $card) {
+                            foreach ((array)$cards as $card) {
                                 if (count($card['idMembers']) > 0) {
                                     for ($i=0; $i < count($card['idMembers']) ; $i++) { 
                                         if ($idUser === $card['idMembers'][$i]) {

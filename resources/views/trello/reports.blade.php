@@ -33,9 +33,17 @@
 						      <th scope="col">STATUS</th>
 						    </tr>
 						  </thead>
-						  	<tr>
-							</td>
-							</tr>
+						  <tbody>
+						  	@foreach($data as $d)
+						  		<tr>
+						  			<td>{{$d['date_started']}}</td>
+						  			<td><a href={{$d['url']}}>{{$d['cardname']}}</a></td>
+						  			<td>{{$d['date_finished']}}</td>
+						  			<td>{{$d['status']}}</td>
+						  		</tr>
+						  	@endforeach
+						  </tbody>
+						  	
 						</table>
 						 
                    </div>
