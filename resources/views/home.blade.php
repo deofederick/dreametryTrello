@@ -202,33 +202,33 @@
         </div>
   </div>
 
-  <table class="table table-dark">
+  <table class="table table-striped table-dark" id="livetable">
   <thead>
     <tr>
-      <th scope="col">#</th>
-      <th scope="col">First Name</th>
-      <th scope="col">Last Name</th>
-      <th scope="col">Username</th>
+      <th scope="col">Name</th>
+      <th scope="col">Today</th>
+      <th scope="col">This Week</th>
+      <th scope="col">This Month</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <th scope="row">1</th>
-      <td>Mark</td>
-      <td>Otto</td>
-      <td>@mdo</td>
+      <td>Lorem Ipsum</td>
+      <td>0</td>
+      <td>0</td>
+      <td>999</td>
     </tr>
     <tr>
-      <th scope="row">2</th>
-      <td>Jacob</td>
-      <td>Thornton</td>
-      <td>@fat</td>
+      <td>Lorem Ipsum</td>
+      <td>0</td>
+      <td>0</td>
+      <td>999</td>
     </tr>
     <tr>
-      <th scope="row">3</th>
-      <td>Larry</td>
-      <td>the Bird</td>
-      <td>@twitter</td>
+      <td>Lorem Ipsum</td>
+      <td>0</td>
+      <td>0</td>
+      <td>999</td>
     </tr>
   </tbody>
 </table>
