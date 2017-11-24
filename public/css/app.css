@@ -9739,7 +9739,7 @@ body {
 
 #tasktoday .centered {
   position: absolute;
-  top: 32%;
+  top: 31%;
   left: 50%;
   -webkit-transform: translate(-50%, -50%);
           transform: translate(-50%, -50%);
@@ -9751,12 +9751,11 @@ body {
 
 #counter .container {
   overflow-y: auto;
-  height: 18rem;
+  height: 20rem;
 }
 
 #countercards {
   margin-top: .5rem;
-  margin-bottom: 1rem;
 }
 
 /*!
