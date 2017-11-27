@@ -33,100 +33,93 @@
             <div class="card" id="counter">
               <div class="card-header bg-success text-white">FINISHED TODAY</div>
                   <div class="container row justify-content-center text-center" >
-                 <div class="col-md-3" id="countercards">
+              <div class="col-md-3" id="countercards">
                 <div class="card">
-                  <img src="data:image/gif;base64,R0lGODlhAQABAIABAAJ12AAAACwAAAAAAQABAAACAkQBADs=" class="card-img img-fluid rounded-circle">
+                  <div class="card-header">Lorem</div>
                   <div class="card-text"><h1>0</h1></div>
                 </div>
               </div>
 
                <div class="col-md-3" id="countercards">
                 <div class="card">
-                  <img src="data:image/gif;base64,R0lGODlhAQABAIABAAJ12AAAACwAAAAAAQABAAACAkQBADs=" class="card-img img-fluid rounded-circle">
+                  <div class="card-header">Lorem</div>
                   <div class="card-text"><h1>0</h1></div>
                 </div>
               </div>
 
-               <div class="col-md-3" id="countercards">
+              <div class="col-md-3" id="countercards">
                 <div class="card">
-                  <img src="data:image/gif;base64,R0lGODlhAQABAIABAAJ12AAAACwAAAAAAQABAAACAkQBADs=" class="card-img img-fluid rounded-circle">
+                  <div class="card-header">Lorem</div>
                   <div class="card-text"><h1>0</h1></div>
                 </div>
               </div>
 
-               <div class="col-md-3" id="countercards">
+              <div class="col-md-3" id="countercards">
                 <div class="card">
-                  <img src="data:image/gif;base64,R0lGODlhAQABAIABAAJ12AAAACwAAAAAAQABAAACAkQBADs=" class="card-img img-fluid rounded-circle">
+                  <div class="card-header">Lorem</div>
                   <div class="card-text"><h1>0</h1></div>
                 </div>
               </div>
 
-               <div class="col-md-3" id="countercards">
+              <div class="col-md-3" id="countercards">
                 <div class="card">
-                  <img src="data:image/gif;base64,R0lGODlhAQABAIABAAJ12AAAACwAAAAAAQABAAACAkQBADs=" class="card-img img-fluid rounded-circle">
+                  <div class="card-header">Lorem</div>
                   <div class="card-text"><h1>0</h1></div>
                 </div>
               </div>
 
-               <div class="col-md-3" id="countercards">
+              <div class="col-md-3" id="countercards">
                 <div class="card">
-                  <img src="data:image/gif;base64,R0lGODlhAQABAIABAAJ12AAAACwAAAAAAQABAAACAkQBADs=" class="card-img img-fluid rounded-circle">
+                  <div class="card-header">Lorem</div>
                   <div class="card-text"><h1>0</h1></div>
                 </div>
               </div>
 
-               <div class="col-md-3" id="countercards">
+              <div class="col-md-3" id="countercards">
                 <div class="card">
-                  <img src="data:image/gif;base64,R0lGODlhAQABAIABAAJ12AAAACwAAAAAAQABAAACAkQBADs=" class="card-img img-fluid rounded-circle">
+                  <div class="card-header">Lorem</div>
                   <div class="card-text"><h1>0</h1></div>
                 </div>
               </div>
 
-               <div class="col-md-3" id="countercards">
+              <div class="col-md-3" id="countercards">
                 <div class="card">
-                  <img src="data:image/gif;base64,R0lGODlhAQABAIABAAJ12AAAACwAAAAAAQABAAACAkQBADs=" class="card-img img-fluid rounded-circle">
+                  <div class="card-header">Lorem</div>
                   <div class="card-text"><h1>0</h1></div>
                 </div>
               </div>
 
-               <div class="col-md-3" id="countercards">
+              <div class="col-md-3" id="countercards">
                 <div class="card">
-                  <img src="data:image/gif;base64,R0lGODlhAQABAIABAAJ12AAAACwAAAAAAQABAAACAkQBADs=" class="card-img img-fluid rounded-circle">
+                  <div class="card-header">Lorem</div>
                   <div class="card-text"><h1>0</h1></div>
                 </div>
               </div>
 
-               <div class="col-md-3" id="countercards">
+              <div class="col-md-3" id="countercards">
                 <div class="card">
-                  <img src="data:image/gif;base64,R0lGODlhAQABAIABAAJ12AAAACwAAAAAAQABAAACAkQBADs=" class="card-img img-fluid rounded-circle">
+                  <div class="card-header">Lorem</div>
                   <div class="card-text"><h1>0</h1></div>
                 </div>
               </div>
 
-               <div class="col-md-3" id="countercards">
+              <div class="col-md-3" id="countercards">
                 <div class="card">
-                  <img src="data:image/gif;base64,R0lGODlhAQABAIABAAJ12AAAACwAAAAAAQABAAACAkQBADs=" class="card-img img-fluid rounded-circle">
+                  <div class="card-header">Lorem</div>
                   <div class="card-text"><h1>0</h1></div>
                 </div>
               </div>
 
-               <div class="col-md-3" id="countercards">
+              <div class="col-md-3" id="countercards">
                 <div class="card">
-                  <img src="data:image/gif;base64,R0lGODlhAQABAIABAAJ12AAAACwAAAAAAQABAAACAkQBADs=" class="card-img img-fluid rounded-circle">
+                  <div class="card-header">Lorem</div>
                   <div class="card-text"><h1>0</h1></div>
                 </div>
               </div>
 
-               <div class="col-md-3" id="countercards">
+              <div class="col-md-3" id="countercards">
                 <div class="card">
-                  <img src="data:image/gif;base64,R0lGODlhAQABAIABAAJ12AAAACwAAAAAAQABAAACAkQBADs=" class="card-img img-fluid rounded-circle">
-                  <div class="card-text"><h1>0</h1></div>
-                </div>
-              </div>
-
-               <div class="col-md-3" id="countercards">
-                <div class="card">
-                  <img src="data:image/gif;base64,R0lGODlhAQABAIABAAJ12AAAACwAAAAAAQABAAACAkQBADs=" class="card-img img-fluid rounded-circle">
+                  <div class="card-header">Lorem</div>
                   <div class="card-text"><h1>0</h1></div>
                 </div>
               </div>
@@ -143,56 +136,70 @@
 
                <div class="col-md-3" id="countercards">
                 <div class="card">
-                  <img src="data:image/gif;base64,R0lGODlhAQABAIABAAJ12AAAACwAAAAAAQABAAACAkQBADs=" class="card-img img-fluid rounded-circle">
+                  <div class="card-header">Lorem</div>
                   <div class="card-text"><h1>0</h1></div>
                 </div>
               </div>
 
-               <div class="col-md-3" id="countercards">
+              <div class="col-md-3" id="countercards">
                 <div class="card">
-                  <img src="data:image/gif;base64,R0lGODlhAQABAIABAAJ12AAAACwAAAAAAQABAAACAkQBADs=" class="card-img img-fluid rounded-circle">
+                  <div class="card-header">Lorem</div>
                   <div class="card-text"><h1>0</h1></div>
                 </div>
               </div>
 
-               <div class="col-md-3" id="countercards">
+              <div class="col-md-3" id="countercards">
                 <div class="card">
-                  <img src="data:image/gif;base64,R0lGODlhAQABAIABAAJ12AAAACwAAAAAAQABAAACAkQBADs=" class="card-img img-fluid rounded-circle">
+                  <div class="card-header">Lorem</div>
                   <div class="card-text"><h1>0</h1></div>
                 </div>
               </div>
 
-               <div class="col-md-3" id="countercards">
+              <div class="col-md-3" id="countercards">
                 <div class="card">
-                  <img src="data:image/gif;base64,R0lGODlhAQABAIABAAJ12AAAACwAAAAAAQABAAACAkQBADs=" class="card-img img-fluid rounded-circle">
+                  <div class="card-header">Lorem</div>
                   <div class="card-text"><h1>0</h1></div>
                 </div>
               </div>
 
-               <div class="col-md-3" id="countercards">
+              <div class="col-md-3" id="countercards">
                 <div class="card">
-                  <img src="data:image/gif;base64,R0lGODlhAQABAIABAAJ12AAAACwAAAAAAQABAAACAkQBADs=" class="card-img img-fluid rounded-circle">
+                  <div class="card-header">Lorem</div>
                   <div class="card-text"><h1>0</h1></div>
                 </div>
               </div>
 
-               <div class="col-md-3" id="countercards">
+              <div class="col-md-3" id="countercards">
                 <div class="card">
-                  <img src="data:image/gif;base64,R0lGODlhAQABAIABAAJ12AAAACwAAAAAAQABAAACAkQBADs=" class="card-img img-fluid rounded-circle">
-                  <div class="card-text"><h1>10</h1></div>
-                </div>
-              </div>
-
-               <div class="col-md-3" id="countercards">
-                <div class="card">
-                  <img src="data:image/gif;base64,R0lGODlhAQABAIABAAJ12AAAACwAAAAAAQABAAACAkQBADs=" class="card-img img-fluid rounded-circle">
+                  <div class="card-header">Lorem</div>
                   <div class="card-text"><h1>0</h1></div>
                 </div>
               </div>
 
-               <div class="col-md-3" id="countercards">
+              <div class="col-md-3" id="countercards">
                 <div class="card">
-                  <img src="data:image/gif;base64,R0lGODlhAQABAIABAAJ12AAAACwAAAAAAQABAAACAkQBADs=" class="card-img img-fluid rounded-circle">
+                  <div class="card-header">Lorem</div>
+                  <div class="card-text"><h1>0</h1></div>
+                </div>
+              </div>
+
+              <div class="col-md-3" id="countercards">
+                <div class="card">
+                  <div class="card-header">Lorem</div>
+                  <div class="card-text"><h1>0</h1></div>
+                </div>
+              </div>
+
+              <div class="col-md-3" id="countercards">
+                <div class="card">
+                  <div class="card-header">Lorem</div>
+                  <div class="card-text"><h1>0</h1></div>
+                </div>
+              </div>
+
+              <div class="col-md-3" id="countercards">
+                <div class="card">
+                  <div class="card-header">Lorem</div>
                   <div class="card-text"><h1>0</h1></div>
                 </div>
               </div>
