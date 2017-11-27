@@ -44529,7 +44529,7 @@ exports = module.exports = __webpack_require__(44)(undefined);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -44819,6 +44819,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         this.fetchUnreg();
     }, methods: {
         fetchUnreg: function fetchUnreg() {
+
             this.$http.get('/registerlist', function (resp) {
                 this.unregboards = resp.unRegBoards;
             }).bind(this);
@@ -44846,7 +44847,7 @@ var render = function() {
             _c("div", { staticClass: "card-block" }, [
               _c("div", { staticClass: "card-title" }, [
                 _vm._v(
-                  "\n                    " +
+                  "\n                    @" +
                     _vm._s(unregboard.boardName) +
                     "\n                "
                 )

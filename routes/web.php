@@ -23,6 +23,7 @@ Route::get('/dashboard', 'PagesController@dashboard')->name('board');
 Route::get('/register-board', 'PagesController@boardreg')->name('regb');
 Route::get('/tasks', 'PagesController@tasks')->name('tasks');
 
+Route::get('/registerlist', 'istsController@index')->name('registerlist');
 
 
 Route::resource('registerlist', 'ListsController');
