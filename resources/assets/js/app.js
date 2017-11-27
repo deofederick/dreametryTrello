@@ -7,6 +7,8 @@
 
 require('./bootstrap');
 
+//require('../../../node_modules/bootstrap/dist/js/bootstrap');
+
 window.Vue = require('vue');
 
 /**
@@ -16,6 +18,7 @@ window.Vue = require('vue');
  */
 
 Vue.component('example', require('./components/Example.vue'));
+Vue.component('unregboard', require('./components/UnregBoard.vue'));
 
 const app = new Vue({
     el: '#app'

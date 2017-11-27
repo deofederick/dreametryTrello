@@ -18,11 +18,6 @@
     <script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
     <script src="https://api.trello.com/1/client.js?key=27ce3163d5fa2133085b16e6b36689c7"></script>
 
-    <!-- AOS Stylesheet -->
-    <link rel="stylesheet" href="node_modules/aos/dist/aos.css"/>
-
-    <link rel="stylesheet" href="../../../public/css/simple-sidebar.css">
-
 
 </head>
 <body>
@@ -35,7 +30,7 @@
         }
 
     </script>
-    <div id="app">
+    <div>
         @include('inc.navbar')
         <div class="container">
             @include('inc.message')
@@ -49,14 +44,8 @@
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
-    
-    <!-- AOS Scipt -->
-    <script src="node_modules/aos/dist/aos.js"></script>
-    <script>
-      AOS.init({
-        easing: 'ease-in-out-sine'
-      });
-    </script>
+
+    <script src="js/app.js"></script>
 
     <!-- Sidebar Script -->
    <!--  <script>

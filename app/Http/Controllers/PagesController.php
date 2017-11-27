@@ -462,14 +462,26 @@ class PagesController extends Controller
     }
 
     public function dashboard(){
-        return view('pages.dashboard');
+        if(Auth::guest()){
+            return view('pages.index');
+        }else{
+            return view('pages.dashboard');
+        }
     }
 
     public function boardreg(){
-        return view('pages.boardreg');
+         if(Auth::guest()){
+            return view('pages.index');
+        }else{
+            return view('pages.boardreg');
+        }
     }
 
     public function tasks(){
-        return view('pages.tasks');
+         if(Auth::guest()){
+            return view('pages.index');
+        }else{
+            return view('pages.tasks');
+        }
     }
 }
