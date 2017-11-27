@@ -14024,13 +14024,16 @@ body[data-aos-easing="ease-in-out-quart"] [data-aos],
 
 [data-aos^='fade'][data-aos^='fade'] {
   opacity: 0;
-  -webkit-transition-property: opacity;
-  transition-property: opacity;
+  -webkit-transition-property: opacity, -webkit-transform;
+  transition-property: opacity, -webkit-transform;
+  transition-property: opacity, transform;
+  transition-property: opacity, transform, -webkit-transform;
 }
 
 [data-aos^='fade'][data-aos^='fade'].aos-animate {
   opacity: 1;
-  /* transform: translate(0, 0); */
+  -webkit-transform: translate(0, 0);
+          transform: translate(0, 0);
 }
 
 [data-aos='fade-up'] {
