@@ -472,4 +472,8 @@ class PagesController extends Controller
     public function tasks(){
         return view('pages.tasks');
     }
+
+    public function chat(){
+        return view('pages.chat');
+    }
 }
