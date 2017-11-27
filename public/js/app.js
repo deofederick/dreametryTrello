@@ -44789,10 +44789,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
@@ -44804,11 +44800,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         this.fetchUnreg();
     }, methods: {
         fetchUnreg: function fetchUnreg() {
+            console.log("test");
             this.$http.get('/registerlist', function (resp) {
                 this.unregboards = resp.unRegBoards;
+                console.log(resp.unRegBoards);
             }).bind(this);
         }
     }
+
 });
 
 /***/ }),
@@ -44828,15 +44827,9 @@ var render = function() {
           "li",
           { key: unregboard.boardId, staticClass: "list-group-item" },
           [
-            _c("div", { staticClass: "card-block" }, [
-              _c("div", { staticClass: "card-title" }, [
-                _vm._v(
-                  "\n                    " +
-                    _vm._s(unregboard.boardName) +
-                    "\n                "
-                )
-              ])
-            ])
+            _vm._v(
+              " \n            " + _vm._s(unregboard.boardName) + "  \n        "
+            )
           ]
         )
       })
