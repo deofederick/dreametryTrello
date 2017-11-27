@@ -47,7 +47,7 @@ class CardsController extends Controller
         $allcards = Card::all();
         $finished =[];
 
-        $daily = DB::table("cards")->join('users', 'user_id','=','users.trelloId')->select(DB::raw("COUNT(*) as count_row, users.name"))->groupBy(DB::raw("user_id, users.name"))->get();
+        $daily = DB::table("cards")->join('users', 'user_id','=','users.trelloId')->select(DB::raw("COUNT(*) as count_row, users.name"))->where('cards.date_finished','=', Carbon::now()->subDay(1)->toDateString())->groupBy(DB::raw("user_id, users.name"))->get();
         $weekly = DB::table("cards")->join('users', 'user_id','=','users.trelloId')->select(DB::raw("COUNT(*) as count_row, users.name"))->whereBetween('cards.date_finished', [$startweek, $endweek])->groupBy(DB::raw("user_id, users.name"))->get();
         $monthly=DB::table("cards")->join('users', 'user_id','=','users.trelloId')->select(DB::raw("COUNT(*) as count_row, users.name"))->whereMonth('cards.date_finished', Carbon::now()->month)->whereYear('cards.date_finished', Carbon::now()->year)->groupBy(DB::raw("user_id, users.name"))->get();
 
@@ -59,7 +59,7 @@ class CardsController extends Controller
         
 
     //get all cards
-        /*foreach ($users as $user) {
+        foreach ($users as $user) {
             foreach ($done_list as $done) {
                 foreach ($review_list as $review) {
                     $cards_url = 'https://api.trello.com/1/lists/'.$done->list_id.'/cards?key='.$key.'&token='.$token.'&fields=name,idList,idMembers,url';
@@ -92,7 +92,7 @@ class CardsController extends Controller
                     }
                 }       
             }
-        }*/
+        }
 //saving
         
 //weekly
@@ -223,28 +223,77 @@ class CardsController extends Controller
                 }
         }
         
+        
         $dailytotal = '';
+        $dtotal[] ='';
 
+        foreach ($daily as $key) {
+            array_push($dtotal, $key->count_row);
+        }
+
+        $dailytotal = array_sum($dtotal);
         
 
+        $weeklytotal = '';
+        $wtotal[] ='';
+
+        foreach ($weekly as $key) {
+            array_push($wtotal, $key->count_row);
+        }
+
+        $weeklytotal = array_sum($wtotal);
+
+        $monthlytotal = '';
+        $mtotal[] ='';
+
+        foreach ($monthly as $key) {
+            array_push($mtotal, $key->count_row);
+        }
+
+        $monthlytotal = array_sum($mtotal);
+
+        $dailyarray[] ='';
+        $dailyarray = json_decode(json_encode($daily), True);
+        $monthlyarray[] ='';
+        $monthlyarray = json_decode(json_encode($monthly), True);
+        $weeklyarray[] ='';
+        $weeklyarray = json_decode(json_encode($weekly), True);
+        
+
+        if($daily == '[]'){
+            foreach ($users as $user) {
+                $dailyarray[] = array(
+                    'count_row' => 0,
+                    'name' => $user->name,
+                );
+            }
+         }
+        if($weekly == '[]'){
+            foreach ($users as $user) {
+                $weeklyarray[] = array(
+                    'count_row' => 0,
+                    'name' => $user->name,
+                );
+            }
+         }
+       
+
         $alldata[]=array(
-            'daily' => $daily,
-            'weekly' => $weekly,
-            'monthly' => $monthly,
+            'daily' => $dailyarray,
+            'weekly' => $weeklyarray,
+            'monthly' => $monthlyarray,
+        );
+        $otherdata[] = array(
             'pendings' => $pendings,
             'alldaily' => $dailytotal,
+            'allweekly' => $weeklytotal,
+            'allmonthly' => $monthlytotal,
         );
 
-        return $alldata;
+        //return $alldata;
+        return view('trello.counter')->with('alldata',$alldata);
         /*return view('trello.counter')->with('finished',$daily)->with('pendings', $pendings)->with('weeklys', $weekly)->with('monthlys',$monthly);
 */
-
-             
-             
-
-
-
-
         }
 
     }
@@ -279,7 +328,7 @@ class CardsController extends Controller
 //per member
         $currentuser = User::where('trelloId','=',$idUser)->get();
         \Log::info($currentuser);
-        foreach ($users as $user) {
+        foreach ($currentuser as $user) {
             foreach ($todo_list as $todo) {
                 foreach ($review_list as $review) {
                     $cards_url = 'https://api.trello.com/1/lists/'.$todo->list_id.'/cards?key='.$key.'&token='.$token.'&fields=name,idList,idMembers,url';

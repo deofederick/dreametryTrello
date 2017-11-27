@@ -3,53 +3,29 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <div class="panel panel-info">
-                    <div class="panel-heading">TASKS FINISHED TODAY</div>
-                    <div class="panel-body">
-              			@foreach($finished as $key => $f)
-              				<div class="card text-center">
-							  <div class="card-body">
-							    <h3 class="card-title">{{$f->count_row}}</h3>
-							  </div>
-							  <div class="card-footer text-muted">
-							     <p>{{$f->name}}</p>
-							  </div>
-							</div>
-						@endforeach
-                    </div>
-                </div>
-
-                <div class="panel panel-warning">
-                    <div class="panel-heading">ON GOING TASKS</div>
-                    <div class="panel-body">
-                        @foreach($pendings[0] as $key => $pending)
-                            <div class="card text-center">
-                              <div class="card-body">
-                                <h3 class="card-title">{{$pending}}</h3>
-                              </div>
-                              <div class="card-footer text-muted">
-                                 <p>{{$key}}</p>
-                              </div>
-                            </div>
-                        @endforeach
-                    </div>
-                </div>
-
-
-                <div class="panel panel-warning">
-                    <div class="panel-heading">FINISHED TASKS (WEEKLY)</div>
-                    <div class="panel-body">
-                        
-                    </div>
-                </div>
-
-                <div class="panel panel-warning">
-                    <div class="panel-heading">FINISHED TASKS (MONTHLY)</div>
-                    <div class="panel-body">
-                        
-                    </div>
-                </div>
-
+                
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th scope="col">Name</th>
+                      <th scope="col">This Day</th>
+                      <th scope="col">This Week</th>
+                      <th scope="col">This Month</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @foreach($alldata as $all)
+                        @for($a = 0; $a<count($all); $a++)
+                                    <tr>    
+                                      <th scope="row">{{$all['monthly'][$a]['name']}}</th>
+                                      <td>{{$all['daily'][$a]['count_row']}}</td>
+                                      <td>{{$all['weekly'][$a]['count_row']}}</td>
+                                      <td>{{$all['monthly'][$a]['count_row']}}</td>
+                                    </tr>
+                        @endfor
+                    @endforeach
+                  </tbody>
+                </table>
                 <div class="panel panel-danger">
                     <div class="panel-heading">REVISIONS</div>
                     
