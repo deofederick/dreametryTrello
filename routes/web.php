@@ -1,5 +1,4 @@
 <?php
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -20,6 +19,14 @@ Route::get('/task', 'PagesController@task')->name('task');
 Route::get('/load', 'PagesController@load')->name('load');
 Route::get('/taskload', 'PagesController@taskload')->name('load');
 Route::get('/livecounter', 'PagesController@counter')->name('counter');
+Route::get('/dashboard', 'PagesController@dashboard')->name('board');
+Route::get('/register-board', 'PagesController@boardreg')->name('regb');
+Route::get('/tasks', 'PagesController@tasks')->name('tasks');
+
+Route::get('/chat', 'PagesController@chat')->name('chat');
+
+
+
 
 Route::get('/search',['uses' => 'CardsController@report','as' => 'search']);
 
@@ -29,3 +36,13 @@ Route::get('/revisions', 'CardsController@revisions')->name('load');
 Route::get('/mytask', 'CardsController@mytask')->name('load');
 
 Route::resource('trello', 'ListsController');
+Route::resource('registerlist', 'ListsController');
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
+

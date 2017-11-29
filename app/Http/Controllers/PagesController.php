@@ -460,4 +460,20 @@ class PagesController extends Controller
         
         return $data;
     }
+
+    public function dashboard(){
+        return view('pages.dashboard');
+    }
+
+    public function boardreg(){
+        return view('pages.boardreg');
+    }
+
+    public function tasks(){
+        return view('pages.tasks');
+    }
+
+    public function chat(){
+        return view('pages.chat');
+    }
 }

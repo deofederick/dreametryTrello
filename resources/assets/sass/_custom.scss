@@ -1,0 +1,52 @@
+body
+{
+	padding-top: 56px;
+}
+
+#paddingtop
+{
+	padding-top: 14px;
+}
+
+#overflows .list-group
+{
+	overflow-y: auto;
+	height: 20rem; 
+}
+
+#task-overflows .list-group
+{
+	overflow-y: auto;
+	height: 20rem; 
+}
+
+
+#tasktoday .centered
+{
+	position: absolute;
+    top: 31%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#counter 
+{
+	margin-top: 2rem;
+}
+
+#counter .container
+{
+	overflow-y: auto;
+	height: 20rem; 
+}
+
+#countercards
+{
+	margin-top: .5rem;
+}
+
+#livetable
+{
+	margin-top: 2rem;
+}
+

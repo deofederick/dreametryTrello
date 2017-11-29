@@ -15,14 +15,14 @@
                   </thead>
                   <tbody>
                     @foreach($alldata as $all)
-                        @for($a = 0; $a<count($all); $a++)
-                                    <tr>    
-                                      <th scope="row">{{$all['monthly'][$a]['name']}}</th>
-                                      <td>{{$all['daily'][$a]['count_row']}}</td>
-                                      <td>{{$all['weekly'][$a]['count_row']}}</td>
-                                      <td>{{$all['monthly'][$a]['count_row']}}</td>
-                                    </tr>
-                        @endfor
+                        @for($a =0; $a<count($all['daily']); $a++)
+                        <tr>    
+                          <th scope="row">{{$all['daily'][$a]['name']}}</th>
+                          <td>{{$all['daily'][$a]['daily_count']}}</td>
+                          <td>{{$all['daily'][$a]['weekly_count']}}</td>
+                          <td>{{$all['daily'][$a]['monthly_count']}}</td>
+                       </tr>
+                       @endfor
                     @endforeach
                   </tbody>
                 </table>
