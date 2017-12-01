@@ -86,11 +86,13 @@ class ListsController extends Controller
               }
           }
           
-          $data = array(
+          $data = [
               'regBoards' => $regBoard,
               'unRegBoards' => $unRegBoard
-          );
-  
+          ];
+
+          
+         // return response()->json($data);
           //\Log::info($data);
           return $data;
          // return view('trello.registerList')->with($data);
@@ -247,7 +249,7 @@ class ListsController extends Controller
             
            // return view('trello.registerListShow')->with($data);
 
-          // return redirect('/registerlist/'.$id)->with('success', 'Board Registered');
+           return redirect('/register-board')->with('success', 'Board Registered');
         }
 
     }
