@@ -81,7 +81,7 @@ class ListsController extends Controller
                  // \Log::info($org);
                   $unRegBoard[] = array(
                       'boardName' => $urlboard['name'],
-                      'boardId' => $urlboard['id'],
+                      'boardId' => route('registerlist.show', $urlboard['id']),
                       'organization' => $org['displayName']
                       
                   );
@@ -250,7 +250,7 @@ class ListsController extends Controller
             ); 
             return $data;
            // return view('trello.registerListShow')->with($data);
-            return view('pages.setuplist')->with($data);
+           // return view('pages.setuplist')->with($data);
 
 
           // return redirect('/register-board')->with('success', 'Board Registered');
