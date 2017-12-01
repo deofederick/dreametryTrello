@@ -36,10 +36,11 @@
     </script>
     <div>
         @include('inc.navbar')
-        <div class="container">
+        <div>
             @include('inc.message')
         </div>
         @yield('content')
+        
 
     </div>
 

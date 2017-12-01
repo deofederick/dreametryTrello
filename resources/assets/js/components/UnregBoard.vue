@@ -1,16 +1,11 @@
 <template>
         <ul class="list-group list-group-flush">
-<<<<<<< HEAD
             <li class="list-group-item" v-for="(unregboard, index) in unregboards">
                 <div class="card-block">
                     <div class="card-title">
                    		{{ unregboard.boardName }}
                     </div>
                 </div>
-=======
-            <li class="list-group-item"  v-for="unregboard in unregboards" :key="unregboard.boardId"> 
-                {{ unregboard.boardName }}  
->>>>>>> 7e48000521f3a7805eeb92b835f9bbb5d7eaf2f7
             </li>
         </ul>
 </template>
@@ -27,7 +22,6 @@ export default {
     }, created: function(){
         this.fetchUnreg()
     }, methods:{
-<<<<<<< HEAD
     		fetchUnreg: function(){
     			var vm = this;
 
@@ -53,15 +47,6 @@ export default {
     		}
 
 
-=======
-        fetchUnreg: function () {
-            console.log("test");
-            this.$http.get('/registerlist', function(resp){
-                this.unregboards = resp.unRegBoards;
-                console.log(resp.unRegBoards);
-            }).bind(this);
-        }
->>>>>>> 7e48000521f3a7805eeb92b835f9bbb5d7eaf2f7
     } 
 
 }
