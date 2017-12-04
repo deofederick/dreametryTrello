@@ -47,7 +47,7 @@ class ListsController extends Controller
                        
                           $regBoard[] = array(
                               'boardName' => $urlboard['name'],
-                              'boardId' => $urlboard['id'],
+                              'boardId' => route('registerlist.show', $urlboard['id']),
                               'organization' => $org['displayName']
                           );
 
@@ -56,9 +56,11 @@ class ListsController extends Controller
                       }elseif (count($boards)-1 === $i) {
                           $unRegBoard[] = array(
                               'boardName' => $urlboard['name'],
-                              'boardId' => $urlboard['id'],
+                              'boardId' => route('registerlist.show', $urlboard['id']),
                               'organization' => $org['displayName']
                           );
+
+
                       }
   
                   }
@@ -79,18 +81,20 @@ class ListsController extends Controller
                  // \Log::info($org);
                   $unRegBoard[] = array(
                       'boardName' => $urlboard['name'],
-                      'boardId' => $urlboard['id'],
+                      'boardId' => route('registerlist.show', $urlboard['id']),
                       'organization' => $org['displayName']
                       
                   );
               }
           }
           
-          $data = array(
+          $data = [
               'regBoards' => $regBoard,
               'unRegBoards' => $unRegBoard
-          );
-  
+          ];
+
+          
+         // return response()->json($data);
           //\Log::info($data);
           return $data;
          // return view('trello.registerList')->with($data);
@@ -222,6 +226,7 @@ class ListsController extends Controller
          //  return view('trello.registerListShow')->with($data);
 
 
+
         }else{
             
             if (count($regboard) <= 0) {
@@ -231,7 +236,7 @@ class ListsController extends Controller
                 $board->save();
             }
 
-        /*     $listUrl = "https://api.trello.com/1/boards/".$id."/lists?key=".$key."&token=".$token."&cards=none&filter=open";
+             $listUrl = "https://api.trello.com/1/boards/".$id."/lists?key=".$key."&token=".$token."&cards=none&filter=open";
             $listresponse = Curl::to($listUrl)->get();
             $lists = json_decode($listresponse, TRUE);
            
@@ -240,14 +245,15 @@ class ListsController extends Controller
                // 'boards' => $boardArray,
                 'lists' => $lists,
                 'listsBoard' => $boardLists,
-                'editable' => $edit,
                 'boardid' => $regboard
  
-            ); */
-            
+            ); 
+            return $data;
            // return view('trello.registerListShow')->with($data);
+           // return view('pages.setuplist')->with($data);
 
-          // return redirect('/registerlist/'.$id)->with('success', 'Board Registered');
+
+          // return redirect('/register-board')->with('success', 'Board Registered');
         }
 
     }
