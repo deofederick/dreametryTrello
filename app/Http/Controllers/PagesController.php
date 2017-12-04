@@ -51,7 +51,7 @@ class PagesController extends Controller
                 $members = json_decode($response, TRUE);
               //  \Log::info($members);
 
-                foreach ($members as $member) {
+                foreach ((array)$members as $member) {
                     if ($idUser == $member['id']) {
                         $boardArray[] = [$board['board_name'], $board['board_id']];
                         $listUrl = "https://api.trello.com/1/boards/".$board['board_id']."/lists?key=".$key."&token=".$token."&cards=none&filter=open";
@@ -66,7 +66,7 @@ class PagesController extends Controller
                          //   \Log::info($cards);
 
                             
-                            foreach ($cards as $card) {
+                            foreach ((array)$cards as $card) {
                                 if (count($card['idMembers']) > 0) {
                                     for ($i=0; $i < count($card['idMembers']) ; $i++) { 
                                         if ($idUser === $card['idMembers'][$i]) {
@@ -153,7 +153,7 @@ class PagesController extends Controller
 
             );
             
-            //  \Log::info($data);
+              \Log::info($data);
 
             return view('pages.index')->with($data);
 
