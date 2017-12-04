@@ -23,6 +23,8 @@ Route::get('/dashboard', 'PagesController@dashboard')->name('board');
 Route::get('/register-board', 'PagesController@boardreg')->name('regb');
 Route::get('/tasks', 'PagesController@tasks')->name('tasks');
 
+Route::get('/setup', 'PagesController@setuplist')->name('setup');
+
 
 
 
@@ -35,3 +37,5 @@ Route::get('/home', 'HomeController@index')->name('home');
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+

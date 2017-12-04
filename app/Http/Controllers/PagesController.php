@@ -485,11 +485,11 @@ class PagesController extends Controller
         }
     }
 
-    public function regsterlist(){
+    public function setuplist(){
          if(Auth::guest()){
             return view('pages.index');
         }else{
-            return view('pages.regsterlist');
+            return view('pages.setuplist');
         }
     }
 
