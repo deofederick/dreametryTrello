@@ -19,7 +19,7 @@ Vue.use(require('vue-resource'));
  */
 
 Vue.component('example', require('./components/Example.vue'));
-Vue.component('test', require('./components/UnregBoard.vue'));
+
 
 /*const app = new Vue({
     el: '#app'

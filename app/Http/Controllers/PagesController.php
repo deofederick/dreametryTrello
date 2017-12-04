@@ -485,10 +485,20 @@ class PagesController extends Controller
         }
     }
 
-<<<<<<< HEAD
-    public function chat(){
-        return view('pages.chat');
+    public function regsterlist(){
+         if(Auth::guest()){
+            return view('pages.index');
+        }else{
+            return view('pages.regsterlist');
+        }
     }
-=======
->>>>>>> merge
+
+    public function boardedit(){
+         if(Auth::guest()){
+            return view('pages.index');
+        }else{
+            return view('pages.boardedit');
+        }
+    }
+
 }

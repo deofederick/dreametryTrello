@@ -8,11 +8,6 @@
         <div class="col-md-6">
             <div class="card" id="overflows">
               <div class="card-header bg-success text-white">SELECT BOARD</div>
-              <!-- <div class="card-body bg-success text-white text-center">
-                <h3 class="panel-hero-title justify-content-center"><i class="fa fa-clipboard"></i> 999999</h3>
-                <p class="card-text">boards</p>
-              </div> -->
-
              
               <div id="app">
               
@@ -26,6 +21,7 @@
                            <!--  <a :href="'/registerlist/' + unregboard.boardId"> -->
                            <a :href="unregboard.boardId">
                             @{{ unregboard.boardName }}</a>
+                            <p class="card-text"><small class="text-muted">@{{ unregboard.organization }}</small></p>
                           </div>
                       </div>
                   </li>
@@ -39,10 +35,7 @@
         <div class="col-md-6">
             <div class="card" id="overflows">
               <div class="card-header bg-warning text-white">REGISTERED BOARDS</div>
-              <!-- <div class="card-body bg-warning text-white text-center">
-                <h3 class="panel-hero-title justify-content-center"><i class="fa fa-clipboard"></i> 999999</h3>
-                <p class="card-text">boards</p>
-              </div> -->
+
                <div id="app2">
                <div class="text-center" id="regload">Loading...</div>
                  <ul class="list-group list-group-flush" id="regli">
@@ -55,7 +48,9 @@
                                <!--  <a href="route('registerlist.store')">@{{ unregboard.boardName }}</a> -->
                                 <!-- <a href="/registerlist/@{{ regboard.boardId }}"></a> -->
                                 @{{ regboard.boardName }}
+                                <p class="card-text"><small class="text-muted">@{{ regboard.organization }}</small></p>
                               </div>
+                              
                           </div>
                       </li>
                   </ul>
