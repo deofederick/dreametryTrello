@@ -16,11 +16,12 @@
              
               <div id="app">
               
-               <ul class="list-group list-group-flush">
-                  <li class="list-group-item" v-for="unregboard in unregboards">
-                      <div class="card-block">
-                          <div class="card-title" >
-                            
+               <ul class="list-group list-group-flush" id="unreg">
+                  <div class="text-center" id="unregload">Loading...</div> 
+                  <li class="list-group-item" v-cloak v-for="unregboard in unregboards" id="unregli">
+                      <div class="card-block"> 
+                                 
+                          <div class="card-title v-cloak--hidden">                            
                            <!--  <a href="route('registerlist.store')">@{{ unregboard.boardName }}</a> -->
                            <!--  <a :href="'/registerlist/' + unregboard.boardId"> -->
                            <a :href="unregboard.boardId">
@@ -43,10 +44,13 @@
                 <p class="card-text">boards</p>
               </div> -->
                <div id="app2">
-                 <ul class="list-group list-group-flush">
-                      <li class="list-group-item" v-for="regboard in regboards">
+               <div class="text-center" id="regload">Loading...</div>
+                 <ul class="list-group list-group-flush" id="regli">
+                      <li class="list-group-item" v-cloak v-for="regboard in regboards">
+
                           <div class="card-block">
-                              <div class="card-title">
+                              
+                              <div class="card-title v-cloak--hidden">
                                 
                                <!--  <a href="route('registerlist.store')">@{{ unregboard.boardName }}</a> -->
                                 <!-- <a href="/registerlist/@{{ regboard.boardId }}"></a> -->
@@ -73,7 +77,7 @@
                 
               },
 
-              created: function(){
+              mounted: function(){
                   this.fetchUnreg()
               }, methods:{
                   fetchUnreg: function(){
@@ -121,7 +125,7 @@
                 
               },
 
-              created: function(){
+              mounted: function(){
                   this.fetchReg()
               }, methods:{
                   fetchReg: function(){
@@ -154,5 +158,26 @@
 
           });
 
+
+
         </script>
+        <script type="text/javascript">
+          var time = setInterval(function(){
+            if($('#unregli').length){
+              $('#unregload').hide();
+              clearInterval(time);
+            }
+          }, 500)
+
+          var time2 = setInterval(function(){
+            if($('#regli').length){
+              $('#regload').hide();
+              clearInterval(time2);
+            }
+          }, 500)
+
+        </script>
+
+
+
 @endsection
