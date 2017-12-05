@@ -1,6 +1,6 @@
 ## Dreametry app for Trello
 
-This is an application created by the developers from [Dreametry](http://dreametry.ph/).
+This is an application created by the developers from [Dreametry](http://dreametry.com/).
 This is one of the first App created with laravel and git.
 
 After cloning create .env file from .env.example
