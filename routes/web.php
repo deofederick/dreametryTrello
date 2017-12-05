@@ -47,3 +47,5 @@ Route::get('/revisions', 'CardsController@revisions')->name('load');
 Route::get('/mytask', 'CardsController@mytask')->name('load');
 
 Route::resource('trello', 'ListsController');
+
+Route::resource('test2', 'CardsController');

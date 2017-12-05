@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\DB;
 
 class CardsController extends Controller
 {
+
     /**
      * Display a listing of the resource.
      *
@@ -47,18 +48,11 @@ class CardsController extends Controller
         $allcards = Card::all();
         $finished =[];
 
-        $daily = DB::table("cards")->join('users', 'user_id','=','users.trelloId')->select(DB::raw("COUNT(*) as count_row, users.name"))->groupBy(DB::raw("user_id, users.name"))->get();
-        $weekly = DB::table("cards")->join('users', 'user_id','=','users.trelloId')->select(DB::raw("COUNT(*) as count_row, users.name"))->whereBetween('cards.date_finished', [$startweek, $endweek])->groupBy(DB::raw("user_id, users.name"))->get();
-        $monthly=DB::table("cards")->join('users', 'user_id','=','users.trelloId')->select(DB::raw("COUNT(*) as count_row, users.name"))->whereMonth('cards.date_finished', Carbon::now()->month)->whereYear('cards.date_finished', Carbon::now()->year)->groupBy(DB::raw("user_id, users.name"))->get();
-
-    
-
-
         $pending = [];
         $sample = [];
         
 
-    //get all cards
+    //get all cards -need to uncomment
         /*foreach ($users as $user) {
             foreach ($done_list as $done) {
                 foreach ($review_list as $review) {
@@ -72,9 +66,9 @@ class CardsController extends Controller
                             $actions = json_decode($actionresponse, TRUE);
                             foreach ((array)$actions as $action) {
                                 if($user->trelloId==$member){
-                                    if($action['type']=='updateCard'){
+                                    if($action['type']=='updateCard'){ 
                                         if($action['data']['listBefore']['id'] == $review->list_id && $action['data']['listAfter']['id'] == $done->list_id){
-                                            //array_push($finished, $user->name);
+                                            
                                             $sample[] = array(
                                                 'cardid' => $card['id'],
                                                 'cardname' => $card['name'],
@@ -155,7 +149,7 @@ class CardsController extends Controller
             }
         }*/
 
-//Ongoing tasks
+//Ongoing tasks -need to uncomment
     foreach ($users as $user) {
         foreach ($todo_list as $todo) {
             $cards_url = 'https://api.trello.com/1/lists/'.$todo->list_id.'/cards?key='.$key.'&token='.$token.'&fields=name,idList,idMembers,url';
@@ -200,7 +194,6 @@ class CardsController extends Controller
         //$monthlys = array(array_count_values($monthly));
         $pendings = array(array_count_values($pending));
         $test=array(array_count_values($finished));
-        \Log::info($monthly);
         \Log::info($pendings);
 
 
@@ -223,28 +216,32 @@ class CardsController extends Controller
                 }
         }
         
-        $dailytotal = '';
+        $daily = DB::table("cards")->join('users', 'user_id','=','users.trelloId')->select(DB::raw("users.name"), DB::raw('SUM(CASE WHEN cards.date_finished = CURDATE() THEN 1 ELSE 0 END) AS daily_count'), DB::raw('SUM(CASE WHEN month(cards.date_finished) = month(CURDATE()) and year(cards.date_finished) = year(CURDATE())  THEN 1 ELSE 0 END) AS monthly_count'), DB::raw('SUM(CASE WHEN weekofyear(cards.date_finished) = weekofyear(now()) THEN 1 ELSE 0 END) AS weekly_count'))->groupBy(DB::raw("user_id, users.name"))->get();
+        $allcount = DB::table("cards")->select(DB::raw('SUM(CASE WHEN date_finished = CURDATE() THEN 1 ELSE 0 END) AS daily_count'), DB::raw('SUM(CASE WHEN month(date_finished) = month(CURDATE()) and year(cards.date_finished) = year(CURDATE())  THEN 1 ELSE 0 END) AS monthly_count'), DB::raw('SUM(CASE WHEN weekofyear(date_finished) = weekofyear(now()) THEN 1 ELSE 0 END) AS weekly_count'))->get();
 
-        
+        $dailyarray[] ='';
+        $dailyarray = (json_encode($daily));
+        $pendingarray[] ='';
+        $pendingarray = json_decode(json_encode($pendings), True);
+        $allcountarray[] ='';
+        $allcountarray = json_decode(json_encode($allcount), True);        
 
-        $alldata[]=array(
+        $alldata = array(
             'daily' => $daily,
-            'weekly' => $weekly,
-            'monthly' => $monthly,
+            'allcount' => $allcount,
+            'pendings' => $pendings,
+        );
+        /*$otherdata[] = array(
             'pendings' => $pendings,
             'alldaily' => $dailytotal,
-        );
+            'allweekly' => $weeklytotal,
+            'allmonthly' => $monthlytotal,
+        );*/
 
         return $alldata;
+        //return view('trello.counter')->with('alldata',$alldata);
         /*return view('trello.counter')->with('finished',$daily)->with('pendings', $pendings)->with('weeklys', $weekly)->with('monthlys',$monthly);
 */
-
-             
-             
-
-
-
-
         }
 
     }
@@ -274,12 +271,13 @@ class CardsController extends Controller
         $users = User::all();
 
         $sample = [];
+        $cardsid = [];
         $allrevisions = [];
 
 //per member
         $currentuser = User::where('trelloId','=',$idUser)->get();
         \Log::info($currentuser);
-        foreach ($users as $user) {
+        foreach ($currentuser as $user) {
             foreach ($todo_list as $todo) {
                 foreach ($review_list as $review) {
                     $cards_url = 'https://api.trello.com/1/lists/'.$todo->list_id.'/cards?key='.$key.'&token='.$token.'&fields=name,idList,idMembers,url';
@@ -291,7 +289,7 @@ class CardsController extends Controller
                             $actionresponse = Curl::to($action_url)->get();
                             $actions = json_decode($actionresponse, TRUE);
                             foreach ((array)$actions as $action) {
-                                if($user->trelloId==$member){
+                                if($idUser==$member){
                                     if($action['type']=='updateCard'){
                                         if($action['data']['listBefore']['id'] == $review->list_id && $action['data']['listAfter']['id'] == $todo->list_id){
                                             //array_push($finished, $user->name);
@@ -313,8 +311,6 @@ class CardsController extends Controller
                 }       
             }
         }
-
-
         return $sample;
     }
 
@@ -374,30 +370,31 @@ class CardsController extends Controller
         }
     }
 
-    foreach ($allcards as $card) {
-        $action_url = 'https://api.trello.com/1/cards/'.$card['card_id'].'/actions?key='.$key.'&token='.$token;
+    foreach ($allcards as $card => $cq) {
+        $action_url = 'https://api.trello.com/1/cards/'.$cq['card_id'].'/actions?key='.$key.'&token='.$token;
         $actionresponse = Curl::to($action_url)->get();
         $actions = json_decode($actionresponse, TRUE);
-            foreach ((array)$actions as $action) {
+            foreach ((array)$actions as $action){
                 if($action['type'] == 'commentCard'){
                     if($action['data']['text'] == 'Working on it.'){
-                              $c = Card::where('card_id', '=', $card['card_id'])->get();
+                              $c = Card::where('card_id', '=', $cq['card_id'])->first();
                               $c->date_started = Carbon::parse($action['date']);
                               $c->save();
                             }
                     else{
+
                         }
                     }
                 }
         $sample[] = array(
-        'cardid' => $card['card_id'],
-        'cardname' => $card['card_name'],
-        'listid' => $card['list_id'],
-        'userid' => $card['user_id'],
-        'date_started' => $card['date_started'],
-        'date_finished' => $card['date_finished'],
-        'status' => $card['status'],
-        'url' => $card['url'],
+        'cardid' => $cq['card_id'],
+        'cardname' => $cq['card_name'],
+        'listid' => $cq['list_id'],
+        'userid' => $cq['user_id'],
+        'date_started' => $cq['date_started'],
+        'date_finished' => $cq['date_finished'],
+        'status' => $cq['status'],
+        'url' => $cq['url'],
         );
     
             }            
@@ -408,6 +405,7 @@ class CardsController extends Controller
 
     }
 
+
     public function mytask(){
 
    
@@ -417,7 +415,7 @@ class CardsController extends Controller
         
     $lists = boardList::all();
     $users = User::all();
-
+    \Log::info(Carbon::now()->subDay(1)->toDateString());
     $a='';
 
     $sample = [];
@@ -483,6 +481,14 @@ class CardsController extends Controller
         'task' => $result
     );
     return $all;
+
+    }
+
+    public function excel(){
+
+        $cards = Card::all();
+
+        return view("trello.testvue")->with('cards', $cards);
 
     }
 
@@ -553,10 +559,35 @@ class CardsController extends Controller
         return $today;
     }
 
-     public function sortFunction( $a, $b ) {
+    public function sortFunction( $a, $b ) {
         $t1 = strtotime($a['date']);
         $t2 = strtotime($b['date']);
         return $t1 - $t2;
     }
+
+    public function multi_in_array($value, $array) 
+    { 
+        foreach ($array AS $item) 
+        { 
+            if (!is_array($item)) 
+            { 
+                if ($item == $value) 
+                { 
+                    return true; 
+                } 
+                continue; 
+            } 
+
+            if (in_array($value, $item)) 
+            { 
+                return true; 
+            } 
+            else if (multi_in_array($value, $item)) 
+            { 
+                return true; 
+            } 
+        } 
+        return false; 
+    } 
 
 }

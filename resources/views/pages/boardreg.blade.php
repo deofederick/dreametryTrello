@@ -136,7 +136,7 @@
                     vm.$http.get('/registerlist').then(function(response){
                       console.log('test');
                     //console.log(response.data.unRegBoards[0]);
-                    //console.log(response);
+                      console.log(response);
                       vm.regboards = response.data.regBoards;
                       console.log(vm.regBoards);
                       

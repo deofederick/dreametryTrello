@@ -17,7 +17,7 @@ class AddColumnsToCards extends Migration
             $table->date('date_started');
             $table->date('date_finished');
             $table->string('url');
-            $status->string('status');
+            $table->string('status');
         });
     }
 
@@ -32,7 +32,7 @@ class AddColumnsToCards extends Migration
             $table->date('date_started');
             $table->date('date_finished');
             $table->string('url');
-            $status->string('status');
+            $table->string('status');
         });
     }
 }
