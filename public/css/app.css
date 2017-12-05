@@ -9791,6 +9791,13 @@ body {
   display: none;
 }
 
+@media (min-width: 992px) and (max-width: 1199px) {
+  .card-group {
+    -webkit-column-count: 3;
+            column-count: 3;
+  }
+}
+
 /*!
  *  Font Awesome 4.7.0 by @davegandy - http://fontawesome.io - @fontawesome
  *  License - http://fontawesome.io/license (Font: SIL OFL 1.1, CSS: MIT License)

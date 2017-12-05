@@ -30,16 +30,16 @@
 
     <div class="row">
         <div class="col-md-6">
-          <div class="container">
+          <!-- <div class="container-fluid"> -->
             <div class="card" id="counter">
               <div class="card-header bg-success text-white">FINISHED TODAY</div>
                 <div class="container row justify-content-center text-center" id="app">
                 
-                <div class="card-columns">
+                <div class="col-md-3" id="countercards"   v-for="finished in finishedtoday">
 
-                  <div class="card" id="countercards" v-for="finished in finishedtoday">
-                    <div class="card-header" id="name">@{{ finished.name }}</div>
-                    <div class="card-text"><h1>@{{finished.daily_count}}</h1></div>
+                  <div class="card">
+                    <div class="card-header" id="name"><small>@{{ finished.name }}</small></div>
+                    <div class="card-text"><h1>@{{finished.count}}</h1></div>
                   </div>
                 </div>
              
@@ -53,7 +53,7 @@
 
                 </div>
               </div>
-            </div>
+            <!-- </div> -->
           </div>
 
         <div class="col-md-6">
@@ -184,7 +184,7 @@
 
       mounted: function(){
           this.fetchFinished()
-      }, methods:{
+      },methods:{
           fetchFinished: function(){
             var vm = this;
 
@@ -195,12 +195,25 @@
               console.log(unregboards);
               
             });*/
-            vm.$http.get('/test2').then(function(response){
+            vm.$http.get('/test').then(function(response){
               console.log('test');
             //console.log(response.data.unRegBoards[0]);
               console.log(response);
-              vm.finishedtoday = response.body.daily;
-              console.log(vm.finishedtoday);
+              var name = response.body.daily;
+              //vm.finishedtoday = response.body.daily;
+              //console.log(vm.finishedtoday);
+
+              name.forEach(function(value, id){
+              //  console.log(value.name);
+                var firstname = value.name;
+               // firstname.split(" ")[0];
+                vm.finishedtoday.push({"name": firstname.split(" ")[0], "count": value.daily_count})
+               // console.log(firstname)
+              })
+
+              console.log(vm.finishedtoday)
+
+
               
 
             }).catch(function(error){
