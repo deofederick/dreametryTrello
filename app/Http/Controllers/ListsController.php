@@ -126,6 +126,8 @@ class ListsController extends Controller
             'selectdone' => 'required',
             'selectpaid' => 'required'
         ]);
+
+        
         
         $id = $request->input('board_id');
 
@@ -146,7 +148,7 @@ class ListsController extends Controller
          || ($selecttodo === $selectpaid) || ($selectforreview === $selectdone)
          || ($selectforreview === $selectpaid) || ($selectdone === $selectpaid)) {
             
-            //return redirect('/registerlist/'.$id)->with('error', 'Duplicate Choice');
+            return redirect(route("registerlist.show",$id))->with('error', 'Duplicate Choice');
 
         }else{
             
@@ -174,7 +176,7 @@ class ListsController extends Controller
             $list->board_id = $id;
             $list->save();
 
-            //return redirect('/registerlist')->with('success', 'Lists Saved');
+            return redirect(route("regb"))->with('success', 'Lists Saved');
         }        
     }
 
@@ -198,15 +200,10 @@ class ListsController extends Controller
         $boardLists = json_decode($boardListresponse, TRUE);
         //\Log::info($boardLists);
       
-        $edit = false;
-        if(count($regboard) > 0/*  && count($regboardList) != 0 */){
+        if(count($regboard) > 0){
            // \Log::info("found");
 
            $regboardList = boardList::where('board_id', $regboard->id)->first();
-
-           if (count($regboardList) != 0) {
-                $edit = true;
-           }
            
            $listUrl = "https://api.trello.com/1/boards/".$id."/lists?key=".$key."&token=".$token."&cards=none&filter=open";
            $listresponse = Curl::to($listUrl)->get();
@@ -217,12 +214,11 @@ class ListsController extends Controller
               // 'boards' => $boardArray,
                'lists' => $lists,
                'listsBoard' => $boardLists,
-               'editable' => $edit,
                'boardid' => $regboard
 
            );
    
-          // \Log::info($data);
+           \Log::info($data);
          //  return view('trello.registerListShow')->with($data);
 
            return view('pages.setuplist')->with($data);
@@ -248,9 +244,10 @@ class ListsController extends Controller
                 'boardid' => $regboard
  
             ); 
-            return $data;
+           // return $data;
            // return view('trello.registerListShow')->with($data);
-           // return view('pages.setuplist')->with($data);
+
+            return view('pages.setuplist')->with($data);
 
 
           // return redirect('/register-board')->with('success', 'Board Registered');

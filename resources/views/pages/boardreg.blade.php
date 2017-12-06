@@ -118,7 +118,6 @@
                       message:'',
                       regboards:[]
                       }
-                
               },
 
               mounted: function(){
@@ -127,21 +126,10 @@
                   fetchReg: function(){
                     var vm = this;
 
-                   /* $.get('/registerlist', function(json){
-                      console.log('testgiididididis');
-                      console.log(json)
-                      vm.unregboards = json['regBoards'];
-                      console.log(unregboards);
-                      
-                    });*/
                     vm.$http.get('/registerlist').then(function(response){
-                      //console.log('test');
-                    //console.log(response.data.unRegBoards[0]);
-                     // console.log(response);
-                      vm.regboards = response.data.regBoards;
-                     // console.log(vm.regBoards);
                       
-
+                      vm.regboards = response.data.regBoards;
+                    
                     }).catch(function(error){
 
                     });
