@@ -5240,6 +5240,25 @@ tbody.collapse.show {
   background-color: #1d2124;
 }
 
+.badge-todo{
+  color: #fff;
+  background-color: #016ecd;
+}
+
+.badge-forreview{
+  color: #fff;
+  background-color: #f2d600;
+}
+
+.badge-done{
+  color: #fff;
+  background-color: #d73814;
+}
+
+.badge-paid{
+  color: #fff;
+  background-color: #80D651;
+}
 .jumbotron {
   padding: 2rem 1rem;
   margin-bottom: 2rem;
@@ -9789,6 +9808,13 @@ body {
 .v-cloak--inline,
 .v-cloak--inlineBlock {
   display: none;
+}
+
+@media (min-width: 992px) and (max-width: 1199px) {
+  .card-group {
+    -webkit-column-count: 3;
+            column-count: 3;
+  }
 }
 
 /*!
