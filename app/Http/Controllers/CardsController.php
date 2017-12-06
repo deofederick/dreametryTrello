@@ -53,7 +53,7 @@ class CardsController extends Controller
         
 
     //get all cards -need to uncomment
-        /*foreach ($users as $user) {
+        foreach ($users as $user) {
             foreach ($done_list as $done) {
                 foreach ($review_list as $review) {
                     $cards_url = 'https://api.trello.com/1/lists/'.$done->list_id.'/cards?key='.$key.'&token='.$token.'&fields=name,idList,idMembers,url';
@@ -86,7 +86,7 @@ class CardsController extends Controller
                     }
                 }       
             }
-        }*/
+        }
 //saving
         
 //weekly
@@ -271,8 +271,9 @@ class CardsController extends Controller
         $users = User::all();
 
         $sample = [];
-        $cardsid = [];
         $allrevisions = [];
+        $forreview_label = [];
+        $forreview_unlabel = [];
 
 //per member
         $currentuser = User::where('trelloId','=',$idUser)->get();
@@ -280,7 +281,7 @@ class CardsController extends Controller
         foreach ($currentuser as $user) {
             foreach ($todo_list as $todo) {
                 foreach ($review_list as $review) {
-                    $cards_url = 'https://api.trello.com/1/lists/'.$todo->list_id.'/cards?key='.$key.'&token='.$token.'&fields=name,idList,idMembers,url';
+                    $cards_url = 'https://api.trello.com/1/lists/'.$todo->list_id.'/cards?key='.$key.'&token='.$token.'&fields=name,idList,idMembers,url,labels';
                     $cardresponse = Curl::to($cards_url)->get();
                     $cards = json_decode($cardresponse, TRUE);
                     foreach ((array)$cards as $card) {
@@ -293,15 +294,33 @@ class CardsController extends Controller
                                     if($action['type']=='updateCard'){
                                         if($action['data']['listBefore']['id'] == $review->list_id && $action['data']['listAfter']['id'] == $todo->list_id){
                                             //array_push($finished, $user->name);
-                                            $sample[] = array(
-                                                'cardid' => $card['id'],
-                                                'cardname' => $card['name'],
-                                                'listid' => $card['idList'],
-                                                'userid' => $member,
-                                                'date_action' => $action['date'],
-                                                'status' => 'For Review',
-                                                'url' => $card['url'],
-                                            );
+                                             if(count($card['labels']) == 0){
+                                                $sample[] = array(
+                                                        'cardid' => $card['id'],
+                                                        'cardname' => $card['name'],
+                                                        'listid' => $card['idList'],
+                                                        'userid' => $member,
+                                                        'date_action' => $action['date'],
+                                                        'status' => 'For Review',
+                                                        'url' => $card['url'],
+                                                        'label' =>' '
+                                                    );
+                                             }
+                                             else{
+                                                foreach ($card['labels'] as $label) {
+                                                    $date = date_create($action['date']);
+                                                    $allrevisions[] = array(
+                                                        'cardid' => $card['id'],
+                                                        'cardname' => $card['name'],
+                                                        'listid' => $card['idList'],
+                                                        'userid' => $member,
+                                                        'date_action' => date_format($date,"Y/m/d H:i:s"),
+                                                        'status' => 'For Review',
+                                                        'url' => $card['url'],
+                                                        'label' =>$label['name']
+                                                    );
+                                                }
+                                            }
                                         }
                                     }
                                 }           
@@ -311,7 +330,72 @@ class CardsController extends Controller
                 }       
             }
         }
-        return $sample;
+
+        foreach ($currentuser as $user) {
+            foreach ($todo_list as $todo) {
+                foreach ($review_list as $review) {
+                    $cards_url = 'https://api.trello.com/1/lists/'.$review->list_id.'/cards?key='.$key.'&token='.$token.'&fields=name,idList,idMembers,url,labels';
+                    $cardresponse = Curl::to($cards_url)->get();
+                    $cards = json_decode($cardresponse, TRUE);
+                    foreach ((array)$cards as $card) {
+                        foreach ($card['idMembers'] as $member) {
+                            $action_url = 'https://api.trello.com/1/cards/'.$card['id'].'/actions?key='.$key.'&token='.$token;
+                            $actionresponse = Curl::to($action_url)->get();
+                            $actions = json_decode($actionresponse, TRUE);
+                            foreach ((array)$actions as $action) {
+                                if($idUser==$member){
+                                    if($action['type']=='updateCard'){
+                                        if($action['data']['listBefore']['id'] == $todo->list_id){
+                                            //array_push($finished, $user->name);
+                                             if(count($card['labels']) == 0){
+                                                $date = date_create($action['date']);
+                                                $forreview_unlabel[] = array(
+                                                        'cardid' => $card['id'],
+                                                        'cardname' => $card['name'],
+                                                        'listid' => $card['idList'],
+                                                        'userid' => $member,
+                                                        'date_action' => date_format($date, "Y/m/d H:i:s"),
+                                                        'status' => 'For Review',
+                                                        'url' => $card['url'],
+                                                        'label' =>' '
+                                                    );
+                                             }
+                                             else{
+                                                foreach ($card['labels'] as $label) {
+                                                    $date = date_create($action['date']);
+                                                    $forreview_label[] = array(
+                                                        'cardid' => $card['id'],
+                                                        'cardname' => $card['name'],
+                                                        'listid' => $card['idList'],
+                                                        'userid' => $member,
+                                                        'date' => $action['date'],
+                                                        'status' => 'For Review',
+                                                        'url' => $card['url'],
+                                                        'label' =>' '
+                                                    );
+                                                }
+                                            }
+                                        }
+                                    }
+                                }           
+                            }
+                        }
+                    }
+                }       
+            }
+        }
+
+        $data [] ='';
+
+        usort($forreview_label, 'self::sortFunction');
+        \Log::info($sample);
+        $data =[
+            'labeled' => $allrevisions,
+            'unlabeled' => $sample,
+            'forreview_label' => $forreview_label,
+            'forreview_unlabel' => $forreview_unlabel
+        ];
+        return $data;
     }
 
     public function report(){
@@ -431,6 +515,7 @@ class CardsController extends Controller
             $cards_url = 'https://api.trello.com/1/lists/'.$list->list_id.'/cards?key='.$key.'&token='.$token.'&fields=name,idList,idMembers,url,labels';
             $cardresponse = Curl::to($cards_url)->get();
             $cards = json_decode($cardresponse, TRUE);
+
             foreach ((array)$cards as $card) {
                 foreach ($card['idMembers'] as $member) {
                     if($user->trelloId==$member){
@@ -440,6 +525,8 @@ class CardsController extends Controller
                             $unlabeled[] = array(
                             'card_name' => $card['name'],
                             'card_id' => $card['id'],
+                            'url' => $card['url'],
+                            'listname'=> $list->status->status_name
                             );
                         }
                         else{

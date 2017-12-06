@@ -35,7 +35,7 @@
               <div class="card-header bg-success text-white">FINISHED TODAY</div>
                 <div class="container row justify-content-center text-center" id="app">
                 
-                <div class="col-md-3" id="countercards"   v-for="finished in finishedtoday">
+                <div class="col-md-3" id="countercards"  v-for="finished in finishedtoday">
 
                   <div class="card">
                     <div class="card-header" id="name"><small>@{{ finished.name }}</small></div>
@@ -59,77 +59,23 @@
         <div class="col-md-6">
             <div class="card" id="counter">
               <div class="card-header bg-danger text-white">TASKS IN PROGRESS</div>
-            <div class="container row justify-content-center text-center" >
+            <div class="container row justify-content-center text-center" id="app2" >
+            
+            
+              <div class="col-md-3" id="countercards" v-for="pending in pendingtasks">
+                <div class="card">
+                  <div class="card-header"><small>@{{ pending.name }}</small></div>
+                  <div class="card-text"><h1>@{{ pending.count }}</h1></div>
+                </div>
+              </div>
+          
 
-               <div class="col-md-3" id="countercards">
+              <!-- <div class="col-md-3" id="countercards">
                 <div class="card">
                   <div class="card-header">Lorem</div>
                   <div class="card-text"><h1>0</h1></div>
                 </div>
-              </div>
-
-              <div class="col-md-3" id="countercards">
-                <div class="card">
-                  <div class="card-header">Lorem</div>
-                  <div class="card-text"><h1>0</h1></div>
-                </div>
-              </div>
-
-              <div class="col-md-3" id="countercards">
-                <div class="card">
-                  <div class="card-header">Lorem</div>
-                  <div class="card-text"><h1>0</h1></div>
-                </div>
-              </div>
-
-              <div class="col-md-3" id="countercards">
-                <div class="card">
-                  <div class="card-header">Lorem</div>
-                  <div class="card-text"><h1>0</h1></div>
-                </div>
-              </div>
-
-              <div class="col-md-3" id="countercards">
-                <div class="card">
-                  <div class="card-header">Lorem</div>
-                  <div class="card-text"><h1>0</h1></div>
-                </div>
-              </div>
-
-              <div class="col-md-3" id="countercards">
-                <div class="card">
-                  <div class="card-header">Lorem</div>
-                  <div class="card-text"><h1>0</h1></div>
-                </div>
-              </div>
-
-              <div class="col-md-3" id="countercards">
-                <div class="card">
-                  <div class="card-header">Lorem</div>
-                  <div class="card-text"><h1>0</h1></div>
-                </div>
-              </div>
-
-              <div class="col-md-3" id="countercards">
-                <div class="card">
-                  <div class="card-header">Lorem</div>
-                  <div class="card-text"><h1>0</h1></div>
-                </div>
-              </div>
-
-              <div class="col-md-3" id="countercards">
-                <div class="card">
-                  <div class="card-header">Lorem</div>
-                  <div class="card-text"><h1>0</h1></div>
-                </div>
-              </div>
-
-              <div class="col-md-3" id="countercards">
-                <div class="card">
-                  <div class="card-header">Lorem</div>
-                  <div class="card-text"><h1>0</h1></div>
-                </div>
-              </div>
+              </div> -->
 
             </div>
             </div>
@@ -196,9 +142,9 @@
               
             });*/
             vm.$http.get('/test').then(function(response){
-              console.log('test');
+             // console.log('test');
             //console.log(response.data.unRegBoards[0]);
-              console.log(response);
+              //console.log(response);
               var name = response.body.daily;
               //vm.finishedtoday = response.body.daily;
               //console.log(vm.finishedtoday);
@@ -211,7 +157,7 @@
                // console.log(firstname)
               })
 
-              console.log(vm.finishedtoday)
+              //console.log(vm.finishedtoday)
 
 
               
@@ -231,12 +177,64 @@
  
 </script>
 
-<script type="text/javascript">
-  $('#name').each(function(){
-     var me = $(this);
-     me.html(me.html().replace(/^(\w+)/, '<span>$1</span>'));
-  });
-</script>
+<script>
+ new Vue({
+    el: '#app2',
+    name: 'test',
+    data(){
+        return{
+              message:'',
+              pendingtasks:[]
+              }
+        
+      },
 
+      mounted: function(){
+          this.fetchPending()
+      },methods:{
+          fetchPending: function(){
+            var vm = this;
+
+            vm.$http.get('/test').then(function(response){
+              //vm.pendingtasks = response.body.pendings;
+            //  var name = response.body.pendings;
+                    //vm.pendingtasks = response.body.pendings[0];
+                    //console.log(vm.pendingtasks)
+              //console.log(Object.keys(name));
+
+              $.each(response.body.pendings[0], function(key, value){
+                var firstname = key;
+                var values = value;
+                
+                vm.pendingtasks.push({"name": firstname.split(" ")[0], "count": value});
+                //console.log(key + " " + value);
+              });
+
+              /*name.forEach(function(value, id){
+
+                var firstname = value;
+                var values = id;
+                console.log(firstname + " " + values)
+                //var firstname = Object.keys(value);
+                //var values = value.firstname;
+                //console.log(firstname);
+                
+
+                //vm.pendingtasks.push( : values);
+
+              });*/
+              //console.log(vm.pendingtasks)
+            });     
+
+            
+          }
+
+
+      } 
+
+  });
+
+ 
+</script>
 
 @endsection
