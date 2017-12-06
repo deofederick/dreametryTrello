@@ -53,7 +53,7 @@ class CardsController extends Controller
         
 
     //get all cards -need to uncomment
-        /*foreach ($users as $user) {
+        foreach ($users as $user) {
             foreach ($done_list as $done) {
                 foreach ($review_list as $review) {
                     $cards_url = 'https://api.trello.com/1/lists/'.$done->list_id.'/cards?key='.$key.'&token='.$token.'&fields=name,idList,idMembers,url';
@@ -86,7 +86,7 @@ class CardsController extends Controller
                     }
                 }       
             }
-        }*/
+        }
 //saving
         
 //weekly
