@@ -70,3 +70,9 @@ body
 .v-cloak--inlineBlock {
   display: none;
 }
+
+.card-group {
+  @include media-breakpoint-only(lg) {
+    column-count: 3;
+}
+}
