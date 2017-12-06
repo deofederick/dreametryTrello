@@ -448,6 +448,8 @@ class CardsController extends Controller
                             'label' => $label['name'],
                             'card_name' => $card['name'],
                             'card_id' => $card['id'],
+                            'url' => $card['url'],
+                            'listname'=> $list->status->status_name
                             );                                
                         }
                     }
@@ -463,7 +465,7 @@ class CardsController extends Controller
     
 
     $groups = array();
-    $result = [];
+    $result = '';
         foreach ($tasks as $data) {
           $id = $data['label'];
           if (isset($result[$id])) {
@@ -475,11 +477,11 @@ class CardsController extends Controller
      
     \Log::info($all);
     ksort($result);
-    $all=array(
+    $all=[
         'count' => $count,
         'unlabeled' => $unlabeled,
-        'task' => $result
-    );
+        'task' => $tasks
+    ];
     return $all;
 
     }
