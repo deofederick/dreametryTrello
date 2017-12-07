@@ -5240,25 +5240,6 @@ tbody.collapse.show {
   background-color: #1d2124;
 }
 
-.badge-todo{
-  color: #fff;
-  background-color: #016ecd;
-}
-
-.badge-forreview{
-  color: #fff;
-  background-color: #f2d600;
-}
-
-.badge-done{
-  color: #fff;
-  background-color: #d73814;
-}
-
-.badge-paid{
-  color: #fff;
-  background-color: #80D651;
-}
 .jumbotron {
   padding: 2rem 1rem;
   margin-bottom: 2rem;
@@ -13029,11 +13010,40 @@ body {
   color: #45ABCD;
 }
 
+.notice-null {
+  border-color: #5D6D7E;
+}
+
 .notice-warning {
   border-color: #FEAF20;
 }
 
 .notice-warning > strong {
   color: #FEAF20;
+}
+
+.badge-todo {
+  color: #fff;
+  background-color: #016ecd;
+}
+
+.badge-forreview {
+  color: #fff;
+  background-color: #f2d600;
+}
+
+.badge-done {
+  color: #fff;
+  background-color: #d73814;
+}
+
+.badge-paid {
+  color: #fff;
+  background-color: #80D651;
+}
+
+.badge-revision {
+  color: #fff;
+  background-color: #E74C3C;
 }
 
