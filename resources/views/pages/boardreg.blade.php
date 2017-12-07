@@ -38,8 +38,8 @@
 
                <div id="app2">
                <div class="text-center" id="regload">Loading...</div>
-                 <ul class="list-group list-group-flush" id="regli">
-                      <li class="list-group-item" v-cloak v-for="regboard in regboards">
+                 <ul class="list-group list-group-flush" >
+                      <li class="list-group-item" v-cloak v-for="regboard in regboards" id="regli">
 
                           <div class="card-block">
                               
@@ -47,7 +47,8 @@
                                 
                                <!--  <a href="route('registerlist.store')">@{{ unregboard.boardName }}</a> -->
                                 <!-- <a href="/registerlist/@{{ regboard.boardId }}"></a> -->
-                                @{{ regboard.boardName }}
+                                 <a :href="regboard.boardId">
+                                @{{ regboard.boardName }}</a>
                                 <p class="card-text"><small class="text-muted">@{{ regboard.organization }}</small></p>
                               </div>
                               
@@ -90,7 +91,7 @@
                     //console.log(response.data.unRegBoards[0]);
                     //console.log(response);
                       vm.unregboards = response.data.unRegBoards;
-                      console.log(vm.unregboards);
+                     // console.log(vm.unregboards);
                       
 
                     }).catch(function(error){
@@ -134,11 +135,11 @@
                       
                     });*/
                     vm.$http.get('/registerlist').then(function(response){
-                      console.log('test');
+                      //console.log('test');
                     //console.log(response.data.unRegBoards[0]);
-                      console.log(response);
+                     // console.log(response);
                       vm.regboards = response.data.regBoards;
-                      console.log(vm.regBoards);
+                     // console.log(vm.regBoards);
                       
 
                     }).catch(function(error){

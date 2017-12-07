@@ -225,7 +225,7 @@ class ListsController extends Controller
           // \Log::info($data);
          //  return view('trello.registerListShow')->with($data);
 
-
+           return view('pages.setuplist')->with($data);
 
         }else{
             
