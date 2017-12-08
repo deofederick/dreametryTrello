@@ -2,7 +2,7 @@
 
 @section('content')
 
-<div class="container" id="paddingtop">
+<div class="vueapp container" id="paddingtop">
   <div class="row justify-content-center">
     <div class="col-md-2 placeholder justify-content-center text-center" id="tasktoday">
       <img src="data:image/gif;base64,R0lGODlhAQABAIABAADcgwAAACwAAAAAAQABAAACAkQBADs=" width="80" height="80" class="img-fluid rounded-circle" alt="Generic placeholder thumbnail">
@@ -33,7 +33,7 @@
           <!-- <div class="container-fluid"> -->
             <div class="card" id="counter">
               <div class="card-header bg-success text-white">FINISHED TODAY</div>
-                <div class="vueapp container row justify-content-center text-center" id="app">
+                <div class="container row justify-content-center text-center" id="app">
                 
                 <div class="col-md-3" id="countercards"  v-for="finished in finishedtoday">
 
@@ -81,7 +81,7 @@
             </div>
         </div>
   </div>
-  <div class="vueapp" id="app">
+  <div id="app">
   <table class="table table-striped table-dark" id="livetable">
 
   <thead>
@@ -98,7 +98,7 @@
       <td>@{{ index + 1 }}</td>
       <td>@{{ count.name }}</td>
       <td>@{{ count.daily_count }}</td>
-      <td>@{{ count.weeky_count }}</td>
+      <td>@{{ count.weekly_count }}</td>
       <td>@{{ count.monthly_count }}</td>
     </tr>
   </tbody>
@@ -116,13 +116,15 @@
         return{
               message:'',
               finishedtoday:[],
-              tablecounts:[]
+              tablecounts:[],
+              pendingtasks:[]
               }
         
       },
 
       mounted: function(){
-          this.fetchFinished()
+          this.fetchFinished(),
+          this.fetchPending()
           
       },methods:{
           fetchFinished: function(){
@@ -164,13 +166,32 @@
             }).catch(function(error){
             }); 
           },
+          fetchPending: function(){
+            var vm = this;
+
+            vm.$http.get('/test').then(function(response){
+              //vm.pendingtasks = response.body.pendings;
+            //  var name = response.body.pendings;
+                    //vm.pendingtasks = response.body.pendings[0];
+                    //console.log(vm.pendingtasks)
+              //console.log(Object.keys(name));
+
+              $.each(response.body.pendings[0], function(key, value){
+                var firstname = key;
+                var values = value;
+                
+                vm.pendingtasks.push({"name": firstname.split(" ")[0], "count": value});
+                //console.log(key + " " + value);
+              });
+            });      
+          },
       } 
   });
 
  
 </script>
 
-<script>
+{{--  <script>
  new Vue({
     el: '#app2',
     name: 'test',
@@ -206,7 +227,7 @@
           }
       } 
   });
-</script>
+</script>  --}}
 
 <!-- <script>
   new Vue({
