@@ -33,7 +33,7 @@
           <!-- <div class="container-fluid"> -->
             <div class="card" id="counter">
               <div class="card-header bg-success text-white">FINISHED TODAY</div>
-                <div class="container row justify-content-center text-center" id="app">
+                <div class="vueapp container row justify-content-center text-center" id="app">
                 
                 <div class="col-md-3" id="countercards"  v-for="finished in finishedtoday">
 
@@ -81,10 +81,12 @@
             </div>
         </div>
   </div>
-
+  <div class="vueapp" id="app">
   <table class="table table-striped table-dark" id="livetable">
+
   <thead>
     <tr>
+      <th scope="col">No.</th>
       <th scope="col">Name</th>
       <th scope="col">Today</th>
       <th scope="col">This Week</th>
@@ -92,44 +94,36 @@
     </tr>
   </thead>
   <tbody>
-    <tr>
-      <td>Lorem Ipsum</td>
-      <td>0</td>
-      <td>0</td>
-      <td>999</td>
-    </tr>
-    <tr>
-      <td>Lorem Ipsum</td>
-      <td>0</td>
-      <td>0</td>
-      <td>999</td>
-    </tr>
-    <tr>
-      <td>Lorem Ipsum</td>
-      <td>0</td>
-      <td>0</td>
-      <td>999</td>
+    <tr v-for="(count, index) in tablecounts">
+      <td>@{{ index + 1 }}</td>
+      <td>@{{ count.name }}</td>
+      <td>@{{ count.daily_count }}</td>
+      <td>@{{ count.weeky_count }}</td>
+      <td>@{{ count.monthly_count }}</td>
     </tr>
   </tbody>
 </table>
+</div>
 
 </div>
 
 <script src="js/app.js"></script>
 <script>
  new Vue({
-    el: '#app',
+    el: '.vueapp',
     name: 'test',
     data(){
         return{
               message:'',
-              finishedtoday:[]
+              finishedtoday:[],
+              tablecounts:[]
               }
         
       },
 
       mounted: function(){
           this.fetchFinished()
+          
       },methods:{
           fetchFinished: function(){
             var vm = this;
@@ -146,32 +140,31 @@
             //console.log(response.data.unRegBoards[0]);
               //console.log(response);
               var name = response.body.daily;
+              
               //vm.finishedtoday = response.body.daily;
               //console.log(vm.finishedtoday);
 
-              name.forEach(function(value, id){
-              //  console.log(value.name);
-                var firstname = value.name;
-               // firstname.split(" ")[0];
-                vm.finishedtoday.push({"name": firstname.split(" ")[0], "count": value.daily_count})
-               // console.log(firstname)
+              /*for (var i = name.length - 1; i >= 0; i--) {
+                var firstname = 
+              }*/
+              vm.tablecounts = name;
+              console.log(vm.tablecounts)
+              name.forEach(function(key, value){
+                var count = key.daily_count;
+                var name = key.name
+
+                vm.finishedtoday.push({"name": name.split(" ")[0], "count": count});
+
               })
 
-              //console.log(vm.finishedtoday)
+              console.log(vm.finishedtoday);
 
-
-              
+                //vm.counts.push({"name": splitt, "day": value.daily_count, "week": value.weekly_count, "month":value.monthly_count})
 
             }).catch(function(error){
-
-            });
-
-            
-          }
-
-
+            }); 
+          },
       } 
-
   });
 
  
@@ -184,7 +177,7 @@
     data(){
         return{
               message:'',
-              pendingtasks:[]
+              pendingtasks:[],
               }
         
       },
@@ -209,32 +202,48 @@
                 vm.pendingtasks.push({"name": firstname.split(" ")[0], "count": value});
                 //console.log(key + " " + value);
               });
-
-              /*name.forEach(function(value, id){
-
-                var firstname = value;
-                var values = id;
-                console.log(firstname + " " + values)
-                //var firstname = Object.keys(value);
-                //var values = value.firstname;
-                //console.log(firstname);
-                
-
-                //vm.pendingtasks.push( : values);
-
-              });*/
-              //console.log(vm.pendingtasks)
-            });     
-
-            
+            });      
           }
-
-
       } 
-
   });
-
- 
 </script>
+
+<!-- <script>
+  new Vue({
+    el: '#app3',
+    name: 'test',
+    data(){
+        return{
+              message:'',
+              count:[]
+              }
+        
+      },
+
+      mounted: function(){
+          this.fetchCount()
+      },methods:{
+          fetchCount: function(){
+            var vm = this;
+
+            vm.$http.get('/test').then(function(response){
+
+              var name = response.body.daily;
+
+              name.forEach(function(key, value){
+
+                var firstname = key.name;
+
+                vm.count.push({"name": firstname.split(" ")[0], "day": key.daily_count, "week": key.weekly_count, "month": key.monthly_count});
+
+                console.log(vm.count);
+
+              });
+
+            });
+          }
+      }
+    });
+</script> -->
 
 @endsection
