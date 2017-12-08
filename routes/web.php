@@ -43,7 +43,7 @@ Route::get('/search',['uses' => 'CardsController@report','as' => 'search']);
 
 Route::get('/test', 'CardsController@index')->name('load');
 Route::get('/reports','CardsController@report');
-Route::get('/revisions', 'CardsController@revisions')->name('load');
+Route::get('/revision', 'CardsController@revisions')->name('load');
 Route::get('/mytasks', 'CardsController@mytask')->name('load');
 
 Route::resource('trello', 'ListsController');
