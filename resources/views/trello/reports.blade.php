@@ -1,29 +1,34 @@
 
 @extends('layouts.app')
 @section('content')
-    <div class="container">
+@include('inc.sidebar')
+<div id = "app">
+    <div class="container" id="paddingtop">
         <div class="row">
             <div class="col-md-12">
-                <div class="panel panel-info">
-                    <div class="panel-heading">TASK REPORT</div>
-                    <div class="panel-body">
+                <div class="card bg-light">
+                    <div class="h4 card-header">TASK REPORT</div>
+                    <div class="card-body">
                     	<div class="col-md-12">
                     		<div class="col-md-6">
                     		<div class="form-group">
                     	<form action="/search">
 						    <div class="input-group input-group-lg">
-						      <span class="input-group-btn">
-						        <button class="btn btn-primary" type="submit">Search</button>
-						      </span>
+						      
 						      <select class= "form-control" name="user">
 							 	@foreach($users as $user)
 							  	<option value={{$user->trelloId}}>{{$user->name}}</option>
 							  	@endforeach
 							</select>
+
+							<span class="input-group-btn">
+						        <button class="btn bg-info text-white" type="submit">Search</button>
+						      </span>
 						  </div>
 						  </form>
 						  </div>
 						</div>
+						<div class="col-md-12">
                     	<table class="table">
 						  <thead class="thead-dark">
 						    <tr>
@@ -45,14 +50,53 @@
 						  </tbody>
 						  	
 						</table>
-						 
+						 </div>
                    </div>
         		</div>
     		</div>
 		</div>
 	</div>
-    <script>
-        $('#loading').hide();
-    </script>
+</div>
+
+</div>
+    <script src="js/app.js"></script>
+  <script>
+         new Vue({
+            el: '#app',
+            name: 'test',
+            data(){
+                return{
+                      count:'',
+                      pcount:'',
+                      loading: false,
+                      users:[],
+                      tasks:[]
+                      }
+                
+              },
+
+              mounted: function(){
+                this.getalltasks()
+              }, methods:{
+                  getalltasks: function(){
+                    var vm = this;
+               console.log('revisions');
+
+                     vm.$http.get('/mytasks').then(function(response){
+                      console.log('allrevision');
+                    //console.log(response.data.unRegBoards[0]);
+                    
+                    }).catch(function(error){
+
+                    });          
+                  }
+
+              } 
+
+          });
+
+         
+        </script>
+
   
 @endsection

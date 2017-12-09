@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Auth;
 use Ixudra\Curl\Facades\Curl;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Collection;
 use App\User;
 use App\Card;
 use App\Board;
@@ -13,6 +15,7 @@ use App\Status;
 use App\Actions;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 
 
@@ -354,6 +357,9 @@ class CardsController extends Controller
         $sample = [];
         $allcards = Card::where('user_id','=', $trelloId)->get();
 
+        $currentPage = LengthAwarePaginator::resolveCurrentPage();
+
+
 //per member
         $currentuser = User::where('trelloId','=',$trelloId)->get();
         \Log::info($currentuser);
@@ -419,12 +425,29 @@ class CardsController extends Controller
         'status' => $cq['status'],
         'url' => $cq['url'],
         );
-    
-            }            
-                    
 
-       
-        return view('trello.reports')->with('users',$users)->with('data',$sample);
+    }
+
+        if(count($sample) < 0){
+            $entries = '';
+        }
+        else{
+             $col = new Collection($sample);
+        $collection = collect($sample);
+        $perPage = 5;
+        $currentPageSearchResults = $col->slice(($currentPage - 1) * $perPage, $perPage)->all();
+        $chunk = $collection->forPage(1, 3);
+        $entries = new LengthAwarePaginator($currentPageSearchResults, count($col), $perPage);
+
+        }
+                
+        $data = [
+            'users' => $users,
+            'sample' => $entries
+        ];
+
+        return $data;
+      
 
     }
 
@@ -467,7 +490,7 @@ class CardsController extends Controller
                 foreach ((array)$actions as $action) {
                     if($user->trelloId==$member){
                         if($action['type'] == 'commentCard'){
-                            if(strpos( $action['data']['text'], "Working on" ) !== false){
+                                if(strpos( $action['data']['text'], "Working on" ) !== false && $action['memberCreator']['id'] == $member){
                                     array_push($sample, $list->status->status_name);
                                     \Log::info($card['id'].'-'.$action['data']['text']);
                                     $date = date_create($action['date']);
@@ -522,6 +545,8 @@ class CardsController extends Controller
                             }
 
                         }
+                            
+                            
                     }
                 }
             }       

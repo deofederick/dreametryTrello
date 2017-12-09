@@ -500,5 +500,12 @@ class PagesController extends Controller
             return view('pages.boardedit');
         }
     }
+    public function taskreport(){
+        if(Auth::guest()){
+            return view('pages.index');
+        }else{
+            return view('pages.taskreport');
+        }
+    }
 
 }
