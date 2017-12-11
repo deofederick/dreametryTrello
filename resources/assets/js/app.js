@@ -12,6 +12,7 @@ require('./bootstrap');
 window.Vue = require('vue');
 
 Vue.use(require('vue-resource'));
+Vue.use(require('vue-moment'));
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
