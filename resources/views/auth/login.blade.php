@@ -8,7 +8,7 @@
                 <div class="panel-heading">Login</div>
 
                 <div class="panel-body">
-                    <form class="form-horizontal" method="POST" action="{{ route('login') }}">
+                    <form method="POST" action="{{ route('login') }}">
                         {{ csrf_field() }}
 
                         <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
@@ -51,7 +51,7 @@
 
                         <div class="form-group">
                             <div class="col-md-8 col-md-offset-4">
-                                <button type="submit" class="btn btn-primary">
+                                <button type="submit" onclick="trelloLogin()" class="btn btn-primary">
                                     Login
                                 </button>
 
@@ -66,6 +66,65 @@
         </div>
     </div>
 </div>
+ <script src="js/app.js"></script>
+<script type="text/javascript">
+  
+
+    var authenticationSuccess = function() { console.log('Successful authentication'); };
+    var authenticationFailure = function() { console.log('Failed authentication'); };
+
+    Trello.authorize({
+        type: 'redirect',
+        name: 'Dreametry App',
+        scope: {
+        read: 'true',
+        write: 'true' },
+        expiration: 'never',
+        success: authenticationSuccess,
+        error: authenticationFailure
+    });
+
+     function getUsername(){
+
+        var retrieveSuccess = function(data) {
+            console.log('Data returned:' + JSON.stringify(data));
+            addObject(data.id);
+        };
+
+        Trello.get("members/me", {fields: "name,displayName,url,email"}, retrieveSuccess);
+
+    }
+function addObject(id){
+        var retrieveSuccess = function(data) {
+            console.log('Data returned:' + JSON.stringify(data));
+            
+            $('#email').val(data.email);       
+        };
+
+        Trello.get("members/" + id, {fields: "email"}, retrieveSuccess);
+
+    }
+
+    function get(){
+
+        var retrieveSuccess = function(data) {
+            console.log('Data returned:' + JSON.stringify(data));
+          
+        };
+
+        Trello.get("members/me", {fields: "name,id"}, retrieveSuccess);
+
+    }
+$(document).ready(function () {
+        getUsername();
+       get();
+    });
+
+   
+
+
+
+</script>
 
 
 @endsection

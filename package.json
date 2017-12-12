@@ -22,8 +22,12 @@
     "aos": "^2.2.0",
     "bootstrap": "^4.0.0-beta.2",
     "font-awesome": "^4.7.0",
+<<<<<<< HEAD
+    "vue-paginate": "^3.5.1",
+=======
     "moment": "^2.19.4",
     "vue-moment": "^3.1.0",
+>>>>>>> fed04dc1e940ab41bfe5deceedcb32ea91078915
     "vue-resource": "^1.3.4",
     "vue-template-compiler": "^2.5.8"
   }

@@ -56,7 +56,7 @@ class CardsController extends Controller
         
 
     //get all cards -need to uncomment
-        foreach ($users as $user) {
+       foreach ($users as $user) {
             foreach ($done_list as $done) {
                     $cards_url = 'https://api.trello.com/1/lists/'.$done->list_id.'/cards?key='.$key.'&token='.$token.'&fields=name,idList,idMembers,url';
                     $cardresponse = Curl::to($cards_url)->get();
@@ -69,8 +69,12 @@ class CardsController extends Controller
                             $actions = json_decode($actionresponse, TRUE);
                             foreach ((array)$actions as $action) {
                                 if($user->trelloId==$member){
+<<<<<<< HEAD
                                     if(is_array($action) && $action['type']=='updateCard'){ 
                                       
+=======
+                                    if($action['type']=='updateCard'){ 
+>>>>>>> 1c80448c0d2395ebcc04ec7b92adf5a61f807617
                                             $sample[] = array(
                                                 'cardid' => $card['id'],
                                                 'cardname' => $card['name'],
@@ -80,7 +84,6 @@ class CardsController extends Controller
                                                 'status' => 'Done',
                                                 'url' => $card['url'],
                                             );
-
                                     }
                                 }           
                             }
@@ -436,26 +439,25 @@ class CardsController extends Controller
 
     }
 
-        if(count($sample) < 0){
+        if(count($sample) == 0){
             $entries = '';
+            $perPage = 5;
         }
         else{
-             $col = new Collection($sample);
-        $collection = collect($sample);
-        $perPage = 5;
+        $col = new Collection($sample);
+        $perPage = count($sample);
         $currentPageSearchResults = $col->slice(($currentPage - 1) * $perPage, $perPage)->all();
-        $chunk = $collection->forPage(1, 3);
         $entries = new LengthAwarePaginator($currentPageSearchResults, count($col), $perPage);
 
         }
-                
+        $report = self::paginate($sample, 5);
         $data = [
             'users' => $users,
             'sample' => $entries
         ];
 
-        return $data;
-      
+       
+      return $data;
 
     }
 
@@ -593,11 +595,31 @@ class CardsController extends Controller
     }
 
     public function excel(){
+        $key = auth()->user()->apikey;
+        $token = auth()->user()->apitoken;
+        $cardresponse ="";
+        $cards ="";
+        $cards_url ="https://api.trello.com/1/cards?name=asdasdasds&desc=hello&idList=59ffba51a8e61972dea61748?key=".$key.'&token='.$token;
+        $cardresponse = Curl::to($cards_url)->get();
+        
+        return $cardsresponse;
 
-        $cards = Card::all();
+    }
 
-        return view("trello.testvue")->with('cards', $cards);
+    public function postcards(){
+        $key = auth()->user()->apikey;
+        $token = auth()->user()->apitoken;
+        $cards_url ='https://api.trello.com/1/cards?name=123123&idList=59ffba51a8e61972dea61748?key='.$key.'&token='.$token;
+        $cardresponse = Curl::to('https://api.trello.com/1/cards?name=123123&desc=asdsad&idList=59ffba51a8e61972dea61748&key=78baac709b39d0f3e734d475272c29f3&token=4448a4fa8e34775ad010188b5a9b28aa51b172d900ec514728bb4d7431c84fef')->post();
+    }
 
+    public function paginate($array, $count){
+        $col = new Collection($array);
+        $perPage = $count;
+        $currentPage = LengthAwarePaginator::resolveCurrentPage();
+        $currentPageSearchResults = $col->slice(($currentPage - 1) * $perPage, $perPage)->all();
+        $entries = new LengthAwarePaginator($currentPageSearchResults, count($col), $perPage);
+        return $entries;
     }
 
     
