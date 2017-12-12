@@ -68,13 +68,8 @@ class CardsController extends Controller
                             $actionresponse = Curl::to($action_url)->get();
                             $actions = json_decode($actionresponse, TRUE);
                             foreach ((array)$actions as $action) {
-                                if($user->trelloId==$member){
-<<<<<<< HEAD
-                                    if(is_array($action) && $action['type']=='updateCard'){ 
-                                      
-=======
+                                if(is_array($action) && $user->trelloId==$member){
                                     if($action['type']=='updateCard'){ 
->>>>>>> 1c80448c0d2395ebcc04ec7b92adf5a61f807617
                                             $sample[] = array(
                                                 'cardid' => $card['id'],
                                                 'cardname' => $card['name'],
