@@ -197,7 +197,8 @@ class CardsController extends Controller
 
         foreach ($sample as $key => $value) {
                if($ucard = Card::where('card_id','=', $value['cardid'])->where('user_id', '=', $value['userid'])->exists()){
-                    \Log::info('existing'.'-'.$value['cardid']);
+                   
+                   
                 }
                 else{
                     $c = new Card;
