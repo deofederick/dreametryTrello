@@ -29,6 +29,7 @@
 
         function logout() {
             Trello.deauthorize();
+           // console.log('test');
             event.preventDefault();
             document.getElementById('logout-form').submit();
         }
