@@ -43,6 +43,7 @@ class CardsController extends Controller
         $done_list = boardList::where('status_id','=',$done)->get();
         $review_list = boardList::where('status_id','=',$review)->get();
         $todo_list = boardList::where('status_id','=',$todo)->get();
+        $pending_list = boardList::where('status_id','=',$todo)->orWhere('status_id','=',$review)->get();
         $users = User::all();
 
         $startweek = self::getDay('Monday')->format('Y-m-d');
@@ -150,7 +151,7 @@ class CardsController extends Controller
         }*/
 
 //Ongoing tasks -need to uncomment
-    foreach ($users as $user) {
+  /*  foreach ($users as $user) {
         foreach ($todo_list as $todo) {
             $cards_url = 'https://api.trello.com/1/lists/'.$todo->list_id.'/cards?key='.$key.'&token='.$token.'&fields=name,idList,idMembers,url';
             $cardresponse = Curl::to($cards_url)->get();
@@ -167,9 +168,28 @@ class CardsController extends Controller
                 }
             }
         }
-    }
+    }*/
 
     foreach ($users as $user) {
+        foreach ($pending_list as $pend) {
+            $cards_url = 'https://api.trello.com/1/lists/'.$pend->list_id.'/cards?key='.$key.'&token='.$token.'&fields=name,idList,idMembers,url';
+            $cardresponse = Curl::to($cards_url)->get();
+            $cards = json_decode($cardresponse, TRUE);
+            foreach ((array)$cards as $card) {
+                if(is_array($card)){
+                foreach ((array)$card['idMembers'] as $member) {
+                    if($user->trelloId == $member){
+                        \Log::info($card['name'].' - '.$user->name);
+                            array_push($pending, $user->name);
+                        
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /*foreach ($users as $user) {
         foreach ($review_list as $review) {
             $cards_url = 'https://api.trello.com/1/lists/'.$review->list_id.'/cards?key='.$key.'&token='.$token.'&fields=name,idList,idMembers,url';
             $cardresponse = Curl::to($cards_url)->get();
@@ -186,7 +206,7 @@ class CardsController extends Controller
                 }
             }
         }
-    }
+    }*/
 
     //revisio        
             
@@ -203,7 +223,7 @@ class CardsController extends Controller
 
         foreach ($sample as $key => $value) {
                if($ucard = Card::where('card_id','=', $value['cardid'])->where('user_id', '=', $value['userid'])->exists()){
-                    \Log::info('existing'.'-'.$value['cardid']);
+                   /* \Log::info('existing'.'-'.$value['cardid']);*/
                 }
                 else{
                     $c = new Card;
@@ -216,7 +236,7 @@ class CardsController extends Controller
                     $c->date_started = Carbon::now();
                     $c->url = $value['url'];
                     $c->save();
-                    \Log::info('saved'.'-'.$value['cardid']);
+                   /* \Log::info('saved'.'-'.$value['cardid']);*/
                 }
         }
         
@@ -577,7 +597,7 @@ class CardsController extends Controller
         }
      
     \Log::info($all);
-    ksort($result);
+    //ksort($result);
     $all=[
         'count' => $count,
         'unlabeled' => $unlabeled,
