@@ -108,7 +108,6 @@
 </div>
 
 <script src="js/app.js"></script>
-<script src="moment.js"></script>
 <script>
  new Vue({
     el: '.vueapp',

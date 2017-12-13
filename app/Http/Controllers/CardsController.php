@@ -62,12 +62,13 @@ class CardsController extends Controller
                     $cardresponse = Curl::to($cards_url)->get();
                     $cards = json_decode($cardresponse, TRUE);
                     foreach ((array)$cards as $card) {
-                        foreach ($card['idMembers'] as $member) {
+                        if(is_array($card)){
+                        foreach ((array)$card['idMembers'] as $member) {
                             $action_url = 'https://api.trello.com/1/cards/'.$card['id'].'/actions?key='.$key.'&token='.$token;
                             $actionresponse = Curl::to($action_url)->get();
                             $actions = json_decode($actionresponse, TRUE);
                             foreach ((array)$actions as $action) {
-                                if($user->trelloId==$member){
+                                if(is_array($action) && $user->trelloId==$member){
                                     if($action['type']=='updateCard'){ 
                                             $sample[] = array(
                                                 'cardid' => $card['id'],
@@ -81,6 +82,7 @@ class CardsController extends Controller
                                     }
                                 }           
                             }
+                        }
                         }
                     }      
             }
@@ -154,12 +156,14 @@ class CardsController extends Controller
             $cardresponse = Curl::to($cards_url)->get();
             $cards = json_decode($cardresponse, TRUE);
             foreach ((array)$cards as $card) {
-                foreach ($card['idMembers'] as $member) {
+                if(is_array($card)){
+                foreach ((array)$card['idMembers'] as $member) {
                     if($user->trelloId == $member){
                         if($card['idList'] == $todo->list_id){
                             array_push($pending, $user->name);
                         }
                     }
+                }
                 }
             }
         }
@@ -171,12 +175,14 @@ class CardsController extends Controller
             $cardresponse = Curl::to($cards_url)->get();
             $cards = json_decode($cardresponse, TRUE);
             foreach ((array)$cards as $card) {
-                foreach ($card['idMembers'] as $member) {
+                if(is_array($card)){
+                foreach ((array)$card['idMembers'] as $member) {
                     if($user->trelloId == $member){
                         if($card['idList'] == $review->list_id){
                             array_push($pending, $user->name);
                         }
                     }
+                }
                 }
             }
         }

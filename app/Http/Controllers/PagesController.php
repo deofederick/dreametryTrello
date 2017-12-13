@@ -52,14 +52,17 @@ class PagesController extends Controller
               //  \Log::info($members);
 
                 foreach ((array)$members as $member) {
-                    if ($idUser == $member['id']) {
+                    if (is_array($member) && $idUser == $member['id']) {
                         $boardArray[] = [$board['board_name'], $board['board_id']];
                         $listUrl = "https://api.trello.com/1/boards/".$board['board_id']."/lists?key=".$key."&token=".$token."&cards=none&filter=open";
                         $listresponse = Curl::to($listUrl)->get();
                         $lists = json_decode($listresponse, TRUE);
                         // \Log::info($board['name']);
                         foreach ($lists as $list) {
-                            $cardsUrl = "https://api.trello.com/1/lists/".$list['id']."/cards?key=".$key."&token=".$token."&fields=name,desc,idMembers,shortUrl,labels,actions,idList";
+                            if (is_array($list)) {
+                                $cardsUrl = "https://api.trello.com/1/lists/".$list['id']."/cards?key=".$key."&token=".$token."&fields=name,desc,idMembers,shortUrl,labels,actions,idList";
+                            }
+                            
                             $cardsResponse = Curl::to($cardsUrl)->get();
                             $cards = json_decode($cardsResponse, TRUE);
                             $totalCards += count($cards);
@@ -67,7 +70,7 @@ class PagesController extends Controller
 
                             
                             foreach ((array)$cards as $card) {
-                                if (count($card['idMembers']) > 0) {
+                                if (is_array($card) && count($card['idMembers']) > 0) {
                                     for ($i=0; $i < count($card['idMembers']) ; $i++) { 
                                         if ($idUser === $card['idMembers'][$i]) {
                                             $totalOwnedCard++;
