@@ -15,7 +15,7 @@
                     	
 						    <div class="input-group input-group-lg">
 						      
-						      <select class= "form-control" name="user" v-model="selected">
+						      <select class= "form-control"  name="user" v-model="selected">
                     <option v-for="user in users" :value="user.trelloId">@{{ user.name }}</option>
                         </select>
                         
@@ -41,27 +41,32 @@
 						    </tr>
 						  </thead>
               <tbody>
-						    <tr v-for="(task, index) in tasks" >
+                <paginate name="alltasks" :list="tasks" :per=5 tag="div"
+  class="pagination">
+                <tr v-for="(task, index) in paginated('alltasks')" >
                     <td>@{{ index + 1 }}</td>
                     <td> @{{ task.date_started }}</td>
                     <td><a :href="task.url">@{{ task.cardname }}</a></td>
                     <td>@{{task.date_finished}}</td>
                     <td>@{{task.status}}</td>
                 </tr>
+              </paginate>
               </tbody>
 						</table>
             <div class="progress" v-show="loading">
                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%" ></div>
             </div>
-            <div class="pagination">
-                <button class="btn btn-default"  :disabled="!pagination.next_page_url">
-                    Previous
-                </button>
-                <span>Page @{{pagination.current_page}} of @{{pagination.last_page}}</span>
-                <button class="btn btn-default" 
-                        :disabled="!pagination.next_page_url" @click="movepage(pagination.next_page_url)">Next
-                </button>
-            </div> 
+            
+            <paginate-links for="alltasks" :simple="{
+    prev: 'Back',
+    next: 'Next'
+  }"
+  :classes="{
+    'ul': 'pagination',
+    '.next > a': 'page-item',
+    '.prev > a': 'page-item' // multiple classes
+  }"></paginate-links>
+                 
 						</div>
           </div>
         </div>
@@ -83,10 +88,9 @@
                       selected: '',
                       tasks:[],
                       pagination: {},
-                      loading : false,
                       current_url : '',
-                      startRow: 0,
-                      rowsPerPage: 10
+                      langs: ['JavaScript', 'PHP', 'HTML', 'CSS', 'Ruby', 'Python', 'Erlang'],
+                      paginate: ['alltasks']
                       }
                 
               },
