@@ -22,7 +22,7 @@ Route::get('/livecounter', 'PagesController@counter')->name('counter');
 Route::get('/dashboard', 'PagesController@dashboard')->name('board');
 Route::get('/register-board', 'PagesController@boardreg')->name('regb');
 Route::get('/tasks', 'PagesController@tasks')->name('tasks');
-Route::get('/taskreport', 'PagesController@taskreport')->name('tasks');
+Route::get('/taskreport', 'PagesController@taskreport')->name('taskreport');
 
 Route::get('/setup', 'PagesController@setuplist')->name('setup');
 
@@ -44,10 +44,9 @@ Route::get('/search',['uses' => 'CardsController@report','as' => 'search']);
 
 Route::get('/test', 'CardsController@index')->name('load');
 Route::get('/reports','CardsController@report');
-Route::get('/revision', 'CardsController@revisions')->name('load');
-Route::get('/mytasks', 'CardsController@mytask')->name('load');
-Route::get('/excel', 'CardsController@postcards')->name('load');
+
+Route::get('/revision', 'CardsController@revisions')->name('revision');
+Route::get('/mytasks', 'CardsController@mytask')->name('mytasks');
+Route::get('/excel', 'CardsController@postcards')->name('excel');
 
 Route::resource('trello', 'ListsController');
-
-Route::resource('test2', 'CardsController');

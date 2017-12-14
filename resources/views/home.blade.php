@@ -35,7 +35,7 @@
               <div class="card-header bg-success text-white">FINISHED TODAY</div>
                 <div class="container row justify-content-center text-center" id="app">
                 
-                <div class="col-md-3" id="countercards"  v-for="finished in finishedtoday">
+                <div class="col-md-3" id="countercards"  v-for="(finished, index) in finishedtoday" :key="index">
 
                   <div class="card" id="removefinished">
                     <div class="card-header" id="name"><small>@{{ finished.name }}</small></div>
@@ -62,7 +62,7 @@
             <div class="container row justify-content-center text-center" id="app2" >
             
             
-              <div class="col-md-3" id="countercards" v-for="pending in pendingtasks">
+              <div class="col-md-3" id="countercards" v-for="(pending, index) in pendingtasks"  :key="index">
                 <div class="card" id="removepending">
                   <div class="card-header"><small>@{{ pending.name }}</small></div>
                   <div class="card-text"><h1>@{{ pending.count }}</h1></div>
@@ -94,7 +94,7 @@
     </tr>
   </thead>
   <tbody>
-    <tr v-for="(count, index) in tablecounts">
+    <tr v-for="(count, index) in tablecounts" :key="index">
       <td>@{{ index + 1 }}</td>
       <td>@{{ count.name }}</td>
       <td>@{{ count.daily_count }}</td>
@@ -124,40 +124,61 @@
       },
 
       mounted: function(){
-         this.fetchFinished(),
-          this.fetchPending(),
-          this.fetchAll()
+         this.fetchFinished()
+          /*this.fetchPending(),
+          this.fetchAll()*/
           
       },methods:{
           fetchFinished: function(){
            
             var vm = this;
+            var finishedtodays = [];
+            var pendingsss = [];
 
            vm.$http.get('/test').then(function(response){
+
              this.finishedtoday = [];
-            //  $("#removefinished").remove();
+             this.pendingtasks = [];
+          
               var name = response.body.daily;
-              
               vm.tablecounts = name;
+
+              //for finsihed today
               name.forEach(function(key, value){
                 var count = key.daily_count;
                 var name = key.name
 
-                vm.finishedtoday.push({"name": name.split(" ")[0], "count": count});
+                finishedtodays.push({"name": name.split(" ")[0], "count": count});
 
-              })
+              });
+
+              //for pending tasks
+              $.each(response.body.pendings[0], function(key, value){
+                var firstname = key;
+                var values = value;
+                //console.log('pending')
+                pendingsss.push({"name": firstname.split(" ")[0], "count": value});
+               // console.log(finishedtodays)
+
+              });
+              vm.finishedtoday = finishedtodays;
+              vm.pendingtasks = pendingsss;
+              //for fetching all
+              vm.allcounts = response.body.allcount;
+
 
               console.log("Test run");
+
 
             
 
             }).catch(function(error){
             });
 
-            setTimeout(this.fetchFinished.bind(this), 1000); 
-           
+           setTimeout(this.fetchFinished.bind(this), 1000); 
+          // this.$forceUpdate();
 
-          },
+          }/*,
           fetchPending: function(){
             
             var vm = this;
@@ -165,7 +186,7 @@
             vm.$http.get('/test').then(function(response){
               this.pendingtasks = [];
 
-              //$("#removepending").remove();
+              //for pending tasks
               $.each(response.body.pendings[0], function(key, value){
                 var firstname = key;
                 var values = value;
@@ -173,9 +194,12 @@
                 vm.pendingtasks.push({"name": firstname.split(" ")[0], "count": value});
 
               });
+
+          
+
             }); 
 
-            setTimeout(this.fetchPending.bind(this), 1000);      
+            //setTimeout(this.fetchPending.bind(this), 1000);      
           },
           fetchAll: function(){
             var vm = this;
@@ -184,18 +208,19 @@
               vm.allcounts = response.body.allcount;
             });
 
-            setTimeout(this.fetchAll.bind(this), 1000); 
+            //setTimeout(this.fetchAll.bind(this), 1000); 
           }
-      },
-      ready: function(){
+      },*/
+     /* ready: function(){
         this.fetchPending();
 
         setInterval(function(){
           this.fetchPending();
         }.bind(this), 1000)
 
-      }
-  });
+      }*/
+  }
+});
 
  
 </script>

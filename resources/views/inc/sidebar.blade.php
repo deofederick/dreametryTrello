@@ -38,7 +38,7 @@
 
                 <a href="{{ route('tasks') }}" class="list-group-item bg-dark textcolor d-inline-block collapsed" data-parent="#sidebar"><i class="fa fa-tasks"></i> <span class="hidden-sm-down">My Task</span></a>
                 <a href="{{ route('regb') }}" class="list-group-item bg-dark textcolor d-inline-block collapsed" data-parent="#sidebar"><i class="fa fa-clipboard"></i> <span class="hidden-sm-down">Board Registration</span></a>
-                <a href="#" class="list-group-item bg-dark textcolor d-inline-block collapsed" data-parent="#sidebar"><i class="fa fa-file-text"></i> <span class="hidden-sm-down">Reports</span></a>
+                <a href="{{ route('taskreport') }}" class="list-group-item bg-dark textcolor d-inline-block collapsed" data-parent="#sidebar"><i class="fa fa-file-text"></i> <span class="hidden-sm-down">Reports</span></a>
 
                 <!--
                 <a href="#" class="list-group-item bg-dark d-inline-block collapsed" data-parent="#sidebar"><i class="fa fa-heart"></i> <span class="hidden-sm-down">My Task</span></a>
