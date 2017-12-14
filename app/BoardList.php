@@ -13,4 +13,6 @@ class BoardList extends Model
     public function board(){
         return $this->belongsTo('App\Board');
     }
+
+    
 }
