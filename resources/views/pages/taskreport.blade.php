@@ -106,15 +106,6 @@
                      vm.$http.get(page_url).then(function(response){
                       var tasks = response.data.sample;
                       vm.tasks = response.data.sample.data;
-                      
-                      
-                      vm.pagination = {
-                        "current_page": response.data.sample.current_page,
-                        "last_page": response.data.sample.last_page,
-                        "next_page_url": response.data.sample.next_page_url,
-                        "prev_page_url": response.data.sample.prev_page_url
-                      }
-                      console.log(vm.pagination);
                       vm.loading = false;
 
                     //console.log(response.data.unRegBoards[0]);

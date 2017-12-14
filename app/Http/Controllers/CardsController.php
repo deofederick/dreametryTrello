@@ -83,8 +83,8 @@ class CardsController extends Controller
                                 }           
                             }
                         }
-                        }
-                    }      
+                    }
+                }      
             }
         }
 //saving
@@ -158,17 +158,24 @@ class CardsController extends Controller
             foreach ((array)$cards as $card) {
                 if(is_array($card)){
                 foreach ((array)$card['idMembers'] as $member) {
-                    if($user->trelloId == $member){
-                        if($card['idList'] == $todo->list_id){
-                            array_push($pending, $user->name);
+                    $action_url = 'https://api.trello.com/1/cards/'.$card['id'].'/actions?key='.$key.'&token='.$token;
+                    $actionresponse = Curl::to($action_url)->get();
+                    $actions = json_decode($actionresponse, TRUE);
+                    foreach ((array)$actions as $action) {
+                        if($user->trelloId == $member){
+                            if($action['type']=='commentCard'){
+                                if(strpos( $action['data']['text'], "Working on" ) !== false && $action['memberCreator']['id'] == $member){
+                                    array_push($pending, $user->name);
+                                    \Log::info($card['name']);
+                                }
+                            }
                         }
                     }
-                }
                 }
             }
         }
     }
-
+ }
     foreach ($users as $user) {
         foreach ($review_list as $review) {
             $cards_url = 'https://api.trello.com/1/lists/'.$review->list_id.'/cards?key='.$key.'&token='.$token.'&fields=name,idList,idMembers,url';
@@ -178,15 +185,15 @@ class CardsController extends Controller
                 if(is_array($card)){
                 foreach ((array)$card['idMembers'] as $member) {
                     if($user->trelloId == $member){
-                        if($card['idList'] == $review->list_id){
+                        \Log::info($card['name']);
                             array_push($pending, $user->name);
-                        }
+                        
                     }
-                }
                 }
             }
         }
     }
+}
 
     //revisio        
             
@@ -202,9 +209,7 @@ class CardsController extends Controller
 
 
         foreach ($sample as $key => $value) {
-               if($ucard = Card::where('card_id','=', $value['cardid'])->where('user_id', '=', $value['userid'])->exists()){
-                   
-                   
+               if($ucard = Card::where('card_id','=', $value['cardid'])->where('user_id', '=', $value['userid'])->exists()){ 
                 }
                 else{
                     $c = new Card;
@@ -223,13 +228,7 @@ class CardsController extends Controller
         
         $daily = DB::table("cards")->join('users', 'user_id','=','users.trelloId')->select(DB::raw("users.name"), DB::raw('SUM(CASE WHEN cards.date_finished = CURDATE() THEN 1 ELSE 0 END) AS daily_count'), DB::raw('SUM(CASE WHEN month(cards.date_finished) = month(CURDATE()) and year(cards.date_finished) = year(CURDATE())  THEN 1 ELSE 0 END) AS monthly_count'), DB::raw('SUM(CASE WHEN weekofyear(cards.date_finished) = weekofyear(now()) THEN 1 ELSE 0 END) AS weekly_count'))->groupBy(DB::raw("user_id, users.name"))->get();
         $allcount = DB::table("cards")->select(DB::raw('SUM(CASE WHEN date_finished = CURDATE() THEN 1 ELSE 0 END) AS daily_count'), DB::raw('SUM(CASE WHEN month(date_finished) = month(CURDATE()) and year(cards.date_finished) = year(CURDATE())  THEN 1 ELSE 0 END) AS monthly_count'), DB::raw('SUM(CASE WHEN weekofyear(date_finished) = weekofyear(now()) THEN 1 ELSE 0 END) AS weekly_count'))->get();
-
-        $dailyarray[] ='';
-        $dailyarray = (json_encode($daily));
-        $pendingarray[] ='';
-        $pendingarray = json_decode(json_encode($pendings), True);
-        $allcountarray[] ='';
-        $allcountarray = json_decode(json_encode($allcount), True);        
+    
 
         $alldata = array(
             'daily' => $daily,
@@ -384,7 +383,7 @@ class CardsController extends Controller
                         if($user->trelloId == $member){
                             if($card['idList'] == $todo->list_id){
                                 if($action['type'] == 'commentCard'){
-                                    if($action['data']['text'] == 'Working on it.'){
+                                    if(strpos( $action['data']['text'], "Working on" ) !== false && $action['memberCreator']['id'] == $member){
                                         $listid = boardList::where('list_id', '=', $card['idList'])->first();
                                         $sample[] = array(
                                         'cardid' => $card['id'],
@@ -412,7 +411,7 @@ class CardsController extends Controller
         $actions = json_decode($actionresponse, TRUE);
             foreach ((array)$actions as $action){
                 if($action['type'] == 'commentCard'){
-                    if($action['data']['text'] == 'Working on it.'){
+                    if(strpos( $action['data']['text'], "Working on" ) !== false && $action['memberCreator']['id'] == $member){
                               $c = Card::where('card_id', '=', $cq['card_id'])->first();
                               $c->date_started = Carbon::parse($action['date']);
                               $c->save();
@@ -567,7 +566,7 @@ class CardsController extends Controller
     
 
     $groups = array();
-    $result = '';
+  /*  $result = '';
         foreach ($tasks as $data) {
           $id = $data['label'];
           if (isset($result[$id])) {
@@ -575,10 +574,10 @@ class CardsController extends Controller
           } else {
              $result[$id] = array($data);
           }
-        }
+        }*/
      
     \Log::info($all);
-    ksort($result);
+    //ksort($result);
     $all=[
         'count' => $count,
         'unlabeled' => $unlabeled,
