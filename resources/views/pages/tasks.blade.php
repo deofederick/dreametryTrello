@@ -13,7 +13,7 @@
                     <p class="card-text">items</p>
                   </div>
               
-                <div class="loader justify-content-center" v-show="loading"></div>
+                <div class="loader justify-content-center" v-show="loading1"></div>
                   <ul class="list-group list-group-flush">
                     <li class="list-group-item" v-cloak v-for="task in tasks">
                       <a :href="task.url">
@@ -36,10 +36,10 @@
                   <p class="card-text">items</p>
                 </div>
                 
-                <div class="d-flex justify-content-center loader" v-show="loading"></div>
+                <div class="d-flex justify-content-center loader" id="loading" v-show="loading2"></div>
                 
                  <ul class="list-group list-group-flush">
-                    <li class="list-group-item" v-cloak v-for="pending in pendings">
+                    <li class="list-group-item" id="pendinglist" v-cloak v-for="pending in pendings">
                       <p :class="pending.label">@{{pending.card_name}}</br>
                       <small class="text-muted">@{{pending.date_action}}</small></br>
                       <span :class="pending.status">@{{pending.statusname}}</span>
@@ -61,7 +61,8 @@
                 return{
                       count:'',
                       pcount:'',
-                      loading: false,
+                      loading1: false,
+                       loading2: false,
                       tasks:[],
                       pendings:[]
                       }
@@ -73,7 +74,9 @@
               }, methods:{
                   getalltasks: function(){
                     var vm = this;
-                    vm.loading = true;
+                    vm.loading1 = true;
+                    vm.loading2 = true;
+
                  console.log('revisions');
                     
                     
@@ -116,7 +119,7 @@
                     })
                     vm.pcount = vm.pendings.length;  
                    
-                   vm.loading = false;
+                   vm.loading1 = false;
                     }).catch(function(error){
 
                     });
@@ -141,9 +144,9 @@
                
                     })
                      vm.pcount = vm.pendings.length;  
-                    vm.loading = false;
+                   
                       console.log("ok2");
-                    
+                     vm.loading2 = false;
                     }).catch(function(error){
 
                     });                   
@@ -163,8 +166,8 @@
 
 <script type="text/javascript">
           var time = setInterval(function(){
-            if($('#unregli').length){
-              $('#unregload').hide();
+            if($('#pendinglist').length){
+              $('#loading').hide();
               clearInterval(time);
             }
           }, 500)

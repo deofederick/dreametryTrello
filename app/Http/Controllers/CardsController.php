@@ -43,7 +43,6 @@ class CardsController extends Controller
         $done_list = boardList::where('status_id','=',$done)->get();
         $review_list = boardList::where('status_id','=',$review)->get();
         $todo_list = boardList::where('status_id','=',$todo)->get();
-        $pending_list = boardList::where('status_id','=',$todo)->orWhere('status_id','=',$review)->get();
         $users = User::all();
 
         $startweek = self::getDay('Monday')->format('Y-m-d');
@@ -52,42 +51,52 @@ class CardsController extends Controller
         $allcards = Card::all();
         $finished =[];
 
-        $pending = [];
+        $allpending = [];
         $sample = [];
 
         $pendingTasks = BoardList::where('status_id', 1)->orWhere('status_id', 2)->get();
         
-            foreach ($users as $user){
 
+    foreach ($users as $user){
                 $usercount = 0;
-
                 foreach($pendingTasks as $pendingtask){
                     $cards_url = 'https://api.trello.com/1/lists/'.$pendingtask->list_id.'/cards?key='.$key.'&token='.$token.'&fields=name,idList,idMembers,url';
                     $cardresponse = Curl::to($cards_url)->get();
                     $cards = json_decode($cardresponse, TRUE);
-                    foreach ($cards as $card) {
+                    foreach ((array)$cards as $card) {    
                         foreach ($card['idMembers'] as $member){
+                        $action_url = 'https://api.trello.com/1/cards/'.$card['id'].'/actions?key='.$key.'&token='.$token;
+                        $actionresponse = Curl::to($action_url)->get();
+                        $actions = json_decode($actionresponse, TRUE);
                             if ($user['trelloId'] == $member) {
-                                $usercount++;
+                                 if($pendingtask->status_id == 1){
+                                    foreach ((array)$actions as $action) {
+                                        if($action['type']=='commentCard'){
+                                            if(strpos( $action['data']['text'], "Working on" ) !== false && $action['memberCreator']['id'] == $member){
+                                            \Log::info($card['id'].'-'.$card['name'].'1');
+                                            $usercount++;
+                                            }
+                                        }
+                                    }
+                                        
+                                    }
+                                    else if($pendingtask->status_id == 2){
+                                        \Log::info($card['id'].'-'.$card['name'].'2');
+                                        $usercount++;    
+                                    }
+                                }   
                             }
-                        }
-                        
-                    }
-                }
-                $pending[] = array(
+                        }            
+                    
+                }     
+                
+                $allpending[] = array(
                         'name' => $user['name'],
                         'count' => $usercount
                     );  
-
-                
-
             }
 
-        
-       // return $pending;
-
     //get all cards -need to uncomment
-/* 
         foreach ($users as $user) {
             foreach ($done_list as $done) {
                     $cards_url = 'https://api.trello.com/1/lists/'.$done->list_id.'/cards?key='.$key.'&token='.$token.'&fields=name,idList,idMembers,url';
@@ -119,7 +128,26 @@ class CardsController extends Controller
                 }      
             }
         }
- */
+         foreach ($sample as $key => $value) { 
+               if($ucard = Card::where('card_id','=', $value['cardid'])->where('user_id', '=', $value['userid'])->exists()){
+                   //\Log::info('existing'.'-'.$value['cardid']);
+                }
+                else{
+                    $c = new Card;
+                    $c->card_id = $value['cardid'];
+                    $c->card_name = $value['cardname'];
+                    $c->date_finished = Carbon::parse($value['date_finished']);
+                    $c->user_id = $value['userid'];
+                    $c->list_id = $value['listid'];
+                    $c->status = $value['status'];
+                    $c->date_started = Carbon::now();
+                    $c->url = $value['url'];
+                    $c->save();
+                   //\Log::info('saved'.'-'.$value['cardid']);
+                }
+        }
+
+
 
 //saving
         
@@ -249,64 +277,33 @@ class CardsController extends Controller
         }
     }
 }
-    }*/ 
+    }*/
     //revisio        
-            
-        $test[]='';
-        $pendings[]='';
-        $weeklys[] = '';
-        //$weeklys = array(array_count_values($weekly));
-        $monthlys[] = '';
         //$monthlys = array(array_count_values($monthly));
      //   $pendings = array(array_count_values($pending));
      //   $test=array(array_count_values($finished));
       //  \Log::info($pendings);
 
-/* 
-        foreach ($sample as $key => $value) {
-               if($ucard = Card::where('card_id','=', $value['cardid'])->where('user_id', '=', $value['userid'])->exists()){ 
-               if($ucard = Card::where('card_id','=', $value['cardid'])->where('user_id', '=', $value['userid'])->exists()){
-                   //\Log::info('existing'.'-'.$value['cardid']);
-                }
-                else{
-                    $c = new Card;
-                    $c->card_id = $value['cardid'];
-                    $c->card_name = $value['cardname'];
-                    $c->date_finished = Carbon::parse($value['date_finished']);
-                    $c->user_id = $value['userid'];
-                    $c->list_id = $value['listid'];
-                    $c->status = $value['status'];
-                    $c->date_started = Carbon::now();
-                    $c->url = $value['url'];
-                    $c->save();
-                   //\Log::info('saved'.'-'.$value['cardid']);
-                }
-        } */
-   /*      
+ 
+       
+         
         $daily = DB::table("cards")->join('users', 'user_id','=','users.trelloId')->select(DB::raw("users.name"), DB::raw('SUM(CASE WHEN cards.date_finished = CURDATE() THEN 1 ELSE 0 END) AS daily_count'), DB::raw('SUM(CASE WHEN month(cards.date_finished) = month(CURDATE()) and year(cards.date_finished) = year(CURDATE())  THEN 1 ELSE 0 END) AS monthly_count'), DB::raw('SUM(CASE WHEN weekofyear(cards.date_finished) = weekofyear(now()) THEN 1 ELSE 0 END) AS weekly_count'))->groupBy(DB::raw("user_id, users.name"))->get();
         $allcount = DB::table("cards")->select(DB::raw('SUM(CASE WHEN date_finished = CURDATE() THEN 1 ELSE 0 END) AS daily_count'), DB::raw('SUM(CASE WHEN month(date_finished) = month(CURDATE()) and year(cards.date_finished) = year(CURDATE())  THEN 1 ELSE 0 END) AS monthly_count'), DB::raw('SUM(CASE WHEN weekofyear(date_finished) = weekofyear(now()) THEN 1 ELSE 0 END) AS weekly_count'))->get();
     
 
-        $alldata = array(
-            'daily' => $daily,
-            'allcount' => $allcount,
-            'pendings' => $pendings,
-        );
+    $alldata =array(
+        'daily' => $daily,
+        'allcount' =>$allcount,
+        'pending' => $allpending
+        );       
 
-         */
-        /*$otherdata[] = array(
-            'pendings' => $pendings,
-            'alldaily' => $dailytotal,
-            'allweekly' => $weeklytotal,
-            'allmonthly' => $monthlytotal,
-        );*/
-
-        
-        return $alldata;
-
+    return $alldata;
+    }
+}
         //return view('trello.counter')->with('alldata',$alldata);
         /*return view('trello.counter')->with('finished',$daily)->with('pendings', $pendings)->with('weeklys', $weekly)->with('monthlys',$monthly);
-*/
+
+        return $pending;
         }
 
     }
