@@ -37,7 +37,7 @@
                 
                 <div class="col-md-3" id="countercards"  v-for="(finished, index) in finishedtoday" :key="index">
 
-                  <div class="card" id="removefinished">
+                  <div class="card">
                     <div class="card-header" id="name"><small>@{{ finished.name }}</small></div>
                     <div class="card-text"><h1>@{{finished.count}}</h1></div>
                   </div>
@@ -63,7 +63,7 @@
             
             
               <div class="col-md-3" id="countercards" v-for="(pending, index) in pendingtasks"  :key="index">
-                <div class="card" id="removepending">
+                <div class="card">
                   <div class="card-header"><small>@{{ pending.name }}</small></div>
                   <div class="card-text"><h1>@{{ pending.count }}</h1></div>
                 </div>
@@ -141,8 +141,9 @@
              this.pendingtasks = [];
           
               var name = response.body.daily;
+              var name2 = response.body.pending;
               vm.tablecounts = name;
-
+              console.log('test1')
               //for finsihed today
               name.forEach(function(key, value){
                 var count = key.daily_count;
@@ -151,16 +152,28 @@
                 finishedtodays.push({"name": name.split(" ")[0], "count": count});
 
               });
-
-              //for pending tasks
-              $.each(response.body.pendings[0], function(key, value){
+              console.log('test2')
+              //for pendingng tasks
+             /* $.each(response.body.pendings[0], function(key, value){
                 var firstname = key;
                 var values = value;
                 //console.log('pending')
                 pendingsss.push({"name": firstname.split(" ")[0], "count": value});
                // console.log(finishedtodays)
-
               });
+               */
+
+               name2.forEach(function(key, value){
+                var firstname = key.name
+                var count = key.count
+
+                pendingsss.push({"name": firstname.split(" ")[0], "count": count});
+
+               });
+
+
+
+              
               vm.finishedtoday = finishedtodays;
               vm.pendingtasks = pendingsss;
               //for fetching all

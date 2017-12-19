@@ -63,15 +63,16 @@ class CardsController extends Controller
                     $cards_url = 'https://api.trello.com/1/lists/'.$pendingtask->list_id.'/cards?key='.$key.'&token='.$token.'&fields=name,idList,idMembers,url';
                     $cardresponse = Curl::to($cards_url)->get();
                     $cards = json_decode($cardresponse, TRUE);
-                    foreach ((array)$cards as $card) {    
-                        foreach ($card['idMembers'] as $member){
+                    foreach ((array)$cards as $card) {
+                    if(is_array($card)){   
+                        foreach ((array)$card['idMembers'] as $member){
                         $action_url = 'https://api.trello.com/1/cards/'.$card['id'].'/actions?key='.$key.'&token='.$token;
                         $actionresponse = Curl::to($action_url)->get();
                         $actions = json_decode($actionresponse, TRUE);
                             if ($user['trelloId'] == $member) {
                                  if($pendingtask->status_id == 1){
                                     foreach ((array)$actions as $action) {
-                                        if($action['type']=='commentCard'){
+                                        if(is_array($action) && $action['type']=='commentCard'){
                                             if(strpos( $action['data']['text'], "Working on" ) !== false && $action['memberCreator']['id'] == $member){
                                             \Log::info($card['id'].'-'.$card['name'].'1');
                                             $usercount++;
@@ -86,6 +87,7 @@ class CardsController extends Controller
                                     }
                                 }   
                             }
+                        }
                         }            
                     
                 }     
