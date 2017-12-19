@@ -13114,7 +13114,7 @@ body {
   transition: opacity .3s, transform .3s, -webkit-transform .3s;
   -webkit-animation: pulse-animation 2s cubic-bezier(0.24, 0, 0.38, 1) 1;
           animation: pulse-animation 2s cubic-bezier(0.24, 0, 0.38, 1) 1;
-  z-index: -1;
+  z-index: 99999;
 }
 
 @-webkit-keyframes pulse-animation {

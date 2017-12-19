@@ -35,9 +35,9 @@
               <div class="card-header bg-success text-white">FINISHED TODAY</div>
                 <div class="container row justify-content-center text-center" id="app">
                 
-                <div class="col-md-3" id="countercards"  v-for="(finished, index) in finishedtoday" :key="index">
+                <div class="col-md-3" id="countercards"  v-for="(finished, index) in finishedtoday">
 
-                  <div class="card">
+                  <div class="pulse card" v-bind:id="'finish' + (index + 1)">
                     <div class="card-header" id="name"><small>@{{ finished.name }}</small></div>
                     <div class="card-text"><h1>@{{finished.count}}</h1></div>
                   </div>
@@ -62,10 +62,10 @@
             <div class="container row justify-content-center text-center" id="app2" >
             
             
-              <div class="col-md-3" id="countercards" v-for="(pending, index) in pendingtasks"  :key="index">
-                <div class="card">
+              <div class="col-md-3" id="countercards" v-for="(pending, index) in pendingtasks">
+                <div class="pulse card" v-bind:id="'task' + (index + 1)">
                   <div class="card-header"><small>@{{ pending.name }}</small></div>
-                  <div class="card-text"><h1>@{{ pending.count }}</h1></div>
+                  <div class="card-text" contenteditable="true"><h1>@{{ pending.count }}</h1></div>
                 </div>
               </div>
           
@@ -124,7 +124,8 @@
       },
 
       mounted: function(){
-         this.fetchFinished()
+         this.fetchFinished(),
+         this.animate()
           /*this.fetchPending(),
           this.fetchAll()*/
           
@@ -191,7 +192,28 @@
            setTimeout(this.fetchFinished.bind(this), 1000); 
           // this.$forceUpdate();
 
-          }/*,
+          },
+          animate: function(){
+
+             $("div").on('DOMSubtreeModified', ".card-text", function()
+                      {
+
+                          var id =  $(this).parents(".pulse").attr('id');
+                          console.log(id);
+                          $('#'+id).addClass('pulse-active')
+                          setTimeout(function(){ $('#'+id).removeClass('pulse-active') }, 1000)
+                         // self.isActive = true;
+
+                         // setTimeout(function(){ self.isActive = false; }, 1000);
+                           $('#'+id).addClass('pulse-active')
+                          setTimeout(function(){ $('#'+id).removeClass('pulse-active') }, 1000)
+
+                      })
+
+          }
+
+
+          /*,
           fetchPending: function(){
             
             var vm = this;
