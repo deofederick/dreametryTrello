@@ -75,6 +75,7 @@ class CardsController extends Controller
                                     foreach ((array)$actions as $action) {
                                         if(isset($action['type'])){
                                         if($action['type']=='commentCard'){
+                                        if(is_array($action) && $action['type']=='commentCard'){
                                             if(strpos( $action['data']['text'], "Working on" ) !== false && $action['memberCreator']['id'] == $member){
                                             \Log::info($card['id'].'-'.$card['name'].'1');
                                             $usercount++;
@@ -84,6 +85,7 @@ class CardsController extends Controller
                                     }
                                         
                                 }
+                            }
                                     else if($pendingtask->status_id == 2){
                                         \Log::info($card['id'].'-'.$card['name'].'2');
                                         $usercount++;    
@@ -97,6 +99,8 @@ class CardsController extends Controller
                     }
                 }            
             }     
+                        }            
+                         
                 
                 $allpending[] = array(
                         'name' => $user['name'],
