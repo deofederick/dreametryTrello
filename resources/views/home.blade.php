@@ -153,7 +153,7 @@
               });
 
               //for pending tasks
-              $.each(response.body.pendings[0], function(key, value){
+              $.each(response.body.pending[0], function(key, value){
                 var firstname = key;
                 var values = value;
                 //console.log('pending')
@@ -300,5 +300,6 @@
       }
     });
 </script> -->
+<script type="text/javascript"></script>
 
 @endsection

@@ -13,7 +13,7 @@
                     <p class="card-text">items</p>
                   </div>
               
-                <div class="loader justify-content-center" v-show="loading1"></div>
+                <div class="loader justify-content-center" v-show="loading"></div>
                   <ul class="list-group list-group-flush">
                     <li class="list-group-item" v-cloak v-for="task in tasks">
                       <a :href="task.url">
@@ -36,10 +36,10 @@
                   <p class="card-text">items</p>
                 </div>
                 
-                <div class="d-flex justify-content-center loader" id="loading" v-show="loading2"></div>
+                <div class="d-flex justify-content-center loader" v-show="loading"></div>
                 
                  <ul class="list-group list-group-flush">
-                    <li class="list-group-item" id="pendinglist" v-cloak v-for="pending in pendings">
+                    <li class="list-group-item" v-cloak v-for="pending in pendings">
                       <p :class="pending.label">@{{pending.card_name}}</br>
                       <small class="text-muted">@{{pending.date_action}}</small></br>
                       <span :class="pending.status">@{{pending.statusname}}</span>
@@ -61,8 +61,7 @@
                 return{
                       count:'',
                       pcount:'',
-                      loading1: false,
-                       loading2: false,
+                      loading: false,
                       tasks:[],
                       pendings:[]
                       }
@@ -74,8 +73,7 @@
               }, methods:{
                   getalltasks: function(){
                     var vm = this;
-                    vm.loading1 = true;
-                    vm.loading2 = true;
+                    vm.loading = true;
 
                  console.log('revisions');
                     
@@ -119,7 +117,7 @@
                     })
                     vm.pcount = vm.pendings.length;  
                    
-                   vm.loading1 = false;
+                   vm.loading = false;
                     }).catch(function(error){
 
                     });
@@ -132,6 +130,7 @@
                       var unlabeled = response.data.unlabeled;
                       
                       console.log(unlabeled);
+                       console.log('1');
                       labeled.forEach(function(value, id){
 
                     vm.pendings.push({"label": "card-text notice notice-"+value.label.toLowerCase(), "card_name": value.card_name, "date_action": value.date_action, "url": value.url,  "status": "badge badge-revision", "statusname": "With Revisions"})
@@ -144,9 +143,9 @@
                
                     })
                      vm.pcount = vm.pendings.length;  
-                   
+                     vm.loading = false;
                       console.log("ok2");
-                     vm.loading2 = false;
+                   
                     }).catch(function(error){
 
                     });                   
@@ -164,22 +163,6 @@
         </script>
 
 
-<script type="text/javascript">
-          var time = setInterval(function(){
-            if($('#pendinglist').length){
-              $('#loading').hide();
-              clearInterval(time);
-            }
-          }, 500)
-
-          var time2 = setInterval(function(){
-            if($('#regli').length){
-              $('#regload').hide();
-              clearInterval(time2);
-            }
-          }, 500)
-
-        </script>
 
         
 @endsection

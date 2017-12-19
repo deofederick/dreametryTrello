@@ -117,7 +117,7 @@ function addObject(id){
     }
 $(document).ready(function () {
         getUsername();
-       get();
+      
     });
 
    
