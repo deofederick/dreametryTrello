@@ -83,7 +83,6 @@ class CardsController extends Controller
                                             }
                                         }
                                     }
-                                        
                                 }
                             }
                                     else if($pendingtask->status_id == 2){
@@ -98,10 +97,7 @@ class CardsController extends Controller
 
                     }
                 }            
-            }     
-                        }            
-                         
-                
+            }                 
                 $allpending[] = array(
                         'name' => $user['name'],
                         'count' => $usercount
@@ -160,6 +156,20 @@ class CardsController extends Controller
                    //\Log::info('saved'.'-'.$value['cardid']);
                 }
         }
+
+
+        $daily = DB::table("cards")->join('users', 'user_id','=','users.trelloId')->select(DB::raw("users.name"), DB::raw('SUM(CASE WHEN cards.date_finished = CURDATE() THEN 1 ELSE 0 END) AS daily_count'), DB::raw('SUM(CASE WHEN month(cards.date_finished) = month(CURDATE()) and year(cards.date_finished) = year(CURDATE())  THEN 1 ELSE 0 END) AS monthly_count'), DB::raw('SUM(CASE WHEN weekofyear(cards.date_finished) = weekofyear(now()) THEN 1 ELSE 0 END) AS weekly_count'))->groupBy(DB::raw("user_id, users.name"))->get();
+        $allcount = DB::table("cards")->select(DB::raw('SUM(CASE WHEN date_finished = CURDATE() THEN 1 ELSE 0 END) AS daily_count'), DB::raw('SUM(CASE WHEN month(date_finished) = month(CURDATE()) and year(cards.date_finished) = year(CURDATE())  THEN 1 ELSE 0 END) AS monthly_count'), DB::raw('SUM(CASE WHEN weekofyear(date_finished) = weekofyear(now()) THEN 1 ELSE 0 END) AS weekly_count'))->get();
+    
+
+    $alldata =array(
+        'daily' => $daily,
+        'allcount' =>$allcount,
+        'pending' => $allpending
+        );       
+
+    return $alldata;
+    }
 
 
 
@@ -300,22 +310,10 @@ class CardsController extends Controller
 
  
        
-         
-        $daily = DB::table("cards")->join('users', 'user_id','=','users.trelloId')->select(DB::raw("users.name"), DB::raw('SUM(CASE WHEN cards.date_finished = CURDATE() THEN 1 ELSE 0 END) AS daily_count'), DB::raw('SUM(CASE WHEN month(cards.date_finished) = month(CURDATE()) and year(cards.date_finished) = year(CURDATE())  THEN 1 ELSE 0 END) AS monthly_count'), DB::raw('SUM(CASE WHEN weekofyear(cards.date_finished) = weekofyear(now()) THEN 1 ELSE 0 END) AS weekly_count'))->groupBy(DB::raw("user_id, users.name"))->get();
-        $allcount = DB::table("cards")->select(DB::raw('SUM(CASE WHEN date_finished = CURDATE() THEN 1 ELSE 0 END) AS daily_count'), DB::raw('SUM(CASE WHEN month(date_finished) = month(CURDATE()) and year(cards.date_finished) = year(CURDATE())  THEN 1 ELSE 0 END) AS monthly_count'), DB::raw('SUM(CASE WHEN weekofyear(date_finished) = weekofyear(now()) THEN 1 ELSE 0 END) AS weekly_count'))->get();
-    
-
-    $alldata =array(
-        'daily' => $daily,
-        'allcount' =>$allcount,
-        'pending' => $allpending
-        );       
-
-    return $alldata;
     }
-}
+
         //return view('trello.counter')->with('alldata',$alldata);
-        /*return view('trello.counter')->with('finished',$daily)->with('pendings', $pendings)->with('weeklys', $weekly)->with('monthlys',$monthly);
+        /*return view('trello.c`    ounter')->with('finished',$daily)->with('pendings', $pendings)->with('weeklys', $weekly)->with('monthlys',$monthly);
 
         return $pending;
         }

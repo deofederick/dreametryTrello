@@ -154,17 +154,6 @@
               });
 
               //for pending tasks
-              $.each(response.body.pending[0], function(key, value){
-              console.log('test2')
-              //for pendingng tasks
-             /* $.each(response.body.pendings[0], function(key, value){
-                var firstname = key;
-                var values = value;
-                //console.log('pending')
-                pendingsss.push({"name": firstname.split(" ")[0], "count": value});
-               // console.log(finishedtodays)
-              });
-               */
 
                name2.forEach(function(key, value){
                 var firstname = key.name
@@ -173,28 +162,20 @@
                 pendingsss.push({"name": firstname.split(" ")[0], "count": count});
 
                });
-
-
-
-              
               vm.finishedtoday = finishedtodays;
               vm.pendingtasks = pendingsss;
               //for fetching all
               vm.allcounts = response.body.allcount;
 
-
-              console.log("Test run");
-
-
-            
+              console.log("Test run");            
 
             }).catch(function(error){
             });
 
            setTimeout(this.fetchFinished.bind(this), 1000); 
           // this.$forceUpdate();
-
-          }/*,
+          }
+        }/*,
           fetchPending: function(){
             
             var vm = this;
@@ -235,7 +216,6 @@
         }.bind(this), 1000)
 
       }*/
-  }
 });
 
  
