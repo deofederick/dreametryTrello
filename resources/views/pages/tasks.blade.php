@@ -36,7 +36,7 @@
                   <p class="card-text">items</p>
                 </div>
                 
-                <div class="d-flex justify-content-center loader" v-show="loading"></div>
+               
                 
                  <ul class="list-group list-group-flush">
                     <li class="list-group-item" v-cloak v-for="pending in pendings">
@@ -51,7 +51,20 @@
         </div>
     </div>
 </div>
+  <div class="zoom">
+  <a class="zoom-fab zoom-btn-large" id="zoomBtn"><span class="fa fa-info-circle"></span></a>
+  <ul class="zoom-menu">
+    <li><a class="zoom-fab zoom-btn-sm zoom-btn-l1 scale-transition scale-out text-white">L1</a></li>
+    <li><a class="zoom-fab zoom-btn-sm zoom-btn-l2 scale-transition scale-out text-white">L2</a></li>
+    <li><a class="zoom-fab zoom-btn-sm zoom-btn-l3 scale-transition scale-out text-white">L3</a></li>
+    <li><a class="zoom-fab zoom-btn-sm zoom-btn-l4 scale-transition scale-out text-white">L4</a></li>
+  </ul>
+ 
 </div>
+
+</div>
+
+
     <script src="js/app.js"></script>
 <script>
          new Vue({
@@ -143,7 +156,7 @@
                
                     })
                      vm.pcount = vm.pendings.length;  
-                     vm.loading = false;
+                   
                       console.log("ok2");
                    
                     }).catch(function(error){
@@ -161,6 +174,34 @@
 
          
         </script>
+
+    <script type="text/javascript">
+        $('#zoomBtn').click(function() {
+        $('.zoom-btn-sm').toggleClass('scale-out');
+        if (!$('.zoom-card').hasClass('scale-out')) {
+          $('.zoom-card').toggleClass('scale-out');
+        }
+      });
+
+      $('.zoom-btn-sm').click(function() {
+        var btn = $(this);
+        var card = $('.zoom-card');
+        if ($('.zoom-card').hasClass('scale-out')) {
+          $('.zoom-card').toggleClass('scale-out');
+        }
+        if (btn.hasClass('zoom-btn-person')) {
+          card.css('background-color', '#d32f2f');
+        } else if (btn.hasClass('zoom-btn-doc')) {
+          card.css('background-color', '#fbc02d');
+        } else if (btn.hasClass('zoom-btn-tangram')) {
+          card.css('background-color', '#388e3c');
+        } else if (btn.hasClass('zoom-btn-report')) {
+          card.css('background-color', '#1976d2');
+        } else {
+          card.css('background-color', '#7b1fa2');
+        }
+      });
+    </script>
 
 
 
