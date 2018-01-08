@@ -1,6 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
+@include('inc.loading')
+
 
 <div class="vueapp container" id="paddingtop">
   <div class="row justify-content-center" v-for="allcount in allcounts">
@@ -62,7 +64,7 @@
             <div class="container row justify-content-center text-center" id="app2" >
             
             
-              <div class="col-md-3" id="countercards" v-for="(pending, index) in pendingtasks">
+              <div class="col-md-3 tasksss" id="countercards" v-for="(pending, index) in pendingtasks">
                 <div class="pulse card" v-bind:id="'task' + (index + 1)">
                   <div class="card-header"><small>@{{ pending.name }}</small></div>
                   <div class="card-text" contenteditable="true"><h1>@{{ pending.count }}</h1></div>
@@ -135,12 +137,12 @@
             var vm = this;
             var finishedtodays = [];
             var pendingsss = [];
-
+          //console.log('test1')
            vm.$http.get('/test').then(function(response){
 
              this.finishedtoday = [];
              this.pendingtasks = [];
-          
+          console.log('test1')
               var name = response.body.daily;
               var name2 = response.body.pending;
               vm.tablecounts = name;
@@ -171,12 +173,19 @@
               console.log("Test run");
               
 
+              console.log("Test run");
+
+              //this.fetchFinished2();
+            
+              console.log("Test run");            
+
             }).catch(function(error){
             });
               //vm.fetchFinished2();            
 
            setTimeout(this.fetchFinished.bind(this), 5000);
            //setInterval(this.fetchFinished.bind(this), 10000); 
+     
           // this.$forceUpdate();
           },
 
@@ -197,6 +206,62 @@
 
                       })
 
+          }/*,
+
+           fetchFinished2: function(){
+           
+            var vm = this;
+            var finishedtodays = [];
+            var pendingsss = [];
+
+           vm.$http.get('/test').then(function(response){
+
+             this.finishedtoday = [];
+             this.pendingtasks = [];
+              console.log('test1')
+              var name = response.body.daily;
+              var name2 = response.body.pending;
+              vm.tablecounts = name;
+              console.log('test1')
+              //for finsihed today
+              name.forEach(function(key, value){
+                var count = key.daily_count;
+                var name = key.name
+
+                finishedtodays.push({"name": name.split(" ")[0], "count": count});
+
+              });
+              console.log('test2')
+
+               name2.forEach(function(key, value){
+                var firstname = key.name
+                var count = key.count
+
+                pendingsss.push({"name": firstname.split(" ")[0], "count": count});
+
+               });
+        
+              vm.finishedtoday = finishedtodays;
+              vm.pendingtasks = pendingsss;
+              //for fetching all
+              vm.allcounts = response.body.allcount;
+
+
+              console.log("Test run");
+
+              this.fetchFinished();
+
+            }).catch(function(error){
+            });
+
+
+           //setTimeout(this.fetchFinished.bind(this), 1000); 
+
+          }*/
+
+
+          /*,
+          fetchPending: function(){
           },
             //setTimeout(this.fetchFinished.bind(this), 1000);
            //setInterval(this.fetchFinished.bind(this), 10000); 
@@ -333,5 +398,15 @@ $( document ).ajaxSuccess(function() {
     });
 </script> -->
 <script type="text/javascript"></script>
+
+<script type="text/javascript">
+  var time = setInterval(function(){
+    if($('.taksss').length){
+      $('#loading-wrapper').hide();
+      clearInterval(time);
+    }
+  }, 1000)
+
+</script>
 
 @endsection

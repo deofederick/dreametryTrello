@@ -31,6 +31,7 @@ Route::get('/pulse', function () {
 });
 
 
+
 Route::resource('registerlist', 'ListsController');
 
 Auth::routes();

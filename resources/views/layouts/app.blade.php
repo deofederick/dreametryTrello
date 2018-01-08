@@ -24,7 +24,7 @@
 
 
 </head>
-<body>
+<body class="test">
   <script>
 
         function logout() {
@@ -37,6 +37,7 @@
     </script>
     <div>
         @include('inc.navbar')
+        @include('inc.loading')
         <div>
             @include('inc.message')
         </div>
