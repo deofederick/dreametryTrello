@@ -26,7 +26,9 @@ Route::get('/taskreport', 'PagesController@taskreport')->name('taskreport');
 
 Route::get('/setup', 'PagesController@setuplist')->name('setup');
 
-
+Route::get('/pulse', function () {
+    return view('pages.samplepulse');
+});
 
 
 

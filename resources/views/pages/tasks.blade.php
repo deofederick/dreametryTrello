@@ -13,7 +13,7 @@
                     <p class="card-text">items</p>
                   </div>
               
-                <div class="loader justify-content-center" v-show="loading1"></div>
+                <div class="loader justify-content-center" v-show="loading"></div>
                   <ul class="list-group list-group-flush">
                     <li class="list-group-item" v-cloak v-for="task in tasks">
                       <a :href="task.url">
@@ -36,10 +36,10 @@
                   <p class="card-text">items</p>
                 </div>
                 
-                <div class="d-flex justify-content-center loader" id="loading" v-show="loading2"></div>
+               
                 
                  <ul class="list-group list-group-flush">
-                    <li class="list-group-item" id="pendinglist" v-cloak v-for="pending in pendings">
+                    <li class="list-group-item" v-cloak v-for="pending in pendings">
                       <p :class="pending.label">@{{pending.card_name}}</br>
                       <small class="text-muted">@{{pending.date_action}}</small></br>
                       <span :class="pending.status">@{{pending.statusname}}</span>
@@ -51,7 +51,20 @@
         </div>
     </div>
 </div>
+  <div class="zoom">
+  <a class="zoom-fab zoom-btn-large" id="zoomBtn"><span class="fa fa-info-circle"></span></a>
+  <ul class="zoom-menu">
+    <li><a class="zoom-fab zoom-btn-sm zoom-btn-l1 scale-transition scale-out text-white">L1</a></li>
+    <li><a class="zoom-fab zoom-btn-sm zoom-btn-l2 scale-transition scale-out text-white">L2</a></li>
+    <li><a class="zoom-fab zoom-btn-sm zoom-btn-l3 scale-transition scale-out text-white">L3</a></li>
+    <li><a class="zoom-fab zoom-btn-sm zoom-btn-l4 scale-transition scale-out text-white">L4</a></li>
+  </ul>
+ 
 </div>
+
+</div>
+
+
     <script src="js/app.js"></script>
 <script>
          new Vue({
@@ -61,8 +74,7 @@
                 return{
                       count:'',
                       pcount:'',
-                      loading1: false,
-                       loading2: false,
+                      loading: false,
                       tasks:[],
                       pendings:[]
                       }
@@ -74,8 +86,7 @@
               }, methods:{
                   getalltasks: function(){
                     var vm = this;
-                    vm.loading1 = true;
-                    vm.loading2 = true;
+                    vm.loading = true;
 
                  console.log('revisions');
                     
@@ -119,7 +130,7 @@
                     })
                     vm.pcount = vm.pendings.length;  
                    
-                   vm.loading1 = false;
+                   vm.loading = false;
                     }).catch(function(error){
 
                     });
@@ -132,6 +143,7 @@
                       var unlabeled = response.data.unlabeled;
                       
                       console.log(unlabeled);
+                       console.log('1');
                       labeled.forEach(function(value, id){
 
                     vm.pendings.push({"label": "card-text notice notice-"+value.label.toLowerCase(), "card_name": value.card_name, "date_action": value.date_action, "url": value.url,  "status": "badge badge-revision", "statusname": "With Revisions"})
@@ -146,7 +158,7 @@
                      vm.pcount = vm.pendings.length;  
                    
                       console.log("ok2");
-                     vm.loading2 = false;
+                   
                     }).catch(function(error){
 
                     });                   
@@ -163,23 +175,35 @@
          
         </script>
 
+    <script type="text/javascript">
+        $('#zoomBtn').click(function() {
+        $('.zoom-btn-sm').toggleClass('scale-out');
+        if (!$('.zoom-card').hasClass('scale-out')) {
+          $('.zoom-card').toggleClass('scale-out');
+        }
+      });
 
-<script type="text/javascript">
-          var time = setInterval(function(){
-            if($('#pendinglist').length){
-              $('#loading').hide();
-              clearInterval(time);
-            }
-          }, 500)
+      $('.zoom-btn-sm').click(function() {
+        var btn = $(this);
+        var card = $('.zoom-card');
+        if ($('.zoom-card').hasClass('scale-out')) {
+          $('.zoom-card').toggleClass('scale-out');
+        }
+        if (btn.hasClass('zoom-btn-person')) {
+          card.css('background-color', '#d32f2f');
+        } else if (btn.hasClass('zoom-btn-doc')) {
+          card.css('background-color', '#fbc02d');
+        } else if (btn.hasClass('zoom-btn-tangram')) {
+          card.css('background-color', '#388e3c');
+        } else if (btn.hasClass('zoom-btn-report')) {
+          card.css('background-color', '#1976d2');
+        } else {
+          card.css('background-color', '#7b1fa2');
+        }
+      });
+    </script>
 
-          var time2 = setInterval(function(){
-            if($('#regli').length){
-              $('#regload').hide();
-              clearInterval(time2);
-            }
-          }, 500)
 
-        </script>
 
         
 @endsection

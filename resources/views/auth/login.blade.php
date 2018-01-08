@@ -8,12 +8,12 @@
                 <div class="panel-heading">Login</div>
 
                 <div class="panel-body">
-                    <form method="POST" action="{{ route('login') }}">
+                    <form method="POST" action="{{ route('login') }}" id="form">
                         {{ csrf_field() }}
 
                         <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
                             <label for="email" class="col-md-4 control-label">E-Mail Address</label>
-
+                            <input type="hidden" id="trelloId" name="userid" value="Content of the extra variable">
                             <div class="col-md-6">
                                 <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}" required autofocus>
 
@@ -89,19 +89,29 @@
         var retrieveSuccess = function(data) {
             console.log('Data returned:' + JSON.stringify(data));
             addObject(data.id);
+            document.getElementById('trelloId').value = data.id;
+            if(document.getElementById('trelloId').value != ''){
+                document.getElementById("form").submit();
+            }
+              
         };
 
         Trello.get("members/me", {fields: "name,displayName,url,email"}, retrieveSuccess);
+            }
 
-    }
+
+    
 function addObject(id){
         var retrieveSuccess = function(data) {
             console.log('Data returned:' + JSON.stringify(data));
-            
-            $('#email').val(data.email);       
+            $('#trelloId').val(data.id);   
+            document.getElementById('trelloId').value = data.id;
+            console.log(document.getElementById('trelloId').value); 
         };
 
-        Trello.get("members/" + id, {fields: "email"}, retrieveSuccess);
+        Trello.get("members/" + id, {fields: "email, id"}, retrieveSuccess);
+
+        
 
     }
 
@@ -117,7 +127,7 @@ function addObject(id){
     }
 $(document).ready(function () {
         getUsername();
-       get();
+        
     });
 
    

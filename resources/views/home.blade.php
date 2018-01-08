@@ -155,16 +155,8 @@
                 finishedtodays.push({"name": name.split(" ")[0], "count": count});
 
               });
-              console.log('test2')
-              //for pendingng tasks
-             /* $.each(response.body.pendings[0], function(key, value){
-                var firstname = key;
-                var values = value;
-                //console.log('pending')
-                pendingsss.push({"name": firstname.split(" ")[0], "count": value});
-               // console.log(finishedtodays)
-              });
-               */
+
+              //for pending tasks
 
                name2.forEach(function(key, value){
                 var firstname = key.name
@@ -173,10 +165,6 @@
                 pendingsss.push({"name": firstname.split(" ")[0], "count": count});
 
                });
-
-
-
-              
               vm.finishedtoday = finishedtodays;
               vm.pendingtasks = pendingsss;
               //for fetching all
@@ -187,15 +175,16 @@
 
               //this.fetchFinished2();
             
+              console.log("Test run");            
 
             }).catch(function(error){
             });
 
            setTimeout(this.fetchFinished.bind(this), 5000); 
           // this.$forceUpdate();
-
           },
-          animate: function(){
+
+       animate: function(){
 
              $("div").on('DOMSubtreeModified', ".card-text", function()
                       {
@@ -268,6 +257,9 @@
 
           /*,
           fetchPending: function(){
+          },
+        }
+          /*fetchPending: function(){
             
             var vm = this;
 
@@ -307,7 +299,6 @@
         }.bind(this), 1000)
 
       }*/
-  }
 });
 
  
@@ -388,6 +379,7 @@
       }
     });
 </script> -->
+<script type="text/javascript"></script>
 
 <script type="text/javascript">
   var time = setInterval(function(){
