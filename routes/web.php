@@ -29,6 +29,7 @@ Route::get('/setup', 'PagesController@setuplist')->name('setup');
 
 
 
+
 Route::resource('registerlist', 'ListsController');
 
 Auth::routes();
