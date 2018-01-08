@@ -106,7 +106,7 @@
 </div>
 
 </div>
-
+<div class="log"></div>
 <script src="js/app.js"></script>
 <script>
  new Vue({
@@ -168,12 +168,15 @@
               //for fetching all
               vm.allcounts = response.body.allcount;
 
-              console.log("Test run");            
+              console.log("Test run");
+              
 
             }).catch(function(error){
             });
+              //vm.fetchFinished2();            
 
-           setTimeout(this.fetchFinished.bind(this), 1000); 
+           setTimeout(this.fetchFinished.bind(this), 5000);
+           //setInterval(this.fetchFinished.bind(this), 10000); 
           // this.$forceUpdate();
           },
 
@@ -195,7 +198,13 @@
                       })
 
           },
+            //setTimeout(this.fetchFinished.bind(this), 1000);
+           //setInterval(this.fetchFinished.bind(this), 10000); 
+          // this.$forceUpdate();
+          
         }
+
+
           /*fetchPending: function(){
             
             var vm = this;
@@ -237,6 +246,13 @@
 
       }*/
 });
+$( document ).ajaxSuccess(function() {
+                console.log("ajaxComplete");
+                 $( ".log" ).text( "Triggered ajaxComplete handler." );
+    });
+ window.addEventListener("load", function(event) {
+    console.log("All resources finished loading!");
+  });
 
  
 </script>
