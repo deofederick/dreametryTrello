@@ -172,7 +172,7 @@
 
 
               console.log("Test run");
-
+               setTimeout(this.fetchFinished.bind(this), 5000); 
               //this.fetchFinished2();
             
               console.log("Test run");            
@@ -180,7 +180,7 @@
             }).catch(function(error){
             });
 
-           setTimeout(this.fetchFinished.bind(this), 5000); 
+           
           // this.$forceUpdate();
           },
 
