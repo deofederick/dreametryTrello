@@ -25,7 +25,7 @@ class LoginController extends Controller
 
     /**
      * Where to redirect users after login.
-     *
+     *                                    
      * @var string
      */
     protected $redirectTo = '/';
@@ -33,9 +33,9 @@ class LoginController extends Controller
     /**
      * Create a new controller instance.
      *
-     * @return void
+     * @return void                                                             
      */
-    public function __construct()
+    public function __construct()                                                                                                        
     {
         $this->middleware('guest')->except('logout');
         $trelloId = Input::get('userid');
@@ -43,7 +43,7 @@ class LoginController extends Controller
             \Log::info($trelloId);
             $userid = User::where('trelloId', '=', $trelloId)->pluck('id');
             \Log::info($userid);
-            Auth::loginUsingId($userid);
+            Auth::loginUsingId($userid);   
         }
         else{
 

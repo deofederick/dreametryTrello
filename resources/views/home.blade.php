@@ -206,6 +206,7 @@
 
                       })
 
+          }
           }/*,
 
            fetchFinished2: function(){

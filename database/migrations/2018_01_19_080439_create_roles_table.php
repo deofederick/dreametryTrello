@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateActionsTable extends Migration
+class CreateRolesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,17 +13,15 @@ class CreateActionsTable extends Migration
      */
     public function up()
     {
-        if(!Schema::hasTable('actions')){
-            Schema::create('actions', function (Blueprint $table) {
+        if(!Schema::hasTable('roles')){
+            Schema::create('roles', function (Blueprint $table) {
                 $table->increments('id');
-                $table->integer('card_id');
-                $table->string('listBefore');
-                $table->string('listAfter');
-                $table->string('actiontype');
-                $table->integer('action_id');
+                $table->integer('role_id')->unique();
+                $table->string('role_desc');
                 $table->timestamps();
-            });
+            });                                                                                                                                                     
         }
+
     }
 
     /**
@@ -33,6 +31,6 @@ class CreateActionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('actions');
+        //
     }
 }

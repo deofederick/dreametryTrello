@@ -28,8 +28,29 @@
           </ul>
           </div> -->
 
+      
+          @if($view_name == "home" || $view_name == "welcome")
+          <ul class="navbar-nav">
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                {{ Auth::user()->name }} 
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="{{ route('logout') }}" onclick="logout()">Logout</a>
+                <!-- <a href="#" class="dropdown-item" data-target="#sidebar" data-toggle="collapse" aria-expanded="false" aria-controls="sidebar">Dashboard</a> -->
+                <a href="{{route('board')}}" class="dropdown-item">Dashboard</a>
 
+               
 
+              </div>
+
+               <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">{{ csrf_field() }}
+               </form>
+               
+
+            </li>
+            </ul>
+          @else
           <ul class="navbar-nav">
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -50,8 +71,7 @@
 
             </li>
             </ul>
-
-          
+            @endif
         @endif
 
       

@@ -13,10 +13,10 @@ class AddCardColumns extends Migration
      */
     public function up()
     {
-        Schema::table('cards', function($table){
+       /* Schema::table('cards', function($table){
             $table->string('card_name');
             $table->integer('user_id');
-        });
+        });*/
     }
 
     /**

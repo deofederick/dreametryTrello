@@ -4,10 +4,10 @@
 <div class="container">
     <div class="row">
         <div class="col-md-8 offset-md-4">
-            <div class="panel panel-default">
-                <div class="panel-heading">Login</div>
+            <div class="card">
+                <div class="card-header">Login</div>
 
-                <div class="panel-body">
+                <div class="card-body">
                     <form method="POST" action="{{ route('login') }}" id="form">
                         {{ csrf_field() }}
 

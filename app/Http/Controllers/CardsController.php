@@ -13,10 +13,16 @@ use App\Board;
 use App\boardList;
 use App\Status;
 use App\Actions;
+use App\Roles;
 use Carbon\Carbon;
+use App\Authentications;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
+use File;
+use View;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Routing\Controller;
 
 
 class CardsController extends Controller
@@ -162,12 +168,12 @@ class CardsController extends Controller
         $allcount = DB::table("cards")->select(DB::raw('SUM(CASE WHEN date_finished = CURDATE() THEN 1 ELSE 0 END) AS daily_count'), DB::raw('SUM(CASE WHEN month(date_finished) = month(CURDATE()) and year(cards.date_finished) = year(CURDATE())  THEN 1 ELSE 0 END) AS monthly_count'), DB::raw('SUM(CASE WHEN weekofyear(date_finished) = weekofyear(now()) THEN 1 ELSE 0 END) AS weekly_count'))->get();
     
 
-    $alldata =array(
-        'daily' => $daily,
+    $alldata =array(                                            
+        'daily' => $daily,                     
         'allcount' =>$allcount,
-        'pending' => $allpending
+        'pending' => $allpending    
         );       
-
+                                        
     return $alldata;
     }
 
@@ -333,6 +339,9 @@ class CardsController extends Controller
     public function revisions(){
 
 //all members
+         if(Auth::guest()){
+            return view('pages.index');
+        }else{
         $key = auth()->user()->apikey;
         $token = auth()->user()->apitoken;
         $idUser = auth()->user()->trelloId;
@@ -419,8 +428,12 @@ class CardsController extends Controller
         ];
         return $data;
     }
+    }
 
     public function report(){
+         if(Auth::guest()){
+            return view('pages.index');
+        }else{
         
         $users= User::all();
         $trelloId = Input::get('user');
@@ -527,12 +540,15 @@ class CardsController extends Controller
 
        
       return $data;
-
+        }
     }
 
 
     public function mytask(){
-
+    
+    if(Auth::guest()){
+            return view('pages.index');
+        }else{
    
     $trelloId = auth()->user()->trelloId;
     $key = auth()->user()->apikey;
@@ -663,6 +679,7 @@ class CardsController extends Controller
         'unlabeledr' => $forreviewunlabeled
     ];
     return $all;
+        }
 
     }
 
@@ -750,6 +767,49 @@ class CardsController extends Controller
     public function destroy($id)
     {
         //
+    }
+    public function create_auth(){
+
+        $users= User::all();
+        $roles = Roles::all();
+
+       
+        $filesInFolder = File::allFiles(resource_path('views/pages'));
+
+       
+        foreach($filesInFolder as $path)
+        {
+            $manuals[] = pathinfo($path);
+            
+        }
+        foreach ($manuals as $manual) {
+            $array [] = array(
+                'filename' => str_replace(".blade", '', $manual['filename']),
+            );
+        }
+        $data = [
+            'users' => $users,
+            'files' => $array,
+            'roles' => $roles
+        ];
+        
+        
+        
+       return $data;
+      
+
+    }
+    public function setmembers(){
+     
+         $users = Input::get('users');
+         $page = Input::get('page');
+         foreach ($users as $user) {
+             $auth = new Authentications;
+             $auth->has_access = $page;
+             $auth->user_id = $user;
+             $auth->save();  
+         }
+        
     }
 
     public function getDay($day)

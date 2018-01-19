@@ -23,6 +23,7 @@ Route::get('/dashboard', 'PagesController@dashboard')->name('board');
 Route::get('/register-board', 'PagesController@boardreg')->name('regb');
 Route::get('/tasks', 'PagesController@tasks')->name('tasks');
 Route::get('/taskreport', 'PagesController@taskreport')->name('taskreport');
+Route::get('/authuser', 'PagesController@auths')->name('authuser');
 
 Route::get('/setup', 'PagesController@setuplist')->name('setup');
 
@@ -45,11 +46,15 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/search',['uses' => 'CardsController@report','as' => 'search']);
 
+Route::get('/post_users',['uses' => 'CardsController@setmembers','as' => 'post_users']);
+
 Route::get('/test', 'CardsController@index')->name('load');
 Route::get('/reports','CardsController@report');
 
 Route::get('/revision', 'CardsController@revisions')->name('revision');
 Route::get('/mytasks', 'CardsController@mytask')->name('mytasks');
 Route::get('/excel', 'CardsController@postcards')->name('excel');
+
+Route::get('/auth', 'CardsController@create_auth')->name('auth');
 
 Route::resource('trello', 'ListsController');

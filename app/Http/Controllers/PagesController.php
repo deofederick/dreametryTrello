@@ -511,5 +511,13 @@ class PagesController extends Controller
         }
     }
 
+    public function auths(){
+        if(Auth::guest()){
+            return view('pages.index');
+        }else{
+            return view('trello.authentication');
+        }
+    }
+
 
 }

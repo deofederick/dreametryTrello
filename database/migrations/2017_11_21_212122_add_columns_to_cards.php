@@ -13,12 +13,12 @@ class AddColumnsToCards extends Migration
      */
     public function up()
     {
-        Schema::table('cards', function($table){
+        /*Schema::table('cards', function($table){
             $table->date('date_started');
             $table->date('date_finished');
             $table->string('url');
             $table->string('status');
-        });
+        });*/
     }
 
     /**

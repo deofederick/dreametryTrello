@@ -13,12 +13,14 @@ class CreateBoardsTable extends Migration
      */
     public function up()
     {
-        Schema::create('boards', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('board_id')->unique();
-            $table->string('board_name');
-            $table->timestamps();
-        });
+        if(!Schema::hasTable('boards')){
+            Schema::create('boards', function (Blueprint $table) {
+                $table->increments('id');
+                $table->string('board_id')->unique();
+                $table->string('board_name');
+                $table->timestamps();
+            });
+        }
     }
 
     /**
