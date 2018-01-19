@@ -23,6 +23,8 @@ Vue.use(require('vue-moment'));
 
 Vue.component('example', require('./components/Example.vue'));
 
+Vue.http.headers.common['X-CSRF-TOKEN'] = $('meta[name=_token]').attr('content');
+
 
 /*const app = new Vue({
     el: '#app'

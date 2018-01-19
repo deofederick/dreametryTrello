@@ -62,9 +62,23 @@
 
         <script src="js/app.js"></script>
         <script>
+              var authenticationSuccess = function() { console.log('Successful authentication'); };
+    var authenticationFailure = function() { console.log('Failed authentication'); };
+
+    Trello.authorize({
+        type: 'redirect',
+        name: 'Dreametry App',
+        scope: {
+        read: 'true',
+        write: 'true' },
+        expiration: 'never',
+        success: authenticationSuccess,
+        error: authenticationFailure
+    });
          new Vue({
             el: '#app',
             name: 'test',
+            
             data(){
                 return{
                       message:'',
@@ -97,6 +111,8 @@
                     }).catch(function(error){
 
                     });
+
+                   
 
                     
                   }

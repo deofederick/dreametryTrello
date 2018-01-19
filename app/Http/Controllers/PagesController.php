@@ -519,5 +519,13 @@ class PagesController extends Controller
         }
     }
 
+    public function regboard(){
+        if(Auth::guest()){
+            return view('pages.index');
+        }else{
+            return view('pages.regboard');
+        }
+    }
+
 
 }

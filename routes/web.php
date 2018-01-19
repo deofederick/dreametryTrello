@@ -24,6 +24,8 @@ Route::get('/register-board', 'PagesController@boardreg')->name('regb');
 Route::get('/tasks', 'PagesController@tasks')->name('tasks');
 Route::get('/taskreport', 'PagesController@taskreport')->name('taskreport');
 Route::get('/authuser', 'PagesController@auths')->name('authuser');
+Route::get('/regboard', 'PagesController@regboard')->name('regboard');
+
 
 Route::get('/setup', 'PagesController@setuplist')->name('setup');
 
@@ -58,3 +60,5 @@ Route::get('/excel', 'CardsController@postcards')->name('excel');
 Route::get('/auth', 'CardsController@create_auth')->name('auth');
 
 Route::resource('trello', 'ListsController');
+
+Route::post('/setboards', array('as' => 'setboards', 'uses' => 'BoardsController@setboards'));
