@@ -489,7 +489,7 @@ class PagesController extends Controller
     }
 
     public function setuplist(){
-         if(Auth::guest()){
+         if(Auth::guest() || auth()->user()->role_id == 2){
             return view('pages.index');
         }else{
             return view('pages.setuplist');
@@ -497,7 +497,7 @@ class PagesController extends Controller
     }
 
     public function boardedit(){
-         if(Auth::guest()){
+         if(Auth::guest() || auth()->user()->role_id == 2){
             return view('pages.index');
         }else{
             return view('pages.boardedit');
@@ -512,7 +512,7 @@ class PagesController extends Controller
     }
 
     public function auths(){
-        if(Auth::guest()){
+        if(Auth::guest() || auth()->user()->role_id == 2){
             return view('pages.index');
         }else{
             return view('trello.authentication');

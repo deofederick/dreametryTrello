@@ -434,9 +434,17 @@ class CardsController extends Controller
          if(Auth::guest()){
             return view('pages.index');
         }else{
+        $curuser = '';
+        $trelloId = '';
         
-        $users= User::all();
-        $trelloId = Input::get('user');
+        if(auth()->user()->role_id == 1){
+            $trelloId = Input::get('user');
+        }
+        else{
+             $trelloId = auth()->user()->trelloId;
+             $curuser = User::find(auth()->user()->id);  
+        } 
+        
         $key = auth()->user()->apikey;
         $token = auth()->user()->apitoken;
         
@@ -534,6 +542,7 @@ class CardsController extends Controller
         }
         $report = self::paginate($sample, 5);
         $data = [
+            'trelloId' => $curuser,
             'users' => $users,
             'sample' => $entries
         ];
@@ -543,6 +552,120 @@ class CardsController extends Controller
         }
     }
 
+ public function myreport(){
+         if(Auth::guest()){
+            return view('pages.index');
+        }else{
+        
+        $trelloId = auth()->user()->trelloId; 
+        
+        $key = auth()->user()->apikey;
+        $token = auth()->user()->apitoken;
+        
+        $review = Status::where('status_name','=','For Review')->pluck('id');
+        $todo = Status::where('status_name', '=','To Do')->pluck('id');
+        
+        $review_list = boardList::where('status_id','=',$review)->get();
+        $todo_list = boardList::where('status_id','=',$todo)->orWhere('status_id','=',$review)->get();
+        $users = User::all();
+
+        $sample = [];
+        $allcards = Card::where('user_id','=', $trelloId)->get();
+
+        $currentPage = LengthAwarePaginator::resolveCurrentPage();
+
+
+//per member
+        $currentuser = User::where('trelloId','=',$trelloId)->get();
+        \Log::info($currentuser);
+    foreach ($currentuser as $user) {
+        foreach ($todo_list as $todo) {
+            $cards_url = 'https://api.trello.com/1/lists/'.$todo->list_id.'/cards?key='.$key.'&token='.$token.'&fields=name,idList,idMembers,url';
+            $cardresponse = Curl::to($cards_url)->get();
+            $cards = json_decode($cardresponse, TRUE);
+            \Log::info($cards);
+            foreach ((array)$cards as $card) {
+                foreach ($card['idMembers'] as $member) {
+                        $action_url = 'https://api.trello.com/1/cards/'.$card['id'].'/actions?key='.$key.'&token='.$token;
+                        $actionresponse = Curl::to($action_url)->get();
+                        $actions = json_decode($actionresponse, TRUE);
+                foreach ((array)$actions as $action) {
+                        if($user->trelloId == $member){
+                            if($card['idList'] == $todo->list_id){
+                                if($action['type'] == 'commentCard'){
+                                    if(strpos( $action['data']['text'], "Working on" ) !== false && $action['memberCreator']['id'] == $member){
+                                        $listid = boardList::where('list_id', '=', $card['idList'])->first();
+                                        $sample[] = array(
+                                        'cardid' => $card['id'],
+                                        'cardname' => $card['name'],
+                                        'listid' => $card['idList'],
+                                        'userid' => $member,
+                                        'date_started' => $action['date'],
+                                        'date_finished' =>'',
+                                        'status' => $listid->status->status_name,
+                                        'url' => $card['url'],
+                                        );
+                                    }
+                                }
+                            }
+                        }            
+                    }
+                }
+            }
+        }
+    }
+\Log::info($sample);
+    foreach ($allcards as $card => $cq) {
+        $action_url = 'https://api.trello.com/1/cards/'.$cq['card_id'].'/actions?key='.$key.'&token='.$token;
+        $actionresponse = Curl::to($action_url)->get();
+        $actions = json_decode($actionresponse, TRUE);
+            foreach ((array)$actions as $action){
+                if($action['type'] == 'commentCard'){
+                    if(strpos( $action['data']['text'], "Working on" ) !== false && $action['memberCreator']['id'] == $member){
+                              $c = Card::where('card_id', '=', $cq['card_id'])->first();
+                              $c->date_started = Carbon::parse($action['date']);
+                              $c->save();
+                            }
+                    else{
+
+                        }
+                    }
+                }
+        $sample[] = array(
+        'cardid' => $cq['card_id'],
+        'cardname' => $cq['card_name'],
+        'listid' => $cq['list_id'],
+        'userid' => $cq['user_id'],
+        'date_started' => $cq['date_started'],
+        'date_finished' => $cq['date_finished'],
+        'status' => $cq['status'],
+        'url' => $cq['url'],
+        );
+
+    }
+
+        if(count($sample) == 0){
+            $entries = '';
+            $perPage = 5;
+        }
+        else{
+        $col = new Collection($sample);
+        $perPage = count($sample);
+        $currentPageSearchResults = $col->slice(($currentPage - 1) * $perPage, $perPage)->all();
+        $entries = new LengthAwarePaginator($currentPageSearchResults, count($col), $perPage);
+
+        }
+        $report = self::paginate($sample, 5);
+        $data = [
+            'trelloId' => $trelloId,
+            'users' => $users,
+            'sample' => $entries
+        ];
+
+       
+      return $data;
+        }
+    }
 
     public function mytask(){
     
@@ -771,9 +894,8 @@ class CardsController extends Controller
     public function create_auth(){
 
         $users= User::all();
-        $roles = Roles::all();
-
-       
+        $allroles = Roles:all();
+        
         $filesInFolder = File::allFiles(resource_path('views/pages'));
 
        
@@ -787,10 +909,12 @@ class CardsController extends Controller
                 'filename' => str_replace(".blade", '', $manual['filename']),
             );
         }
+         $roles = DB::table("users")->join('roles', 'role_id','=','roles.id')->select(DB::raw("users.id"), DB::raw("users.name"), DB::raw("roles.role_desc"))->get();
         $data = [
             'users' => $users,
             'files' => $array,
-            'roles' => $roles
+            'roles' => $roles,
+            'allroles' => $allroles
         ];
         
         
@@ -801,15 +925,24 @@ class CardsController extends Controller
     }
     public function setmembers(){
      
-         $users = Input::get('users');
+         $role = Input::get('roles');
          $page = Input::get('page');
-         foreach ($users as $user) {
              $auth = new Authentications;
              $auth->has_access = $page;
-             $auth->user_id = $user;
-             $auth->save();  
-         }
-        
+             $auth->role_id = $role;
+             $auth->save();
+          return redirect('/authuser')->with('success','Authentication created');   
+    }
+
+
+    public function setroles(){
+     
+         $user = Input::get('users');
+         $role = Input::get('roles2');
+             $user = User::find($user);
+             $user->role_id = $role;
+             $user->save();  
+             return redirect('/authuser')->with('success','Roles Updated'); 
     }
 
     public function getDay($day)

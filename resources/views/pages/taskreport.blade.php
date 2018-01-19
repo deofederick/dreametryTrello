@@ -11,8 +11,9 @@
                     <div class="card-body">
                     	<div class="col-md-12">
                     		<div class="col-md-6">
-                    		<div class="form-group">
-                    	
+                @if(Auth::user()->role_id == 1)            		
+                <div class="form-group">
+                
 						    <div class="input-group input-group-lg">
 						      
 						      <select class= "form-control"  name="user" v-model="selected">
@@ -26,6 +27,9 @@
 
 						 
 						  </div>
+              @else
+              <div class=""></div>
+              @endif
 						</div>
 
 						<div class="col-md-12">
@@ -150,12 +154,22 @@
 
                      vm.$http.get('/reports').then(function(response){
                       console.log('users');
+                      var trelloId = response.data.trelloId.role_id;
                       var users = response.data.users;
-
+                      
                       users.forEach(function(value, id){
                       vm.users.push({"name": value.name, "trelloId": value.trelloId})
-               
+                      
                     })
+                      if(trelloId == 1){
+                        
+                      }
+                      else{
+                        vm.loading = true;
+                        vm.tasks = response.data.sample.data;
+                        vm.loading = false;
+                        
+                      }
                     
                     }).catch(function(error){
 

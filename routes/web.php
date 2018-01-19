@@ -50,11 +50,14 @@ Route::get('/post_users',['uses' => 'CardsController@setmembers','as' => 'post_u
 
 Route::get('/test', 'CardsController@index')->name('load');
 Route::get('/reports','CardsController@report');
+Route::get('/myreports','CardsController@myreport')->name('myreports');
 
 Route::get('/revision', 'CardsController@revisions')->name('revision');
 Route::get('/mytasks', 'CardsController@mytask')->name('mytasks');
 Route::get('/excel', 'CardsController@postcards')->name('excel');
 
 Route::get('/auth', 'CardsController@create_auth')->name('auth');
+
+Route::get('/set_roles',['uses' => 'CardsController@setroles','as' => 'set_roles']);
 
 Route::resource('trello', 'ListsController');
