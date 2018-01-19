@@ -17,11 +17,11 @@
                   <ul class="list-group list-group-flush">
                     <li class="list-group-item" v-cloak v-for="task in tasks">
                       <a :href="task.url">
-                      <p :class="task.label">@{{task.card_name}}</br>
+                      <p :class="task.label">@{{task.card_name}}</br></a>
                         <small class="text-muted">Started On @{{task.date_action}}</small></br>
                         <span :class="task.status">@{{task.listname}}</span>
                         </p>
-                        </a>
+                        
                     </li>
                   </ul>
               
@@ -40,8 +40,9 @@
                 
                  <ul class="list-group list-group-flush">
                     <li class="list-group-item" v-cloak v-for="pending in pendings">
-                      <p :class="pending.label">@{{pending.card_name}}</br>
-                      <small class="text-muted">@{{pending.date_action}}</small></br>
+                     <a :href ="pending.url">
+                      <p :class="pending.label">@{{pending.card_name}}</br></a>
+                      <small class="text-muted">Started on @{{pending.date_action}}</small></br>
                       <span :class="pending.status">@{{pending.statusname}}</span>
                     </p>
                     </li>
@@ -125,7 +126,7 @@
 
                       labeledr.forEach(function(value, id){
                         
-                      vm.pendings.push({"label": "card-text notice notice-"+value.label.toLowerCase(), "card_name": value.card_name, "date_action": value.date_started, "url": value.url,  "status": "badge badge-"+status.replace(/\s+/g, '').toLowerCase(), "statusname": value.status})
+                      vm.pendings.push({"label": "card-text notice notice-"+value.label.toLowerCase(), "card_name": value.card_name, "date_action": value.date_started, "url": value.url,  "status": "badge badge-forreview", "statusname": value.status})
                
                     })
                     vm.pcount = vm.pendings.length;  

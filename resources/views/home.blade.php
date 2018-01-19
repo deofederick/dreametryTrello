@@ -67,7 +67,7 @@
               <div class="col-md-3 tasksss" id="countercards" v-for="(pending, index) in pendingtasks">
                 <div class="pulse card" v-bind:id="'task' + (index + 1)">
                   <div class="card-header"><small>@{{ pending.name }}</small></div>
-                  <div class="card-text" contenteditable="true"><h1>@{{ pending.count }}</h1></div>
+                  <div class="card-text" contenteditable="false"><h1>@{{ pending.count }}</h1></div>
                 </div>
               </div>
           
@@ -139,9 +139,13 @@
             var pendingsss = [];
           //console.log('test1')
            vm.$http.get('/test').then(function(response){
+              // finishedtodays = [];
+              // pendingsss = [];
+            //var finishedtodays = [];
+            //var pendingsss = [];
 
-             this.finishedtoday = [];
-             this.pendingtasks = [];
+            // this.finishedtoday = [];
+             //this.pendingtasks = [];
           console.log('test1')
               var name = response.body.daily;
               var name2 = response.body.pending;
@@ -174,10 +178,10 @@
               
 
               console.log("Test run");
-
+               setTimeout(this.fetchFinished.bind(this), 5000); 
               //this.fetchFinished2();
-            
-              console.log("Test run");            
+            setTimeout(this.fetchFinished.bind(this), 5000); 
+              console.log("Test run2");            
 
             }).catch(function(error){
             });
@@ -186,6 +190,7 @@
            setTimeout(this.fetchFinished.bind(this), 5000);
            //setInterval(this.fetchFinished.bind(this), 10000); 
      
+ 
           // this.$forceUpdate();
           },
 
@@ -311,6 +316,7 @@
         }.bind(this), 1000)
 
       }*/
+    }
 });
 $( document ).ajaxSuccess(function() {
                 console.log("ajaxComplete");

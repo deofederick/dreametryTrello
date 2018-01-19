@@ -491,7 +491,7 @@ class CardsController extends Controller
             }
         }
     }
-
+\Log::info($sample);
     foreach ($allcards as $card => $cq) {
         $action_url = 'https://api.trello.com/1/cards/'.$cq['card_id'].'/actions?key='.$key.'&token='.$token;
         $actionresponse = Curl::to($action_url)->get();
@@ -614,7 +614,7 @@ class CardsController extends Controller
                                     }
                                 }
                                     $listid = $list->status_id;
-                                    \Log::info($listid);
+                                    \Log::info($listid." = ".$review);
                                     \Log::info($review);
                                 if($list->status_id == $review){
                                         \Log::info("ok");
