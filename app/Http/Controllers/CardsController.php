@@ -502,6 +502,7 @@ class CardsController extends Controller
                               $c = Card::where('card_id', '=', $cq['card_id'])->first();
                               $c->date_started = Carbon::parse($action['date']);
                               $c->save();
+                              \Log::info('saved');
                             }
                     else{
 
