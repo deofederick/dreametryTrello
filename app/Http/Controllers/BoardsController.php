@@ -29,7 +29,14 @@ class BoardsController extends Controller
 {
     public function setboards(Request $request){
 
-    	$sample = Input::get('sample');
+    	
+
+
+
+    
+    }
+     public function setcards(){
+        $sample = Input::get('sample');
         $array = [];
         $pendings = Input::get('username');
         $pendings2 = Input::get('pendings');
@@ -37,7 +44,7 @@ class BoardsController extends Controller
         array_push($array, $pendings);
         
         \Log::info($pendings);
-    	 foreach ((array)$sample as $key => $value) { 
+         foreach ((array)$sample as $key => $value) { 
                if($ucard = Card::where('card_id','=', $value['cardid'])->where('user_id', '=', $value['userid'])->exists()){
                    //\Log::info('existing'.'-'.$value['cardid']);
                 }
@@ -57,16 +64,7 @@ class BoardsController extends Controller
   
         }
 
-        foreach ((array)$pendings as $p => $pend) {
-           
-        }
-        \Log::info($array);
-
-
-
-
-    
-    }
+     }
 
     public function getuser(){
         $users = User::all();

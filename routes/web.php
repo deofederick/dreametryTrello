@@ -62,7 +62,7 @@ Route::get('/auth', 'CardsController@create_auth')->name('auth');
 
 Route::resource('trello', 'ListsController');
 
-Route::post('/setboards', array('as' => 'setboards', 'uses' => 'BoardsController@setboards'));
+Route::post('/setcards', array('as' => 'setcards', 'uses' => 'BoardsController@setcards'));
 
 
 Route::get('/getuser', 'BoardsController@getuser')->name('getuser');

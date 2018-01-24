@@ -172,7 +172,7 @@
               //for pending tasks
               console.log('test1');
               console.log(response.body.allcount);  
-              setTimeout(this.fetchFinished.bind(this), 1000);          
+              setTimeout(this.fetchFinished.bind(this), 3000);          
 
             }).catch(function(error){
             });
@@ -281,7 +281,7 @@
 
         });
 
-        setTimeout(this.fetchlists.bind(this), 1000);
+        setTimeout(this.fetchlists.bind(this), 3000);
 
 
         }).catch(function(error){
@@ -320,7 +320,7 @@
                                 }); 
                                 
                                 var csrf_token = $('meta[name="csrf-token"]').attr('content');                              
-                                  vm.$http.post('/setboards', {_token: csrf_token, sample: cards}, function(response) {
+                                  vm.$http.post('/setcards', {_token: csrf_token, sample: cards}, function(response) {
                                         alert(response);
                                   });
                               };
