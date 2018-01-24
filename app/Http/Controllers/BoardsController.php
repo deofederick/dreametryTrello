@@ -17,8 +17,6 @@ use App\Roles;
 use Carbon\Carbon;
 use App\Authentications;
 use Illuminate\Support\Facades\Input;
-use App\Board;
-use App\BoardList;
 use Illuminate\Support\Facades\DB;
 
 class BoardsController extends Controller
@@ -45,14 +43,6 @@ class BoardsController extends Controller
 
    
 	}
-	
-
-    	
-
-
-
-    
-    }
      public function setcards(){
         $sample = Input::get('sample');
         $array = [];
