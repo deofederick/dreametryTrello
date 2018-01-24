@@ -131,22 +131,22 @@
           /*this.fetchPending(),
           this.fetchAll()*/
           
-      },methods:{
+      }, methods:{
           fetchFinished: function(){
            
             var vm = this;
             var finishedtodays = [];
             var pendingsss = [];
-          //console.log('test1')
-           vm.$http.get('/test').then(function(response){
+            //console.log('test1')
+            vm.$http.get('/test').then(function(response){
               // finishedtodays = [];
               // pendingsss = [];
-            //var finishedtodays = [];
-            //var pendingsss = [];
+              //var finishedtodays = [];
+              //var pendingsss = [];
 
-            // this.finishedtoday = [];
-             //this.pendingtasks = [];
-          console.log('test1')
+              // this.finishedtoday = [];
+              //this.pendingtasks = [];
+              console.log('test1')
               var name = response.body.daily;
               var name2 = response.body.pending;
               vm.tablecounts = name;
@@ -180,15 +180,12 @@
               console.log("Test run");
                setTimeout(this.fetchFinished.bind(this), 5000); 
               //this.fetchFinished2();
-            setTimeout(this.fetchFinished.bind(this), 5000); 
               console.log("Test run2");            
 
             }).catch(function(error){
             });
               //vm.fetchFinished2();            
 
-           setTimeout(this.fetchFinished.bind(this), 5000);
-           //setInterval(this.fetchFinished.bind(this), 10000); 
      
  
           // this.$forceUpdate();
@@ -212,7 +209,7 @@
                       })
 
           }
-          }/*,
+        }/*,
 
            fetchFinished2: function(){
            
@@ -316,8 +313,11 @@
         }.bind(this), 1000)
 
       }*/
-    }
+    //}
+  //}
 });
+
+
 $( document ).ajaxSuccess(function() {
                 console.log("ajaxComplete");
                  $( ".log" ).text( "Triggered ajaxComplete handler." );

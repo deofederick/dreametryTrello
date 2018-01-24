@@ -17,17 +17,35 @@ use App\Roles;
 use Carbon\Carbon;
 use App\Authentications;
 use Illuminate\Support\Facades\Input;
-use Illuminate\Pagination\LengthAwarePaginator;
+use App\Board;
+use App\BoardList;
 use Illuminate\Support\Facades\DB;
-use File;
-use View;
-use Illuminate\Support\Facades\Route;
-use Illuminate\Routing\Controller;
-
 
 class BoardsController extends Controller
 {
     public function setboards(Request $request){
+		\Log::info("test");
+	
+		$boards = $request->get('data');
+
+		//\Log::info($boards);
+
+		foreach ($boards['boards'] as $board) {
+			$boardintb = Board::where('board_id', $board['boardId'])->first();
+			
+	
+			if ($boardintb) {
+				\Log::info($board['name']." Exsist");
+			}else{
+				\Log::info($board['name']." Does not Exsist");
+			}
+
+		}
+
+
+   
+	}
+	
 
     	
 

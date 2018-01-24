@@ -6,11 +6,12 @@
 <div class="container" id="paddingtop">
     <div class="row">
         <div class="col-md-6">
+          
             <div class="card" id="overflows">
-              <form method="post" id="form" action="{{ route('setboards') }}">
+              
                  {{ csrf_field() }}
               <input type="hidden" name="_token" id="csrf" value="<?php echo csrf_token(); ?>">
-              <div class="card-header bg-success text-white">SELECT BOARD</div>
+              <div class="card-header bg-success text-white">Inactive Boards</div>
              
             
               
@@ -34,37 +35,39 @@
                <!--  <test></test> -->
                                  
              </div>
-            </div>
+        </div>
        <p id="test"></p>
         <p id="test2"></p>
         <div class="col-md-6">
             <div class="card" id="overflows">
-              <div class="card-header bg-warning text-white">REGISTERED BOARDS</div>
+              <div class="card-header bg-warning text-white">Active Boards</div>
 
                <div class="text-center" id="regload">Loading...</div>
                  <ul class="list-group list-group-flush" >
-                      <li class="list-group-item" v-cloak v-for="regboard in regboards" id="regli">
+                    <form method="post" id="boardsIds" action="">
+                      <li class="list-group-item" v-cloak v-for="(regboard, index) in regboards" id="regli">
 
                           <div class="card-block">
                               
                               <div class="card-title v-cloak--hidden">
                                 
-                               <!--  <a href="route('registerlist.store')">@{{ unregboard.boardName }}</a> -->
-                                <!-- <a href="/registerlist/@{{ regboard.boardId }}"></a> -->
-                                 <a :href="regboard.boardId">
-                                @{{ regboard.name }}</a>
+                                  <a :href="regboard.boardId">@{{ regboard.name }}</a>
+                                  <input type="text" :name="'board['+(index+1)+']'" :value="regboard.boardId" hidden />
+
                                 <p class="card-text"><small class="text-muted">@{{ regboard.displayname }}</small></p>
+                                
                               </div>
                               
                           </div>
                       </li>
+                    </form>
                   </ul>
                
             </div>
         </div>
      </div>
        <input type="hidden" id="boardname" name="boards" value="">
-     </form>
+     
  </div>
 </div>
         <script src="js/app.js"></script>
@@ -88,110 +91,75 @@
               }, methods:{
                   fetchUnreg: function(){
                     var vm = this;
-                       var alldata = new Array();
-                       var b = {};
-                       var d;
+                      var alldata = {'boards': [], 'lists':[]};
+                      //var alldata = ['boards', 'lists'];
+             
+                      var retrieveSuccess1 = function(data) {
+                        var orgname = data[0]["name"];
+                        var displayname = data[0]["displayName"];
+                        console.log(displayname);
+                        var retrieveSuccess2 = function(data) {
+              
+                          var g_board=data;
+                          
+                          //console.log('Boards Data returned:' + JSON.stringify(data));
+
+                          g_board.forEach(function(bx,bi){
+                        //console.log(bx.name);
+
+                        //  $('body').append("<h3><a href='"+bx.url+"' target='_blank'>"+bx.name+"</a></h3>");
+
+                          var lists = bx.lists;
+                          console.log(bx.name);
+                          console.log(lists.length);
+                          var bgImage = bx.prefs.backgroundImage; 
+
+                          if (bgImage != null) {
+
+                            vm.regboards.push({"boardId": bx.id, "name": bx.name, "displayname": displayname})
+                             // alldata.push({"boardId": bx.id, "name": bx.name});
+                            alldata['boards'].push({"boardId": bx.id, "name": bx.name});
+                           
+                            var list;
+                            
+                          for(i = 0; i < lists.length; i++){
+                             alldata['lists'].push({"listid": lists[i].id, "name": lists[i].name, "boardid": lists[i].idBoard});
+                          }
                         
-                  var authenticationSuccess = function() { console.log('Successful authentication'); };
-                  var authenticationFailure = function() { console.log('Failed authentication'); };
+                          }else{
+                              vm.unregboards.push({"boardId": bx.id, "name": bx.name, "displayname": displayname});
+                            
+                            }
+                          
+                            
+                          })
 
-                  Trello.authorize({
-                      type: 'redirect',
-                      name: 'Dreametry App',
-                      scope: {
-                      read: 'true',
-                      write: 'true' },
-                      expiration: 'never',
-                      success: authenticationSuccess,
-                      error: authenticationFailure
-                  });
+                          console.log(alldata);
 
-                  var retrieveSuccess1 = function(data) {
-                    var orgname = data[0]["name"];
-                    var displayname = data[0]["displayName"];
-                    console.log(displayname);
-                    var retrieveSuccess2 = function(data) {
-          
-                    var g_board=data;
+
+
+                          var csrf_token = $('meta[name="csrf-token"]').attr('content');
+
+                          vm.$http.post('{{ route("setboards") }}', {_token: csrf_token, data: alldata}, function(response){
+                            console.log(response);
+                          });
+                          
+
+                        }
+        
                     
-                    //console.log('Boards Data returned:' + JSON.stringify(data));
+                    Trello.get("organizations/"+orgname+"/boards?filter=open", {lists: "open", fields: "name,displayName,url,prefs"}, retrieveSuccess2);
 
-                    g_board.forEach(function(bx,bi){
-                   //console.log(bx.name);
-
-                  //  $('body').append("<h3><a href='"+bx.url+"' target='_blank'>"+bx.name+"</a></h3>");
-
-                  var list = bx.lists;
-                  b = bx.lists;
-                     
-                  var bgImage = bx.prefs.backgroundImage; 
-
-                  if (bgImage != null) {
-
-                     vm.regboards.push({"name": bx.name, "displayname": displayname})
-                      alldata.push("1");
-                      
-                    for (var i = 0; i < list.length; i++) {
-                        
-                        
                       }
+
+                      Trello.get("members/me/organizations", {fields: "name,displayName,url,closed"}, retrieveSuccess1);
                       
-                    }
-                    else{
-                      vm.unregboards.push({"name": bx.name, "displayname": displayname});
-                     
-                    }
-                  
-                    
-                })
-
-                }
-    
                 
-          Trello.get("organizations/"+orgname+"/boards?filter=open", {lists: "open", fields: "name,displayName,url,prefs"}, retrieveSuccess2);
-
-                  }
-
-                  Trello.get("members/me/organizations", {fields: "name,displayName,url,closed"}, retrieveSuccess1);
-                    var csrf_token = $('meta[name="csrf-token"]').attr('content');
-                    b =[1,2,3]
-                   document.getElementById('boardname').value = alldata;
-                   document.getElementById('test2').value = "alldata";
-                   console.log(JSON.stringify(alldata))
-                   var c = alldata;
-                    var x = {
-                      'alldata' : alldata,
-                      'd' : d
-                    }
-                   
-
-                    $.ajax({
-                    url         :   "{{ route('setboards') }}",
-                    type        :   'post',
-                     processData: true,
-                      async: true,
-                    data        :   {
-                        
-                        "_token":   csrf_token,
-                        "sample":   b,
-                        "data"  :   c,
-                        "data2" : $("#boardname").val()
-                    },
-                    success: function(response){
-                         //var result = $.parseJSON(response)
-                         console.log(response)
-                     }, 
-                     error: function(response){
-                        //var result = $.parseJSON(response)
-                         console.log($.parseJSON(response.data))
-                     }
-                });
-                    console.log(x);
-                    console.log(alldata);
-                    console.log(c);
-                  }
                 
-
+                  //  console.log(x);
+                  //  console.log(alldata);
+                  //  console.log(c);
+                  }
 
                }
 
@@ -204,6 +172,7 @@
 
         
         <script type="text/javascript">
+
           var time = setInterval(function(){
             if($('#unregli').length){
               $('#unregload').hide();
@@ -217,6 +186,9 @@
               clearInterval(time2);
             }
           }, 500)
+
+
+          
   
         </script>
 
