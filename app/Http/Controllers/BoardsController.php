@@ -43,7 +43,9 @@ class BoardsController extends Controller
 
    
 	}
-     public function setcards(){
+
+    
+     public function setcards(Request $request){
         $sample = Input::get('sample');
         $array = [];
         $pendings = Input::get('username');
@@ -53,8 +55,9 @@ class BoardsController extends Controller
         
         \Log::info($pendings);
          foreach ((array)$sample as $key => $value) { 
+
                if($ucard = Card::where('card_id','=', $value['cardid'])->where('user_id', '=', $value['userid'])->exists()){
-                   //\Log::info('existing'.'-'.$value['cardid']);
+                   \Log::info('existing'.'-'.$value['cardid']);
                 }
                 else{
                     $c = new Card;
