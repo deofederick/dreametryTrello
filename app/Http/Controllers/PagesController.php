@@ -527,5 +527,13 @@ class PagesController extends Controller
         }
     }
 
+    public function livecounter(){
+        if(Auth::guest()){
+            return view('pages.index');
+        }else{
+            return view('pages.counter');
+        }
+    }
+
 
 }
