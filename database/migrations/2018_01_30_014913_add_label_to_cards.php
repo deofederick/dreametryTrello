@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddRoleToUsers extends Migration
+class AddLabelToCards extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,9 @@ class AddRoleToUsers extends Migration
      */
     public function up()
     {
-        /*Schema::table('users', function (Blueprint $table) {
-            $table->integer('role_id');
+         Schema::table('cards', function (Blueprint $table) {
+            $table->string('label');
         });
-*/
     }
 
     /**

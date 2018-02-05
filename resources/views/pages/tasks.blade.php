@@ -100,6 +100,8 @@
                       var unlabeled = response.data.unlabeled;
                       var labeledr = response.data.labeledr;
                       var unlabeledr = response.data.unlabeledr;
+                      var labeledwr = response.data.labeledwr;
+                      var unlabeledwr = response.data.unlabeledwr;
                       
                       console.log(unlabeledr);
 
@@ -129,6 +131,17 @@
                       vm.pendings.push({"label": "card-text notice notice-"+value.label.toLowerCase(), "card_name": value.card_name, "date_action": value.date_started, "url": value.url,  "status": "badge badge-forreview", "statusname": value.status})
                
                     })
+                      labeledwr.forEach(function(value, id){
+
+                    vm.pendings.push({"label": "card-text notice notice-"+value.label.toLowerCase(), "card_name": value.card_name, "date_action": value.date_action, "url": value.url,  "status": "badge badge-revision", "statusname": "With Revisions"})
+               
+                    })  
+                      
+                  unlabeledwr.forEach(function(value, id){
+
+                    vm.pendings.push({"label": "card-text notice notice-null", "card_name": value.card_name, "date_action": value.date_action, "url": value.url,  "status": "badge badge-revision", "statusname": "With Revisions"})
+               
+                    })
                     vm.pcount = vm.pendings.length;  
                    
                    vm.loading = false;
@@ -136,7 +149,7 @@
 
                     });
 
-                    vm.$http.get('/revision').then(function(response){
+                   /* vm.$http.get('/revision').then(function(response){
                       console.log('allrevision');
                     //console.log(response.data.unRegBoards[0]);
                     //console.log(response);
@@ -162,7 +175,7 @@
                    
                     }).catch(function(error){
 
-                    });                   
+                    });               */    
 
 
                     

@@ -105,6 +105,8 @@
     </tr>
   </tbody>
 </table>
+
+<ol id="demo"></ol>
 </div>
 
 </div>
@@ -120,37 +122,33 @@
               finishedtoday:[],
               tablecounts:[],
               pendingtasks:[],
-              allcounts:[]
+              allcounts:[], 
+              done:[]
               }
         
       },
 
       mounted: function(){
-         this.fetchFinished(),
-         this.animate()
+         this.fetchlists(),
+         this.animate(),
+         this.fetchFinished()
           /*this.fetchPending(),
           this.fetchAll()*/
           
-      }, methods:{
+      },methods:{
           fetchFinished: function(){
-           
             var vm = this;
             var finishedtodays = [];
             var pendingsss = [];
-            //console.log('test1')
-            vm.$http.get('/getallcards').then(function(response){
-              // finishedtodays = [];
-              // pendingsss = [];
-              //var finishedtodays = [];
-              //var pendingsss = [];
 
-              // this.finishedtoday = [];
-              //this.pendingtasks = [];
-              console.log('test1')
+             vm.$http.get('/getcards').then(function(response){
+       
+          
               var name = response.body.daily;
-              var name2 = response.body.pending;
-              vm.tablecounts = name;
-              console.log('test1')
+               vm.allcounts = response.body.allcount;
+               var name2 = response.body.allpending;
+               vm.tablecounts = name;
+         
               //for finsihed today
               name.forEach(function(key, value){
                 var count = key.daily_count;
@@ -159,36 +157,30 @@
                 finishedtodays.push({"name": name.split(" ")[0], "count": count});
 
               });
-
-              //for pending tasks
-
-               name2.forEach(function(key, value){
+              console.log('test');
+               /*name2.forEach(function(key, value){
                 var firstname = key.name
                 var count = key.count
 
                 pendingsss.push({"name": firstname.split(" ")[0], "count": count});
 
                });
-              vm.finishedtoday = finishedtodays;
-              vm.pendingtasks = pendingsss;
-              //for fetching all
-              vm.allcounts = response.body.allcount;
 
-              console.log("Test run");
-              
+             
+              vm.pendingtasks = pendingsss;*/
+               vm.finishedtoday = finishedtodays;
 
-              console.log("Test run");
-               setTimeout(this.fetchFinished.bind(this), 5000); 
-              //this.fetchFinished2();
-              console.log("Test run2");            
+              //for pending tasks
+              console.log('test1');
+              console.log(response.body.allcount);  
+              setTimeout(this.fetchFinished.bind(this), 3000);          
 
             }).catch(function(error){
             });
-              //vm.fetchFinished2();            
 
-     
- 
-          // this.$forceUpdate();
+           
+             
+            
           },
 
        animate: function(){
@@ -208,116 +200,189 @@
 
                       })
 
-          }
-        }/*,
+              },
 
-           fetchFinished2: function(){
-           
-            var vm = this;
-            var finishedtodays = [];
-            var pendingsss = [];
+    countcomment: function(username){
+      var array = [];
+      array.push(username);
+      console.log(compressArray(array));
+     },
 
-           vm.$http.get('/test').then(function(response){
+     getcards: function(data){
+      var vm = this;
+      vm.$http.get('/getuser').then(function(response){
+           var boards = response.body.boards;
+           var users = response.body.users;
+           var pendings = [];
+      users.forEach(function(user, value){
+        data.forEach(function(bx, bi){
+          var usercount = 0;
+            var actionSuccess = function(actiondata){
+               var members = bx.idMembers;
+                members.forEach(function(member, value){
+                    if(member == user.trelloId){
+                       actiondata.forEach(function(action, bi){ 
+                        if (action.type == "commentCard" && (action.data.text.includes("Working on") || action.data.text.includes("working on") || action.data.text.includes("WORKING ON"))){
+                               pendings.push(user.name)
+                                          
+                            }
+                                  
+                        });
+                    }
+                });
 
-             this.finishedtoday = [];
-             this.pendingtasks = [];
-              console.log('test1')
-              var name = response.body.daily;
-              var name2 = response.body.pending;
-              vm.tablecounts = name;
-              console.log('test1')
-              //for finsihed today
-              name.forEach(function(key, value){
-                var count = key.daily_count;
-                var name = key.name
+          };
 
-                finishedtodays.push({"name": name.split(" ")[0], "count": count});
+             Trello.get("cards/"+bx.id+"/actions", actionSuccess);
 
-              });
-              console.log('test2')
-
-               name2.forEach(function(key, value){
-                var firstname = key.name
-                var count = key.count
-
-                pendingsss.push({"name": firstname.split(" ")[0], "count": count});
-
-               });
-        
-              vm.finishedtoday = finishedtodays;
-              vm.pendingtasks = pendingsss;
-              //for fetching all
-              vm.allcounts = response.body.allcount;
-
-
-              console.log("Test run");
-
-              this.fetchFinished();
-
-            }).catch(function(error){
-            });
-
-
-           //setTimeout(this.fetchFinished.bind(this), 1000); 
-
-          }*/
-
-
-          /*,
-          fetchPending: function(){
-          },
-            //setTimeout(this.fetchFinished.bind(this), 1000);
-           //setInterval(this.fetchFinished.bind(this), 10000); 
-          // this.$forceUpdate();
+          });
+      });
           
+          console.log(pendings);
+
+
+          
+          
+
+        }).catch(function(error){
+        
+                   });
+     
+     },
+
+     fetchlists: function(){
+        var vm = this;
+        vm.$http.get('/getuser').then(function(response){
+           var boards = response.body.boards;
+           var users = response.body.users;
+           boards.forEach(function(board, value){
+
+               var retrieveSuccess = function(data) {
+               
+                g_board=data;
+                //console.log('Boards Data returned:' + JSON.stringify(data));
+               var todo = [];
+                  var forreview = [];
+                  var done = [];
+                g_board.forEach(function(bx,bi){
+                 
+
+                  if(bx.name == "Done"){
+                     vm.fetchdone(bx.id);
+
+                  }
+
+                
+            })
+            
+            
+          };
+
+            Trello.get("boards/"+board.board_id+"/lists", {fields: "name,displayName,url,prefs"}, retrieveSuccess);
+
+        });
+
+        setTimeout(this.fetchlists.bind(this), 3000);
+
+
+        }).catch(function(error){
+        
+                   });
+        
+
+      
+     },
+
+     fetchdone:function(list_id){
+      var vm = this;
+        vm.$http.get('/getuser').then(function(response){
+              
+              var users = response.body.users;
+              var pendings = response.body.pendings;
+              var csrf_token = $('meta[name="csrf-token"]').attr('content');
+              var alldata = [];
+              var cards = [];
+              var newarray = {};
+               var count = new Array();
+                users.forEach(function(user, value){
+                var usercount = 0;
+                 var retrieveSuccess = function(data) {
+                  data.forEach(function(bx, bi){
+                     var members = bx.idMembers;
+                       members.forEach(function(member, value){
+                          if(user.trelloId == member){
+                              usercount++;
+                              var actionSuccess = function(actiondata){
+                                actiondata.forEach(function(action, data){
+                                  if(action.type == "updateCard"){
+                                          cards.push({"cardid": bx.id, "cardname": bx.name, "listid": bx.idList, "userid":member, "date_finished": action.date, "status": "Done", "url": bx.url})
+
+                                    }
+                                }); 
+                                
+                                var csrf_token = $('meta[name="csrf-token"]').attr('content');                              
+                                  vm.$http.post('/setcards', {_token: csrf_token, sample: cards}, function(response) {
+                                        alert(response);
+                                  });
+                              };
+                              Trello.get("cards/"+bx.id+"/actions", actionSuccess);
+                          }
+                       });
+
+                   });
+                  
+                  alldata.push({"name": user.name.split(" ")[0], "count": usercount});
+                  
+                  
+                 };
+                 
+                
+                  Trello.get("lists/"+list_id+"/cards", retrieveSuccess);
+
+               
+                });
+                  
+             /*     console.log(alldata);
+                  console.log("test");
+                  console.log(count);*/
+
+
+                   }).catch(function(error){
+        
+                   });
+                   //setTimeout(vm.fetchdone.bind(this), 6000);
+             
+          },
+
+        fetchpending: function(){
+          var vm = this;
+              vm.$http.get('/getuser').then(function(response){
+                 console.log('lists')
+                var total = 0;
+                var users = response.body.users;
+               
+              var pendings = [];
+              var count = [];
+                
+              var retrieveSuccess = function(data){
+                vm.getcards(data);
+              };
+
+            
+
+              Trello.get("lists/"+list_id+"/cards", {fields: "id,name,displayName,idMembers"}, retrieveSuccess);
+
+
+             
+
+                   }).catch(function(error){
+        
+                   }); 
         }
 
+   }
 
-          /*fetchPending: function(){
-            
-            var vm = this;
-
-            vm.$http.get('/test').then(function(response){
-              this.pendingtasks = [];
-
-              //for pending tasks
-              $.each(response.body.pendings[0], function(key, value){
-                var firstname = key;
-                var values = value;
-                
-                vm.pendingtasks.push({"name": firstname.split(" ")[0], "count": value});
-
-              });
-
-          
-
-            }); 
-
-            //setTimeout(this.fetchPending.bind(this), 1000);      
-          },
-          fetchAll: function(){
-            var vm = this;
-
-            vm.$http.get('test').then(function(response){
-              vm.allcounts = response.body.allcount;
-            });
-
-            //setTimeout(this.fetchAll.bind(this), 1000); 
-          }
-      },*/
-     /* ready: function(){
-        this.fetchPending();
-
-        setInterval(function(){
-          this.fetchPending();
-        }.bind(this), 1000)
-
-      }*/
-    //}
-  //}
 });
-
-
 $( document ).ajaxSuccess(function() {
                 console.log("ajaxComplete");
                  $( ".log" ).text( "Triggered ajaxComplete handler." );
@@ -326,6 +391,41 @@ $( document ).ajaxSuccess(function() {
     console.log("All resources finished loading!");
   });
 
+function compressArray(original) {
+ 
+    var compressed = [];
+    // make a copy of the input array
+    var copy = original.slice(0);
+   
+    // first loop goes over every element
+    for (var i = 0; i < original.length; i++) {
+   
+      var myCount = 0;  
+      // loop over every element in the copy and see if it's the same
+      for (var w = 0; w < copy.length; w++) {
+        if (original[i] == copy[w]) {
+          // increase amount of times duplicate is found
+          myCount++;
+          // sets item to undefined
+          delete copy[w];
+        }
+      }
+   
+      if (myCount > 0) {
+        var a = new Object();
+        a.value = original[i];
+        a.count = myCount;
+        compressed.push(a);
+      }
+    }
+   
+    return compressed;
+};
+
+function counter(count){
+  count++;
+  return count;
+}
  
 </script>
 

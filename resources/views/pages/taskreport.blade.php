@@ -106,10 +106,15 @@
                     var vm = this;
                     vm.loading = true;
                console.log('revisions');
+                    vm.tasks = [];
                    var page_url = page_url || '/search/?user='+this.selected;
                      vm.$http.get(page_url).then(function(response){
-                      var tasks = response.data.sample;
-                      vm.tasks = response.data.sample.data;
+                      
+                      var tasks = response.data.sample.data;
+                    
+                        vm.tasks = response.data.sample.data;
+                      
+                      
                       vm.loading = false;
 
                     //console.log(response.data.unRegBoards[0]);
