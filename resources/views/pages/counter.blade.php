@@ -158,7 +158,7 @@
 
               });
               console.log('test');
-               name2.forEach(function(key, value){
+               /*name2.forEach(function(key, value){
                 var firstname = key.name
                 var count = key.count
 
@@ -166,8 +166,9 @@
 
                });
 
-              vm.finishedtoday = finishedtodays;
-              vm.pendingtasks = pendingsss;
+             
+              vm.pendingtasks = pendingsss;*/
+               vm.finishedtoday = finishedtodays;
 
               //for pending tasks
               console.log('test1');
@@ -213,9 +214,9 @@
            var boards = response.body.boards;
            var users = response.body.users;
            var pendings = [];
-         users.forEach(function(user, value){
-          data.forEach(function(bx, bi){
-             var usercount = 0;
+      users.forEach(function(user, value){
+        data.forEach(function(bx, bi){
+          var usercount = 0;
             var actionSuccess = function(actiondata){
                var members = bx.idMembers;
                 members.forEach(function(member, value){
@@ -353,7 +354,7 @@
              
           },
 
-        fetchpending: function(list_id){
+        fetchpending: function(){
           var vm = this;
               vm.$http.get('/getuser').then(function(response){
                  console.log('lists')
@@ -370,6 +371,9 @@
             
 
               Trello.get("lists/"+list_id+"/cards", {fields: "id,name,displayName,idMembers"}, retrieveSuccess);
+
+
+             
 
                    }).catch(function(error){
         

@@ -491,18 +491,16 @@ class CardsController extends Controller
             }
         }
     }
-\Log::info($sample);
     foreach ($allcards as $card => $cq) {
         $action_url = 'https://api.trello.com/1/cards/'.$cq['card_id'].'/actions?key='.$key.'&token='.$token;
         $actionresponse = Curl::to($action_url)->get();
         $actions = json_decode($actionresponse, TRUE);
             foreach ((array)$actions as $action){
                 if($action['type'] == 'commentCard'){
-                    if(strpos( $action['data']['text'], "Working on" ) !== false && $action['memberCreator']['id'] == $member){
+                    if(strpos( $action['data']['text'], "Working on" ) !== false && $action['memberCreator']['id'] == $cq['user_id']){
                               $c = Card::where('card_id', '=', $cq['card_id'])->first();
                               $c->date_started = Carbon::parse($action['date']);
                               $c->save();
-                              \Log::info('saved');
                             }
                     else{
 
@@ -557,10 +555,11 @@ class CardsController extends Controller
         
     $lists = boardList::all();
     $users = User::all();
-    $review = Status::where('status_name','=','For Review')->first()->id;
+    $done = Status::where('status_name','=','For Review')->first()->id;
     $todo = Status::where('status_name', '=','To Do')->pluck('id');
     \Log::info(Carbon::now()->subDay(1)->toDateString());
-    $a='';
+    $allcards = Card::all();
+    $revisions = BoardList::where('status_id', 3)->orWhere('status_id', 2)->get();
 
     $sample = [];
     $tasks = [];
@@ -568,116 +567,93 @@ class CardsController extends Controller
     $unlabeled = [];
     $forreviewlabeled = [];
     $forreviewunlabeled = [];
-    $allcards = Card::where('user_id','=', $trelloId)->get();
+    $withrevisionslabeled = [];
+    $withrevisionsunlabeled = [];
+    //$allcards = Card::where('user_id','=', $trelloId)->get();
     $currentuser = User::where('trelloId','=',$trelloId)->get();
-    \Log::info($trelloId);
-    \Log::info('logged -'.$currentuser);
-       
+    $count = 0;
     foreach ($currentuser as $user) {
-        foreach ($lists as $list) {
-            $cards_url = 'https://api.trello.com/1/lists/'.$list->list_id.'/cards?key='.$key.'&token='.$token.'&fields=name,idList,idMembers,url,labels';
-            $cardresponse = Curl::to($cards_url)->get();
-            $cards = json_decode($cardresponse, TRUE);
-            foreach ((array)$cards as $card) {
-                if(isset($card['idMembers'])){
-                foreach ($card['idMembers'] as $member) {
-                    $action_url = 'https://api.trello.com/1/cards/'.$card['id'].'/actions?key='.$key.'&token='.$token;
-                $actionresponse = Curl::to($action_url)->get();
-                $actions = json_decode($actionresponse, TRUE);
-                foreach ((array)$actions as $action) {
-                    if($user->trelloId==$member){
-                        if(isset($action['type'])){
-                        if($action['type'] == 'commentCard'){
-                                if(strpos( $action['data']['text'], "Working on" ) !== false && $action['memberCreator']['id'] == $member){
-                                    array_push($sample, $list->status->status_name);
-                                    \Log::info($card['id'].'-'.$action['data']['text']);
-                                    $date = date_create($action['date']);
-                                    if(count($card['labels']) == 0){
-                                        $unlabeled[] = array(
-                                        'card_name' => $card['name'],
-                                        'card_id' => $card['id'],
-                                        'url' => $card['url'],
-                                        'listname'=> $list->status->status_name,
-                                        'date_started' => date_format($date,"Y/m/d H:i:s"),
-
-                                        );
-                                    }
-                                    else{
-                                    foreach ($card['labels'] as $label) {
-                                        $tasks[] = array(
-                                        'label' => $label['name'],
-                                        'card_name' => $card['name'],
-                                        'card_id' => $card['id'],
-                                        'url' => $card['url'],
-                                        'listname'=> $list->status->status_name,
-                                        'date_started' => date_format($date,"Y/m/d H:i:s"),
-                                        );                                
-                                    }
-                                }
-                                    $listid = $list->status_id;
-                                    \Log::info($listid." = ".$review);
-                                    \Log::info($review);
-                                if($list->status_id == $review){
-                                        \Log::info("ok");
-                                        if(count($card['labels']) == 0){
-                                        $forreviewunlabeled[] = array(
-                                        'card_name' => $card['name'],
-                                        'card_id' => $card['id'],
-                                        'url' => $card['url'],
-                                        'status'=> "For Review",
-                                        'date_started' => date_format($date,"Y/m/d H:i:s"),
-                                        );
-                                    }
-                                    else{
-                                    foreach ($card['labels'] as $label) {
-                                        $forreviewlabeled[] = array(
-                                        'label' => $label['name'],
-                                        'card_name' => $card['name'],
-                                        'card_id' => $card['id'],
-                                        'url' => $card['url'],
-                                        'status'=> "For Review",
-                                        'date_started' => date_format($date,"Y/m/d H:i:s"),
-                                        );                                
-                                    }
-                                }
-                            }
-
+           foreach ($allcards as $card) {
+            $count++;
+            if($card['label'] == ' '){
+                if($card['status'] == 'For Review'){
+                     $forreviewunlabeled[] = array(
+                        'card_name' => $card['card_name'],
+                        'card_id' => $card['id'],
+                        'url' => $card['url'],
+                        'status'=> "For Review",
+                        'date_started' => date_format($date,"Y/m/d H:i:s"),
+                        );   
+                }
+                else if($card['status'] =='To Do'){
+                    foreach ($revisions as $revision) {
+                        if($card['from_list_id'] == $revision['list_id']){
+                             $withrevisionsunlabeled[] = array(
+                                'card_name' => $card['card_name'],
+                                'card_id' => $card['id'],
+                                'url' => $card['url'],
+                                'status'=> "With Revisions",
+                                'date_started' => date_format($date,"Y/m/d H:i:s"),
+                            ); 
                         }
-                                     
                     }
                 }
-                }
-            }       
+              $unlabeled[] = array(
+               'card_name' => $card['card_name'],
+               'card_id' => $card['cardid'],
+               'url' => $card['url'],
+               'listname'=> $card['status'],
+               'date_started' => $card['date_started'],
+                );
             }
-        }
-        }
+            else{
+                if($card['status'] == 'For Review'){
+                     $forreviewlabeled[] = array(
+                        'card_name' => $card['card_name'],
+                        'label' => $card['label'],
+                        'card_id' => $card['id'],
+                        'url' => $card['url'],
+                        'status'=> "For Review",
+                        'date_started' => $card['date_started'],
+                        );   
+                }
+                else if($card['status'] =='To Do'){
+                    foreach ($revisions as $revision) {
+                        if($card['from_list_id'] == $revision['list_id']){
+                             $withrevisionslabeled[] = array(
+                                'card_name' => $card['card_name'],
+                                'card_id' => $card['id'],
+                                'url' => $card['url'],
+                                'label' => $card['label'],
+                                'status'=> "With Revisions",
+                                'date_started' => date_format($date,"Y/m/d H:i:s"),
+                            ); 
+                        }
+                    }
+                }
+                 $tasks[] = array(
+                'label' => $card['label'],
+                'card_name' => $card['card_name'],
+                'card_id' => $card['id'],
+                'url' => $card['url'],
+                'listname'=> $card['status'],
+                'date_started' => $card['date_started'],
+                     );   
+            }
+        } 
     }
-}
 
-    $count[] = '';
-    $all[] = '';
-    $count = array(array_count_values($sample));
+
     
-
-    $groups = array();
-  /*  $result = '';
-        foreach ($tasks as $data) {
-          $id = $data['label'];
-          if (isset($result[$id])) {
-             $result[$id][] = $data;
-          } else {
-             $result[$id] = array($data);
-          }
-        }*/
-     
-    \Log::info($all);
-    //ksort($result);
+ 
     $all=[
         'count' => $count,
         'unlabeled' => $unlabeled,
         'task' => $tasks,
         'labeledr' => $forreviewlabeled,
-        'unlabeledr' => $forreviewunlabeled
+        'unlabeledr' => $forreviewunlabeled,
+        'unlabeledwr' =>$withrevisionsunlabeled,
+        'labeledwr' => $withrevisionslabeled,
     ];
     return $all;
         }

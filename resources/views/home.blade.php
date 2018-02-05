@@ -138,7 +138,7 @@
             var finishedtodays = [];
             var pendingsss = [];
             //console.log('test1')
-            vm.$http.get('/test').then(function(response){
+            vm.$http.get('/getallcards').then(function(response){
               // finishedtodays = [];
               // pendingsss = [];
               //var finishedtodays = [];

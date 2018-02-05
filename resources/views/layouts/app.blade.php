@@ -17,7 +17,7 @@
 
     <!-- Scripts -->
     <script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
-    <script src="https://api.trello.com/1/client.js?key=27ce3163d5fa2133085b16e6b36689c7"></script>
+    <script src="https://api.trello.com/1/client.js?key=96d0a89716c8ba8fc038f09b46e49330"></script>
 
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="https://unpkg.com/vue"></script>
