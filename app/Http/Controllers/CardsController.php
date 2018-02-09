@@ -894,11 +894,10 @@ class CardsController extends Controller
     public function create_auth(){
 
         $users= User::all();
-        $allroles = Roles:all();
+        $allroles = Roles::all();
         
         $filesInFolder = File::allFiles(resource_path('views/pages'));
 
-       
         foreach($filesInFolder as $path)
         {
             $manuals[] = pathinfo($path);
