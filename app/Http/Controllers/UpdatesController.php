@@ -36,7 +36,6 @@ class UpdatesController extends Controller
         $token = auth()->user()->apitoken;
 
         $users = User::all();
-
       
         $allcards = Card::all();
         $alltasks = BoardList::where('status_id', 1)->orWhere('status_id', 2)->orWhere('status_id', 3)->get();
@@ -47,25 +46,50 @@ class UpdatesController extends Controller
 
         $pendingTasks = BoardList::where('status_id', 1)->orWhere('status_id', 2)->get();
         
-
-    foreach ($users as $user){
-                $usercount = 0;
-                foreach($alltasks as $alltask){
+   
+            foreach($alltasks as $alltask){
                     $cards_url = 'https://api.trello.com/1/lists/'.$alltask->list_id.'/cards?key='.$key.'&token='.$token.'&fields=name,idList,idMembers,url,labels';
                     $cardresponse = Curl::to($cards_url)->get();
                     $cards = json_decode($cardresponse, TRUE);
                            
                 foreach ((array)$cards as $card) {
-                    if(isset($card['idMembers'])){
-                        if(is_array($card['idMembers'])){    
+                        if(count($card['idMembers']) <= 0){
+                                 $sample[] = array(
+                                    'cardid' => $card['id'],
+                                    'cardname' => $card['name'],
+                                    'listid' => $card['idList'],
+                                    'userid' => '',
+                                    'date_finished' => '',
+                                    'status' => '',
+                                    'url' => $card['url'],
+                                    'from' => '',
+                                    'labels' => $card['labels']
+                                    );   
+                            
+                        }
+
+                    else{
                         foreach ($card['idMembers'] as $member){
                         $action_url = 'https://api.trello.com/1/cards/'.$card['id'].'/actions?key='.$key.'&token='.$token;
                         $actionresponse = Curl::to($action_url)->get();
                         $actions = json_decode($actionresponse, TRUE);
-                            if ($user['trelloId'] == $member) {
-	                            foreach ((array)$actions as $action) {
-	                            	if($alltask->status_id == 1){
-	                                    if(isset($action['type'])){
+                        if(count($actions) <= 0){
+                             $sample[] = array(
+                                    'cardid' => $card['id'],
+                                    'cardname' => $card['name'],
+                                    'listid' => $card['idList'],
+                                    'userid' => $member,
+                                    'date_finished' => '',
+                                    'status' => '',
+                                    'url' => $card['url'],
+                                    'from' => '',
+                                    'labels' => $card['labels']
+                                    );   
+                        }
+                        else{ 
+                            foreach ((array)$actions as $action) {
+                                    if($alltask->status_id == 1){
+                                        if(isset($action['type'])){
                                             if($action['type'] == 'updateCard'){
                                                      echo 'ok1';
                                                     $sample[] = array(
@@ -83,7 +107,7 @@ class UpdatesController extends Controller
                                                else if($action['type']=='commentCard'){
                                                 if(is_array($action) && $action['type']=='commentCard'){
                                                     if(strpos( $action['data']['text'], "Working on" ) !== false && $action['memberCreator']['id'] == $member){
-                                                              $sample[] = array(
+                                                                  $sample[] = array(
                                                                     'cardid' => $card['id'],
                                                                     'cardname' => $card['name'],
                                                                     'listid' => $card['idList'],
@@ -97,9 +121,9 @@ class UpdatesController extends Controller
                                                    }
                                                 }
                                             }
-	                                        
-		                                }
-		                            }
+                                            
+                                        }
+                                    }
 
                                     else if($alltask->status_id == 2){
                                         if(isset($action['type'])){
@@ -142,31 +166,20 @@ class UpdatesController extends Controller
                                     }
 
                                 }
-                          	}
-
-                            else{
-                                $sample[] = array(
-                                    'cardid' => $card['id'],
-                                    'cardname' => $card['name'],
-                                    'listid' => $card['idList'],
-                                    'userid' => ' ',
-                                    'date_finished' => '',
-                                    'status' => ' ',
-                                    'url' => $card['url'],
-                                    'from' => ' ',
-                                    'labels' => $card['labels']
-                                    );   
-                            }
                         }
+                                
+                            
+                        } 
                     }
-                }
-            }            
-        }                        
-    }
+                        
+                    }
+                }            
+                            
+        
     foreach ($sample as $key => $value) { 
           
         if(count($value['labels']) == 0){
-            $ucard = Card::where('card_id','=', $value['cardid'])->where('user_id', '=', $value['userid']);
+            $ucard = Card::where('card_id','=', $value['cardid']);
                if($ucard->exists()){
                    $id = $ucard->pluck('id');
                    $uc = Card::where('id',$id)->first();
@@ -179,7 +192,7 @@ class UpdatesController extends Controller
                    $uc->date_started = Carbon::now();
                    $uc->url = $value['url'];
                    $uc->from_list_id = $value['from'];
-                   $uc->label = $label['name'];
+                   $uc->label = '';
                    $uc->save();
                    echo "ok";
                 }
@@ -202,7 +215,7 @@ class UpdatesController extends Controller
         }
         else{
             foreach ($value['labels'] as $label) {
-                $ucard = Card::where('card_id','=', $value['cardid'])->where('user_id', '=', $value['userid']);
+                $ucard = Card::where('card_id','=', $value['cardid']);
                if($ucard->exists()){
                    $id = $ucard->pluck('id');
                    $uc = Card::where('id',$id)->first();
