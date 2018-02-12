@@ -74,7 +74,7 @@
               <div class="form-group">
                 <label for="sel1">Select Role:</label>
                     <select class="form-control" id="sel2" name="roles2">
-                      <option v-for ="allrole in allroles" :value="role.id">@{{allrole.role_desc}}</option>
+                      <option v-for ="allrole in allroles" :value="allrole.id">@{{allrole.role_desc}}</option>
                     </select>
                    
             </div>
@@ -117,7 +117,6 @@
 
                      vm.$http.get('/auth').then(function(response){
                       console.log('allrevision');
-                      console.log(response.data.files);
                       vm.pages = response.data.files;
                       vm.users = response.data.users;
                       vm.roles = response.data.roles;

@@ -73,7 +73,7 @@ class UpdatesController extends Controller
                                                     'cardname' => $card['name'],
                                                     'listid' => $card['idList'],
                                                     'userid' => $member,
-                                                    'date_finished' => $action['date'],
+                                                    'date_finished' => '',
                                                     'status' => 'To Do',
                                                     'url' => $card['url'],
                                                     'from' => $action['data']['listBefore']['id'],
@@ -88,7 +88,7 @@ class UpdatesController extends Controller
                                                                     'cardname' => $card['name'],
                                                                     'listid' => $card['idList'],
                                                                     'userid' => $member,
-                                                                    'date_finished' => $action['date'],
+                                                                    'date_finished' => '',
                                                                     'status' => 'To Do',
                                                                     'url' => $card['url'],
                                                                     'from' => 'todo',
@@ -110,7 +110,7 @@ class UpdatesController extends Controller
                                                         'cardname' => $card['name'],
                                                         'listid' => $card['idList'],
                                                         'userid' => $member,
-                                                        'date_finished' => $action['date'],
+                                                        'date_finished' => '',
                                                         'status' => 'For Review',
                                                         'url' => $card['url'],
                                                         'from' => $action['data']['listBefore']['id'],
@@ -150,9 +150,9 @@ class UpdatesController extends Controller
                                     'cardname' => $card['name'],
                                     'listid' => $card['idList'],
                                     'userid' => ' ',
-                                    'date_finished' => ' ',
+                                    'date_finished' => '',
                                     'status' => ' ',
-                                    'url' => ' ',
+                                    'url' => $card['url'],
                                     'from' => ' ',
                                     'labels' => $card['labels']
                                     );   
@@ -170,10 +170,16 @@ class UpdatesController extends Controller
                if($ucard->exists()){
                    $id = $ucard->pluck('id');
                    $uc = Card::where('id',$id)->first();
+                   $uc->card_id = $value['cardid'];
+                   $uc->card_name = $value['cardname'];
+                   $uc->date_finished = Carbon::parse($value['date_finished']);
+                   $uc->user_id = $value['userid'];
                    $uc->list_id = $value['listid'];
-                   $uc->from_list_id = $value['from'];
                    $uc->status = $value['status'];
-                   $uc->label = ' ';
+                   $uc->date_started = Carbon::now();
+                   $uc->url = $value['url'];
+                   $uc->from_list_id = $value['from'];
+                   $uc->label = $label['name'];
                    $uc->save();
                    echo "ok";
                 }
@@ -238,11 +244,11 @@ class UpdatesController extends Controller
 
 public function getcards(){
 
-    $daily = DB::table("cards")->join('users', 'user_id','=','users.trelloId')->select(DB::raw("users.name"), DB::raw('SUM(CASE WHEN cards.date_finished = CURDATE() THEN 1 ELSE 0 END) AS daily_count'), DB::raw('SUM(CASE WHEN month(cards.date_finished) = month(CURDATE()) and year(cards.date_finished) = year(CURDATE())  THEN 1 ELSE 0 END) AS monthly_count'), DB::raw('SUM(CASE WHEN weekofyear(cards.date_finished) = weekofyear(now()) THEN 1 ELSE 0 END) AS weekly_count'))->groupBy(DB::raw("user_id, users.name"))->get();
+    $daily = DB::table("cards")->join('users', 'user_id','=','users.trelloId')->select(DB::raw("users.name"), DB::raw('SUM(CASE WHEN cards.date_finished = CURDATE() THEN 1 ELSE 0 END) AS daily_count'), DB::raw('SUM(CASE WHEN month(cards.date_finished) = month(CURDATE()) and year(cards.date_finished) = year(CURDATE())  THEN 1 ELSE 0 END) AS monthly_count'), DB::raw('SUM(CASE WHEN weekofyear(cards.date_finished) = weekofyear(now()) THEN 1 ELSE 0 END) AS weekly_count'))->where('status', 'Done')->groupBy(DB::raw("user_id, users.name"))->get();
 
     $pending = DB::table("cards")->join('users', 'user_id','=','users.trelloId')->select(DB::raw("users.name"), DB::raw('count(cards.id) as count'))->where('status','!=','Done')->groupBy(DB::raw("user_id, users.name"))->get();
     
-    $allcount = DB::table("cards")->select(DB::raw('SUM(CASE WHEN date_finished = CURDATE() THEN 1 ELSE 0 END) AS daily_count'), DB::raw('SUM(CASE WHEN month(date_finished) = month(CURDATE()) and year(cards.date_finished) = year(CURDATE())  THEN 1 ELSE 0 END) AS monthly_count'), DB::raw('SUM(CASE WHEN weekofyear(date_finished) = weekofyear(now()) THEN 1 ELSE 0 END) AS weekly_count'))->where('user_id','!=', ' ')->get();
+    $allcount = DB::table("cards")->select(DB::raw('SUM(CASE WHEN date_finished = CURDATE() THEN 1 ELSE 0 END) AS daily_count'), DB::raw('SUM(CASE WHEN month(date_finished) = month(CURDATE()) and year(cards.date_finished) = year(CURDATE())  THEN 1 ELSE 0 END) AS monthly_count'), DB::raw('SUM(CASE WHEN weekofyear(date_finished) = weekofyear(now()) THEN 1 ELSE 0 END) AS weekly_count'))->where('user_id','!=', ' ')->where('status','Done')->get();
     
 
     $alldata =array(                                            

@@ -464,41 +464,7 @@ class CardsController extends Controller
 //per member
         $currentuser = User::where('trelloId','=',$trelloId)->get();
         \Log::info($currentuser);
-    foreach ($currentuser as $user) {
-        foreach ($todo_list as $todo) {
-            $cards_url = 'https://api.trello.com/1/lists/'.$todo->list_id.'/cards?key='.$key.'&token='.$token.'&fields=name,idList,idMembers,url';
-            $cardresponse = Curl::to($cards_url)->get();
-            $cards = json_decode($cardresponse, TRUE);
-            foreach ((array)$cards as $card) {
-                foreach ($card['idMembers'] as $member) {
-                        $action_url = 'https://api.trello.com/1/cards/'.$card['id'].'/actions?key='.$key.'&token='.$token;
-                        $actionresponse = Curl::to($action_url)->get();
-                        $actions = json_decode($actionresponse, TRUE);
-                foreach ((array)$actions as $action) {
-                        if($user->trelloId == $member){
-                            if($card['idList'] == $todo->list_id){
-                                if($action['type'] == 'commentCard'){
-                                    if(strpos( $action['data']['text'], "Working on" ) !== false && $action['memberCreator']['id'] == $member){
-                                        $listid = boardList::where('list_id', '=', $card['idList'])->first();
-                                        $sample[] = array(
-                                        'cardid' => $card['id'],
-                                        'cardname' => $card['name'],
-                                        'listid' => $card['idList'],
-                                        'userid' => $member,
-                                        'date_started' => $action['date'],
-                                        'date_finished' =>'',
-                                        'status' => $listid->status->status_name,
-                                        'url' => $card['url'],
-                                        );
-                                    }
-                                }
-                            }
-                        }            
-                    }
-                }
-            }
-        }
-    }
+
     foreach ($allcards as $card => $cq) {
         $action_url = 'https://api.trello.com/1/cards/'.$cq['card_id'].'/actions?key='.$key.'&token='.$token;
         $actionresponse = Curl::to($action_url)->get();
@@ -508,23 +474,39 @@ class CardsController extends Controller
                     if(strpos( $action['data']['text'], "Working on" ) !== false && $action['memberCreator']['id'] == $cq['user_id']){
                               $c = Card::where('card_id', '=', $cq['card_id'])->first();
                               $c->date_started = Carbon::parse($action['date']);
+                              \Log::info("ok");
                               $c->save();
                             }
                     else{
-
+                            \Log::info("not ok");
                         }
                     }
                 }
-        $sample[] = array(
-        'cardid' => $cq['card_id'],
-        'cardname' => $cq['card_name'],
-        'listid' => $cq['list_id'],
-        'userid' => $cq['user_id'],
-        'date_started' => $cq['date_started'],
-        'date_finished' => $cq['date_finished'],
-        'status' => $cq['status'],
-        'url' => $cq['url'],
-        );
+        if($cq['status'] == 'For Review' || $cq['status'] == 'To Do'){
+             $sample[] = array(
+            'cardid' => $cq['card_id'],
+            'cardname' => $cq['card_name'],
+            'listid' => $cq['list_id'],
+            'userid' => $cq['user_id'],
+            'date_started' => $cq['date_started'],
+            'date_finished' => ' ',
+            'status' => $cq['status'],
+            'url' => $cq['url'],
+            );
+        }
+        else{
+            $sample[] = array(
+            'cardid' => $cq['card_id'],
+            'cardname' => $cq['card_name'],
+            'listid' => $cq['list_id'],
+            'userid' => $cq['user_id'],
+            'date_started' => $cq['date_started'],
+            'date_finished' => $cq['date_finished'],
+            'status' => $cq['status'],
+            'url' => $cq['url'],
+            );
+        }
+       
 
     }
 
@@ -543,7 +525,8 @@ class CardsController extends Controller
         $data = [
             'trelloId' => $curuser,
             'users' => $users,
-            'sample' => $entries
+            'sample' => $entries,
+            'sample2' => $sample
         ];
 
        
@@ -681,7 +664,7 @@ class CardsController extends Controller
     $done = Status::where('status_name','=','For Review')->first()->id;
     $todo = Status::where('status_name', '=','To Do')->pluck('id');
     \Log::info(Carbon::now()->subDay(1)->toDateString());
-    $allcards = Card::all();
+    $allcards = Card::where('user_id',$trelloId)->get();
     $revisions = BoardList::where('status_id', 3)->orWhere('status_id', 2)->get();
 
     $sample = [];
@@ -705,7 +688,7 @@ class CardsController extends Controller
                         'card_id' => $card['id'],
                         'url' => $card['url'],
                         'status'=> "For Review",
-                        'date_started' => date_format($date,"Y/m/d H:i:s"),
+                        'date_started' => $card['date_started'],
                         );   
                 }
                 else if($card['status'] =='To Do'){
@@ -716,7 +699,7 @@ class CardsController extends Controller
                                 'card_id' => $card['id'],
                                 'url' => $card['url'],
                                 'status'=> "With Revisions",
-                                'date_started' => date_format($date,"Y/m/d H:i:s"),
+                                'date_started' => $card['date_started'],
                             ); 
                         }
                     }
@@ -749,7 +732,7 @@ class CardsController extends Controller
                                 'url' => $card['url'],
                                 'label' => $card['label'],
                                 'status'=> "With Revisions",
-                                'date_started' => date_format($date,"Y/m/d H:i:s"),
+                                'date_started' => $card['date_started'],
                             ); 
                         }
                     }
@@ -871,7 +854,7 @@ class CardsController extends Controller
     public function create_auth(){
 
         $users= User::all();
-        $allroles = Roles:all();
+        $allroles = Roles::all();
         
         $filesInFolder = File::allFiles(resource_path('views/pages'));
 
