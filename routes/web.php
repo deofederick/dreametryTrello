@@ -24,11 +24,13 @@ Route::get('/register-board', 'PagesController@boardreg')->name('regb');
 Route::get('/tasks', 'PagesController@tasks')->name('tasks');
 Route::get('/taskreport', 'PagesController@taskreport')->name('taskreport');
 Route::get('/authuser', 'PagesController@auths')->name('authuser');
+Route::get('/regboard', 'PagesController@regboard')->name('regboard');
+Route::get('/counter', 'PagesController@livecounter')->name('livecounter');
 
 Route::get('/setup', 'PagesController@setuplist')->name('setup');
 
-Route::get('/pulse', function () {
-    return view('pages.samplepulse');
+Route::get('/calendar', function () {
+    return view('chat');
 });
 
 
@@ -61,3 +63,14 @@ Route::get('/auth', 'CardsController@create_auth')->name('auth');
 Route::get('/set_roles',['uses' => 'CardsController@setroles','as' => 'set_roles']);
 
 Route::resource('trello', 'ListsController');
+
+Route::post('/setcards', array('as' => 'setcards', 'uses' => 'BoardsController@setcards'));
+
+Route::get('/updatecards', 'UpdatesController@updatecards')->name('updatecards');
+Route::get('/getallcards', 'UpdatesController@getcards')->name('getallcards');
+Route::get('/gcal', 'gCalendarsController@index')->name('gcal');
+Route::get('/oauth', 'gCalendarsController@oauth')->name('oath');
+Route::get('/getuser', 'BoardsController@getuser')->name('getuser');
+Route::get('/getcards', 'BoardsController@getcards')->name('getcards');
+Route::resource('/cal', 'gCalendarsController');
+Route::post('/getlist',['uses' => 'BoardsController@getcards','as' => 'search']);

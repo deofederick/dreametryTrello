@@ -40,12 +40,16 @@
 						  </thead>
 						  <tbody>
 						  	@foreach($data as $d)
+                @if(count($data)>0)
 						  		<tr>
 						  			<td>{{$d['date_started']}}</td>
 						  			<td><a href={{$d['url']}}>{{$d['cardname']}}</a></td>
 						  			<td>{{$d['date_finished']}}</td>
 						  			<td>{{$d['status']}}</td>
 						  		</tr>
+                @else
+                 <tr>NO DATA</tr>
+                 @endif
 						  	@endforeach
 						  </tbody>
 						  	
