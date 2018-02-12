@@ -22,6 +22,7 @@ class CreateUsersTable extends Migration
             $table->string('avatarHash');
             $table->string('apikey');
             $table->string('apitoken');
+            $table->integer('role_id');
             $table->rememberToken();
             $table->timestamps();
         });

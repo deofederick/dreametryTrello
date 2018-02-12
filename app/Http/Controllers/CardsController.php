@@ -858,7 +858,6 @@ class CardsController extends Controller
         
         $filesInFolder = File::allFiles(resource_path('views/pages'));
 
-       
         foreach($filesInFolder as $path)
         {
             $manuals[] = pathinfo($path);
