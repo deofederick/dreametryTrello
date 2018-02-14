@@ -28,9 +28,7 @@ use Illuminate\Routing\Controller;
 class UpdatesController extends Controller
 {
     public function updatecards(){
-    	 if(Auth::guest()){
-            return view('pages.index');
-        }else{
+    	
 
         $key = auth()->user()->apikey;
         $token = auth()->user()->apitoken;
@@ -38,7 +36,7 @@ class UpdatesController extends Controller
         $users = User::all();
       
         $allcards = Card::all();
-        $alltasks = BoardList::where('status_id', 1)->orWhere('status_id', 2)->orWhere('status_id', 3)->get();
+        $alltasks = BoardList::where('status_id', 1)->orWhere('status_id', 2)->orWhere('status_id', 3)->orWhere('status_id', 4)->get();
         $finished =[];
 
         $allpending = [];
@@ -51,36 +49,38 @@ class UpdatesController extends Controller
                     $cards_url = 'https://api.trello.com/1/lists/'.$alltask->list_id.'/cards?key='.$key.'&token='.$token.'&fields=name,idList,idMembers,url,labels';
                     $cardresponse = Curl::to($cards_url)->get();
                     $cards = json_decode($cardresponse, TRUE);
-                           
+                    
                 foreach ((array)$cards as $card) {
-                        if(count($card['idMembers']) <= 0){
+                   
+                        if(count($card['idMembers']) <= 0 && $alltask->status_id == 1){
+
                                  $sample[] = array(
                                     'cardid' => $card['id'],
                                     'cardname' => $card['name'],
                                     'listid' => $card['idList'],
                                     'userid' => '',
                                     'date_finished' => '',
-                                    'status' => '',
+                                    'status' => 'To Do',
                                     'url' => $card['url'],
                                     'from' => '',
                                     'labels' => $card['labels']
                                     );   
-                            
                         }
+
 
                     else{
                         foreach ($card['idMembers'] as $member){
                         $action_url = 'https://api.trello.com/1/cards/'.$card['id'].'/actions?key='.$key.'&token='.$token;
                         $actionresponse = Curl::to($action_url)->get();
                         $actions = json_decode($actionresponse, TRUE);
-                        if(count($actions) <= 0){
+                        if(count($actions) <= 0 && $alltask->status_id == 1){
                              $sample[] = array(
                                     'cardid' => $card['id'],
                                     'cardname' => $card['name'],
                                     'listid' => $card['idList'],
                                     'userid' => $member,
                                     'date_finished' => '',
-                                    'status' => '',
+                                    'status' => 'To Do',
                                     'url' => $card['url'],
                                     'from' => '',
                                     'labels' => $card['labels']
@@ -104,28 +104,34 @@ class UpdatesController extends Controller
                                                     'labels' => $card['labels']
                                                      );                                                     
                                             }
-                                               else if($action['type']=='commentCard'){
-                                                if(is_array($action) && $action['type']=='commentCard'){
-                                                    if(strpos( $action['data']['text'], "Working on" ) !== false && $action['memberCreator']['id'] == $member){
-                                                                  $sample[] = array(
-                                                                    'cardid' => $card['id'],
-                                                                    'cardname' => $card['name'],
-                                                                    'listid' => $card['idList'],
-                                                                    'userid' => $member,
-                                                                    'date_finished' => '',
-                                                                    'status' => 'To Do',
-                                                                    'url' => $card['url'],
-                                                                    'from' => 'todo',
-                                                                    'labels' => $card['labels']
-                                                                );                                        
-                                                   }
-                                                }
-                                            }
+                                               
                                             
                                         }
                                     }
 
                                     else if($alltask->status_id == 2){
+                                            if(isset($action['type'])){
+                                            if($action['type']=='updateCard'){
+                                                if(is_array($action) && $action['type']=='updateCard'){
+                                                        $sample[] = array(
+                                                        'cardid' => $card['id'],
+                                                        'cardname' => $card['name'],
+                                                        'listid' => $card['idList'],
+                                                        'userid' => $member,
+                                                        'date_finished' => '',
+                                                        'status' => 'Doing',
+                                                        'url' => $card['url'],
+                                                        'from' => $action['data']['listBefore']['id'],
+                                                        'labels' => $card['labels']
+                                                        );                                             
+                                                }
+                                            }
+                                        }
+                                        
+                                    }
+
+
+                                    else if($alltask->status_id == 3){
                                         if(isset($action['type'])){
                                             if($action['type']=='updateCard'){
                                                 if(is_array($action) && $action['type']=='updateCard'){
@@ -145,7 +151,7 @@ class UpdatesController extends Controller
                                         }   
                                     }
 
-                                    else if($alltask->status_id == 3){
+                                    else if($alltask->status_id == 4){
                                         if(isset($action['type'])){
                                             if($action['type']=='updateCard'){
                                                 if(is_array($action) && $action['type']=='updateCard'){
@@ -176,10 +182,27 @@ class UpdatesController extends Controller
                 }            
                             
         
-    foreach ($sample as $key => $value) { 
-          
+    foreach ($sample as $key1 => $value) { 
+        $date_started = Carbon::now();
+            $action_url = 'https://api.trello.com/1/cards/'.$value['cardid'].'/actions?key='.$key.'&token='.$token;
+            $actionresponse = Curl::to($action_url)->get();
+            $actions = json_decode($actionresponse, TRUE);
+            foreach ((array)$actions as $action){
+                if($action['type'] == 'commentCard'){
+                    if(strpos(strtolower($action['data']['text']), "working on" ) !== false && $action['memberCreator']['id'] == $value['userid']){
+                            $date_started = Carbon::parse($action['date']);
+                              \Log::info("ok");
+                            }
+                    else{
+                             $date_started = Carbon::now();
+                              \Log::info("not");
+                        }
+                    }
+                }
         if(count($value['labels']) == 0){
             $ucard = Card::where('card_id','=', $value['cardid']);
+
+            
                if($ucard->exists()){
                    $id = $ucard->pluck('id');
                    $uc = Card::where('id',$id)->first();
@@ -189,7 +212,7 @@ class UpdatesController extends Controller
                    $uc->user_id = $value['userid'];
                    $uc->list_id = $value['listid'];
                    $uc->status = $value['status'];
-                   $uc->date_started = Carbon::now();
+                   $uc->date_started = $date_started;
                    $uc->url = $value['url'];
                    $uc->from_list_id = $value['from'];
                    $uc->label = '';
@@ -204,7 +227,7 @@ class UpdatesController extends Controller
                     $c->user_id = $value['userid'];
                     $c->list_id = $value['listid'];
                     $c->status = $value['status'];
-                    $c->date_started = Carbon::now();
+                    $c->date_started =  $date_started;
                     $c->url = $value['url'];
                     $c->from_list_id = $value['from'];
                     $c->label = ' ';
@@ -225,7 +248,7 @@ class UpdatesController extends Controller
                    $uc->user_id = $value['userid'];
                    $uc->list_id = $value['listid'];
                    $uc->status = $value['status'];
-                   $uc->date_started = Carbon::now();
+                   $uc->date_started = $date_started;
                    $uc->url = $value['url'];
                    $uc->from_list_id = $value['from'];
                    $uc->label = $label['name'];
@@ -239,7 +262,7 @@ class UpdatesController extends Controller
                     $c->user_id = $value['userid'];
                     $c->list_id = $value['listid'];
                     $c->status = $value['status'];
-                    $c->date_started = Carbon::now();
+                    $c->date_started = $date_started;
                     $c->url = $value['url'];
                     $c->from_list_id = $value['from'];
                     $c->label = $label['name'];
@@ -253,7 +276,7 @@ class UpdatesController extends Controller
     }
      return $sample;   
     }
-}
+
 
 public function getcards(){
 

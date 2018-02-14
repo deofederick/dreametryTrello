@@ -134,6 +134,9 @@ class ListsController extends Controller
         $todo = $request->input('todo');
         $selecttodo = $request->input('selecttodo');
 
+        $doing = $request->input('doing');
+        $selectdoing = $request->input('selectdoing');
+
         $forreview = $request->input('forreview');
         $selectforreview = $request->input('selectforreview');
 
@@ -144,9 +147,9 @@ class ListsController extends Controller
         $selectpaid = $request->input('selectpaid');
 
 
-        if (($selecttodo === $selectforreview) || ($selecttodo === $selectdone)
-         || ($selecttodo === $selectpaid) || ($selectforreview === $selectdone)
-         || ($selectforreview === $selectpaid) || ($selectdone === $selectpaid)) {
+        if (($selecttodo === $selectforreview) || ($selecttodo === $selectdoing) ||
+          ($selecttodo === $selectdone) || ($selecttodo === $selectpaid) || ($selectdoing === $selectforreview) || ($selectdoing === $selectdone) || ($selectdoing === $selectpaid) || 
+          ($selectforreview === $selectdone) || ($selectforreview === $selectpaid) || ($selectdone === $selectpaid))  {
             
             return redirect(route("registerlist.show",$id))->with('error', 'Duplicate Choice');
 
@@ -155,6 +158,12 @@ class ListsController extends Controller
             $list = new boardList;
             $list->list_id = $selecttodo;
             $list->status_id = $todo;
+            $list->board_id = $id;
+            $list->save();
+
+            $list = new boardList;
+            $list->list_id = $selectdoing;
+            $list->status_id = $doing;
             $list->board_id = $id;
             $list->save();
 
