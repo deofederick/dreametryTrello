@@ -16957,6 +16957,8 @@ Vue.use(__webpack_require__(160));
 
 Vue.component('example', __webpack_require__(162));
 
+Vue.http.headers.common['X-CSRF-TOKEN'] = $('meta[name=_token]').attr('content');
+
 /*const app = new Vue({
     el: '#app'
 });*/

@@ -691,6 +691,15 @@ class CardsController extends Controller
                         'date_started' => $card['date_started'],
                         );   
                 }
+                 else if($card['status'] == 'Doing'){
+                     $forreviewunlabeled[] = array(
+                        'card_name' => $card['card_name'],
+                        'card_id' => $card['id'],
+                        'url' => $card['url'],
+                        'status'=> "Doing",
+                        'date_started' => $card['date_started'],
+                        );   
+                }
                 else if($card['status'] =='To Do'){
                     foreach ($revisions as $revision) {
                         if($card['from_list_id'] == $revision['list_id']){
@@ -720,6 +729,16 @@ class CardsController extends Controller
                         'card_id' => $card['id'],
                         'url' => $card['url'],
                         'status'=> "For Review",
+                        'date_started' => $card['date_started'],
+                        );   
+                }
+
+                else if($card['status'] == 'Doing'){
+                     $forreviewunlabeled[] = array(
+                        'card_name' => $card['card_name'],
+                        'card_id' => $card['id'],
+                        'url' => $card['url'],
+                        'status'=> "Doing",
                         'date_started' => $card['date_started'],
                         );   
                 }

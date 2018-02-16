@@ -59,7 +59,7 @@ class UpdatesController extends Controller
                                     'cardname' => $card['name'],
                                     'listid' => $card['idList'],
                                     'userid' => '',
-                                    'date_finished' => '',
+                                    'date_finished' => '0001-01-01',
                                     'status' => 'To Do',
                                     'url' => $card['url'],
                                     'from' => '',
@@ -79,7 +79,7 @@ class UpdatesController extends Controller
                                     'cardname' => $card['name'],
                                     'listid' => $card['idList'],
                                     'userid' => $member,
-                                    'date_finished' => '',
+                                    'date_finished' => '0001-01-01',
                                     'status' => 'To Do',
                                     'url' => $card['url'],
                                     'from' => '',
@@ -97,14 +97,13 @@ class UpdatesController extends Controller
                                                     'cardname' => $card['name'],
                                                     'listid' => $card['idList'],
                                                     'userid' => $member,
-                                                    'date_finished' => '',
+                                                    'date_finished' => '0001-01-01',
                                                     'status' => 'To Do',
                                                     'url' => $card['url'],
                                                     'from' => $action['data']['listBefore']['id'],
                                                     'labels' => $card['labels']
                                                      );                                                     
-                                            }
-                                               
+                                            } 
                                             
                                         }
                                     }
@@ -118,7 +117,7 @@ class UpdatesController extends Controller
                                                         'cardname' => $card['name'],
                                                         'listid' => $card['idList'],
                                                         'userid' => $member,
-                                                        'date_finished' => '',
+                                                        'date_finished' => '0001-01-01',
                                                         'status' => 'Doing',
                                                         'url' => $card['url'],
                                                         'from' => $action['data']['listBefore']['id'],
@@ -140,7 +139,7 @@ class UpdatesController extends Controller
                                                         'cardname' => $card['name'],
                                                         'listid' => $card['idList'],
                                                         'userid' => $member,
-                                                        'date_finished' => '',
+                                                        'date_finished' => '0001-01-01',
                                                         'status' => 'For Review',
                                                         'url' => $card['url'],
                                                         'from' => $action['data']['listBefore']['id'],
@@ -151,7 +150,7 @@ class UpdatesController extends Controller
                                         }   
                                     }
 
-                                    else if($alltask->status_id == 4){
+                                   else if($alltask->status_id == 4){
                                         if(isset($action['type'])){
                                             if($action['type']=='updateCard'){
                                                 if(is_array($action) && $action['type']=='updateCard'){
@@ -165,7 +164,7 @@ class UpdatesController extends Controller
                                                         'url' => $card['url'],
                                                         'from' => $action['data']['listBefore']['id'],
                                                         'labels' => $card['labels']
-                                                        );                                             
+                                                        );                                          break;
                                                 }
                                             }
                                         }   
@@ -183,7 +182,7 @@ class UpdatesController extends Controller
                             
         
     foreach ($sample as $key1 => $value) { 
-        $date_started = Carbon::now();
+            $date_started = Carbon::parse('0001-01-01');
             $action_url = 'https://api.trello.com/1/cards/'.$value['cardid'].'/actions?key='.$key.'&token='.$token;
             $actionresponse = Curl::to($action_url)->get();
             $actions = json_decode($actionresponse, TRUE);
@@ -191,14 +190,15 @@ class UpdatesController extends Controller
                 if($action['type'] == 'commentCard'){
                     if(strpos(strtolower($action['data']['text']), "working on" ) !== false && $action['memberCreator']['id'] == $value['userid']){
                             $date_started = Carbon::parse($action['date']);
-                              \Log::info("ok");
+                             
                             }
                     else{
-                             $date_started = Carbon::now();
-                              \Log::info("not");
+                             
+                              
                         }
                     }
                 }
+                
         if(count($value['labels']) == 0){
             $ucard = Card::where('card_id','=', $value['cardid']);
 
@@ -217,7 +217,7 @@ class UpdatesController extends Controller
                    $uc->from_list_id = $value['from'];
                    $uc->label = '';
                    $uc->save();
-                   echo "ok";
+                   
                 }
                 else{
                     $c = new Card;
@@ -240,6 +240,7 @@ class UpdatesController extends Controller
             foreach ($value['labels'] as $label) {
                 $ucard = Card::where('card_id','=', $value['cardid']);
                if($ucard->exists()){
+                 \Log::info($value['cardname'].'-'.$value['date_finished']);
                    $id = $ucard->pluck('id');
                    $uc = Card::where('id',$id)->first();
                    $uc->card_id = $value['cardid'];
