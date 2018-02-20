@@ -16,7 +16,7 @@
                 <div class="loader justify-content-center" v-show="loading"></div>
                   <ul class="list-group list-group-flush">
                     <li class="list-group-item" v-cloak v-for="task in tasks">
-                      <a :href="task.url">
+                      <a :href="task.url" target="_blank">
                       <p :class="task.label">@{{task.card_name}}</br></a>
                         <small class="text-muted">Started On @{{task.date_action}}</small></br>
                         <span :class="task.status">@{{task.listname}}</span>
@@ -40,7 +40,7 @@
                 
                  <ul class="list-group list-group-flush">
                     <li class="list-group-item" v-cloak v-for="pending in pendings">
-                     <a :href ="pending.url">
+                     <a :href ="pending.url" target="_blank">
                       <p :class="pending.label">@{{pending.card_name}}</br></a>
                       <small class="text-muted">Started on @{{pending.date_action}}</small></br>
                       <span :class="pending.status">@{{pending.statusname}}</span>
