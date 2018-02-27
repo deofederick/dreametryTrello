@@ -76,7 +76,7 @@ class UpdatesController extends Controller
                         $action_url = 'https://api.trello.com/1/cards/'.$card['id'].'/actions?key='.$key.'&token='.$token;
                         $actionresponse = Curl::to($action_url)->get();
                         $actions = json_decode($actionresponse, TRUE);
-                        if($alltask->status_id == 1){
+                        if($alltask->status_id == 1 ){
                              $sample[] = array(
                                             'cardid' => $card['id'],
                                             'cardname' => $card['name'],
@@ -336,10 +336,20 @@ class UpdatesController extends Controller
                    $uc->url = $value['url'];
                    $uc->from_list_id = $value['from'];
                    $uc->label = '';
-                   $uc->time_start = $time_start;
+                   //$uc->time_start = $time_start;
                    $uc->time_stop = $time_stop;
-                   $uc->time_alloted = $time_alloted;
+                   //$uc->time_alloted = $time_alloted;
                    $uc->save();
+
+                  
+                   $timeupdate = Card::where('time_start','!=' ,'')->where('time_start','!=' ,'')->get();
+                   foreach ($timeupdate as $tu) {
+                       $up = Card::where('id',$tu['id'])->first();
+                       $interval = date_diff(date_create($tu['time_stop']), date_create($tu['time_start']));
+                       $alloted = ($interval->d*24)+$interval->h.':'.$interval->i.':'.$interval->s;
+                       $up->time_alloted = $alloted;
+                       $up->save();
+                   }
                    
                 }
                 else{
