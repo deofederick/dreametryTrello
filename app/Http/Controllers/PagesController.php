@@ -8,6 +8,7 @@ use Ixudra\Curl\Facades\Curl;
 use Auth;
 use App\BoardList;
 use App\Board;
+use App\Card;
 
 
 class PagesController extends Controller
@@ -358,6 +359,16 @@ class PagesController extends Controller
 
        // return view('pages.task')->with('variable', $var);
        
+    }
+
+    public function opentask(){
+        if(Auth::guest()){
+            return view('pages.index');
+        }else{
+
+            $opencard = Card::where("");
+            return view('pages.opentask');
+        }
     }
 
     public function counttask(){

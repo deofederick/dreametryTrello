@@ -39,6 +39,7 @@
                 @if( Auth::user()->role_id == 1 )
 
                 <a href="{{ route('tasks') }}" class="list-group-item bg-dark textcolor d-inline-block collapsed" data-parent="#sidebar"><i class="fa fa-tasks"></i> <span class="hidden-sm-down">My Task</span></a>
+                <a href="{{ route('opentask') }}" class="list-group-item bg-dark textcolor d-inline-block collapsed" data-parent="#sidebar"><i class="fa fa-check"></i> <span class="hidden-sm-down">Open Task</span></a>
                 <a href="{{ route('regb') }}" class="list-group-item bg-dark textcolor d-inline-block collapsed" data-parent="#sidebar"><i class="fa fa-clipboard"></i> <span class="hidden-sm-down">Board Registration</span></a>
                 <a href="{{ route('taskreport') }}" class="list-group-item bg-dark textcolor d-inline-block collapsed" data-parent="#sidebar"><i class="fa fa-file-text"></i> <span class="hidden-sm-down">Reports</span></a>
                 <a href="{{ route('authuser') }}" class="list-group-item bg-dark textcolor d-inline-block collapsed" data-parent="#sidebar"><i class="fa fa-lock"></i> <span class="hidden-sm-down">Authentication</span></a>
@@ -55,6 +56,7 @@
                 <a href="#" class="list-group-item bg-dark d-inline-block collapsed" data-parent="#sidebar"><i class="fa fa-star"></i> <span class="hidden-sm-down">Link</span></a> -->
                  @else
                  <a href="{{ route('tasks') }}" class="list-group-item bg-dark textcolor d-inline-block collapsed" data-parent="#sidebar"><i class="fa fa-tasks"></i> <span class="hidden-sm-down">My Task</span></a>
+                 <a href="{{ route('opentask') }}" class="list-group-item bg-dark textcolor d-inline-block collapsed" data-parent="#sidebar"><i class="fa fa-check"></i> <span class="hidden-sm-down">Open Task</span></a>
                   <a href="{{ route('taskreport') }}" class="list-group-item bg-dark textcolor d-inline-block collapsed" data-parent="#sidebar"><i class="fa fa-file-text"></i> <span class="hidden-sm-down">Reports</span></a>
                   @endif
             </div>

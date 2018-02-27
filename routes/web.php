@@ -74,3 +74,4 @@ Route::get('/getuser', 'BoardsController@getuser')->name('getuser');
 Route::get('/getcards', 'BoardsController@getcards')->name('getcards');
 Route::resource('/cal', 'gCalendarsController');
 Route::post('/getlist',['uses' => 'BoardsController@getcards','as' => 'search']);
+Route::get('opentask', 'PagesController@opentask')->name('opentask');
