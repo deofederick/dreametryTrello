@@ -308,25 +308,12 @@ class UpdatesController extends Controller
                    $id = $ucard->pluck('id');
                    $status = $ucard->pluck('status');
                    $time = $ucard->pluck('time_alloted');
-                    if($value['status'] == $status){
 
-                    }
-                    else{
-                        if($time[0] == ""){
-
-                       }
-                       else{
-                        list($hour, $min, $sec) = explode(':', $time[0]);
-                        $hour = $hour+$h;
-                        $min = $min+$m;
-                        $sec = $sec+$s;
-                        $time_alloted = $hour.':'.$min.':'.$sec;
-                       }
-
-                    }
                     
 
+
                    $uc = Card::where('id',$id)->first();
+
                    $uc->card_id = $value['cardid'];
                    $uc->card_name = $value['cardname'];
                    $uc->date_finished = $date_finished;
@@ -341,14 +328,22 @@ class UpdatesController extends Controller
                    //$uc->time_alloted = $time_alloted;
                    $uc->save();
 
+
+
+
                   
-                   $timeupdate = Card::where('time_start','!=' ,'')->where('time_start','!=' ,'')->get();
+                   $timeupdate = Card::where('time_start','!=' ,'')->where('time_stop','!=' ,'')->get();
                    foreach ($timeupdate as $tu) {
                        $up = Card::where('id',$tu['id'])->first();
                        $interval = date_diff(date_create($tu['time_stop']), date_create($tu['time_start']));
-                       $alloted = ($interval->d*24)+$interval->h.':'.$interval->i.':'.$interval->s;
-                       $up->time_alloted = $alloted;
-                       $up->save();
+                       if($tu['time_stop'] == NULL || $tu['time_start'] == NULL){
+
+                        }
+                        else{
+                        $alloted = ($interval->d*24)+$interval->h.':'.$interval->i.':'.$interval->s;
+                        $up->time_alloted = $alloted;
+                        $up->save();
+                        }
                    }
                    
                 }
