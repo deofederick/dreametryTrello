@@ -355,7 +355,7 @@ class PagesController extends Controller
       //  \Log::info($data);
         
         $data = self::counttask();
-         return view('pages.task')->with($data);
+         return view('pages.tasks')->with($data);
 
        // return view('pages.task')->with('variable', $var);
        
@@ -366,9 +366,41 @@ class PagesController extends Controller
             return view('pages.index');
         }else{
 
-            $opencard = Card::where("");
-            return view('pages.opentask');
+            $opencards = Card::where("user_id", "")->get();
+
+            $card = [];
+
+            foreach ($opencards as $opencard) {
+                $card[] = array(
+                    'id' => $opencard["card_id"],
+                    'cardname' => $opencard["card_name"],
+                    'url' => $opencard["url"]
+                );
+            }
+
+            $data = array(
+                "cards" => $card,
+                "totalopen" => count($opencards)
+            );
+
+            //return $data;
+            return view('pages.opentask')->with($data);
         }
+    }
+
+    public function updatecarduser($card_id)
+    {
+        //\Log::info($card_id);
+        $card = Card::where("card_id", $card_id)->first();
+        $toChangeCard = Card::find($card->id);
+        \Log::info($card["id"]);
+
+        \Log::info(auth()->user()->trelloId);
+        $toChangeCard->user_id = auth()->user()->trelloId;
+        $toChangeCard->save();
+
+         return redirect(route('task'))->with('success', 'Worked on '.$card["card_name"]);
+
     }
 
     public function counttask(){

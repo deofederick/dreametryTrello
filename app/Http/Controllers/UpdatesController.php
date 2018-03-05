@@ -54,8 +54,8 @@ class UpdatesController extends Controller
                     
                 foreach ((array)$cards as $card) {
                    
-                        if($alltask->status_id == 1 && count($card['idMembers'] == 0)){
-
+                        if($alltask->status_id == 1 && count($card['idMembers']) == 0){
+                                \Log::info($card['name']." - ".count($card['idMembers']));
                                  $sample[] = array(
                                     'cardid' => $card['id'],
                                     'cardname' => $card['name'],
@@ -76,7 +76,7 @@ class UpdatesController extends Controller
                         $action_url = 'https://api.trello.com/1/cards/'.$card['id'].'/actions?key='.$key.'&token='.$token;
                         $actionresponse = Curl::to($action_url)->get();
                         $actions = json_decode($actionresponse, TRUE);
-                        if($alltask->status_id == 1 ){
+                        if($alltask->status_id == 1 && count($member) >= 0){
                              $sample[] = array(
                                             'cardid' => $card['id'],
                                             'cardname' => $card['name'],

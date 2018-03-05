@@ -51,10 +51,11 @@
     <div>
         @include('inc.navbar')
         @include('inc.loading')
-        <div>
+       
+        @yield('content')
+         <div class="col-md-6">
             @include('inc.message')
         </div>
-        @yield('content')
         
 
     </div>
@@ -66,8 +67,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/vue/1.0.24/vue.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/vue-resource/0.7.0/vue-resource.js"></script>
-
-  
+    
 
     <!-- Sidebar Script -->
    <!--  <script>

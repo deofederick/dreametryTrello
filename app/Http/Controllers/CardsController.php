@@ -466,7 +466,7 @@ class CardsController extends Controller
         \Log::info($currentuser);
 
     foreach ($allcards as $card => $cq) {
-       /* $action_url = 'https://api.trello.com/1/cards/'.$cq['card_id'].'/actions?key='.$key.'&token='.$token;
+        $action_url = 'https://api.trello.com/1/cards/'.$cq['card_id'].'/actions?key='.$key.'&token='.$token; // change to database call
         $actionresponse = Curl::to($action_url)->get();
         $actions = json_decode($actionresponse, TRUE);
             foreach ((array)$actions as $action){
