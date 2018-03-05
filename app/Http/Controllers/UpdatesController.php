@@ -336,10 +336,20 @@ class UpdatesController extends Controller
                    $uc->url = $value['url'];
                    $uc->from_list_id = $value['from'];
                    $uc->label = '';
-                   $uc->time_start = $time_start;
+                   //$uc->time_start = $time_start;
                    $uc->time_stop = $time_stop;
-                   $uc->time_alloted = $time_alloted;
+                   //$uc->time_alloted = $time_alloted;
                    $uc->save();
+
+                  
+                   $timeupdate = Card::where('time_start','!=' ,'')->where('time_start','!=' ,'')->get();
+                   foreach ($timeupdate as $tu) {
+                       $up = Card::where('id',$tu['id'])->first();
+                       $interval = date_diff(date_create($tu['time_stop']), date_create($tu['time_start']));
+                       $alloted = ($interval->d*24)+$interval->h.':'.$interval->i.':'.$interval->s;
+                       $up->time_alloted = $alloted;
+                       $up->save();
+                   }
                    
                 }
                 else{
