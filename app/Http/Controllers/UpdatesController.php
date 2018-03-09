@@ -31,8 +31,11 @@ class UpdatesController extends Controller
     public function updatecards(){
     	
 
-        $key = auth()->user()->apikey;
-        $token = auth()->user()->apitoken;
+      /*  $key = auth()->user()->apikey;
+        $token = auth()->user()->apitoken;*/
+
+        $key = "69b5a9cd9c060f94d7696dc0d2e2493b";
+        $token = "a878abdb34ff3710be6575b06e69d95896fe508cc986803bc1e5f73df568ae41";
 
         $users = User::all();
       
@@ -48,12 +51,12 @@ class UpdatesController extends Controller
         \Log::info($doing);
    
             foreach($alltasks as $alltask){
-                    $cards_url = 'https://api.trello.com/1/lists/'.$alltask->list_id.'/cards?key='.$key.'&token='.$token.'&fields=name,idList,idMembers,url,labels';
+                    $cards_url = 'https://api.trello.com/1/lists/'.$alltask->list_id.'/cards?key='.$key.'&token='.$token.'&fields=name,idList,idMembers,url,labels,due';
                     $cardresponse = Curl::to($cards_url)->get();
                     $cards = json_decode($cardresponse, TRUE);
                     
                 foreach ((array)$cards as $card) {
-                   
+                    
                         if($alltask->status_id == 1 && count($card['idMembers']) == 0){
                                 \Log::info($card['name']." - ".count($card['idMembers']));
                                  $sample[] = array(
@@ -65,38 +68,37 @@ class UpdatesController extends Controller
                                     'status' => 'To Do',
                                     'url' => $card['url'],
                                     'from' => '',
-                                    'labels' => $card['labels']
-                                    );   
-                                 
+                                    'labels' => $card['labels'],
+                                    'due_date' => $card['due'],
+                                    
+                                    );
                         }
-
 
                     else{
                         foreach ($card['idMembers'] as $member){
+                            
                         $action_url = 'https://api.trello.com/1/cards/'.$card['id'].'/actions?key='.$key.'&token='.$token;
                         $actionresponse = Curl::to($action_url)->get();
                         $actions = json_decode($actionresponse, TRUE);
-                        if($alltask->status_id == 1 && count($member) >= 0){
-                             $sample[] = array(
-                                            'cardid' => $card['id'],
-                                            'cardname' => $card['name'],
-                                            'listid' => $card['idList'],
-                                            'userid' => $member,
-                                            'date_finished' => NULL,
-                                            'status' => 'To Do',
-                                            'url' => $card['url'],
-                                            'from' => '',
-                                            'labels' => $card['labels']
-                                            );   
-                            
-
-                        }
-                        else{ 
+                       
+                                $sample[] = array(
+                                      'cardid' => $card['id'],
+                                      'cardname' => $card['name'],
+                                      'listid' => $card['idList'],
+                                      'userid' => $member,
+                                      'date_finished' => NULL,
+                                      'status' => 'To Do',
+                                      'url' => $card['url'],
+                                      'from' => '',
+                                      'labels' => $card['labels'],
+                                      'due_date' => $card['due'],                                   
+                                );       
+                                    
                             foreach ((array)$actions as $action) {
-                                    if($alltask->status_id == 1){
+                                    if($alltask->status_id == 1){                
+
                                         if(isset($action['type'])){
                                             if($action['type'] == 'updateCard'){
-                                                     echo 'ok1';
                                                     $sample[] = array(
                                                     'cardid' => $card['id'],
                                                     'cardname' => $card['name'],
@@ -106,12 +108,14 @@ class UpdatesController extends Controller
                                                     'status' => 'To Do',
                                                     'url' => $card['url'],
                                                     'from' => $action['data']['listBefore']['id'],
-                                                    'labels' => $card['labels']
-                                                     );                                                break;
+                                                    'labels' => $card['labels'],
+                                                    'due_date' => $card['due'],
+                                                    'type' => $action['type']
+                                                     );                                               break;
                                             }
 
                                             else if($action['type'] == 'commentCard'){
-                                                  if(strpos( strtolower($action['data']['text']), "working on" ) !== false && $action['memberCreator']['id'] == $value['userid']){
+                                                  if(strpos( strtolower($action['data']['text']), "working on" ) !== false && $action['memberCreator']['id'] == $member){
                                                          $sample[] = array(
                                                                     'cardid' => $card['id'],
                                                                     'cardname' => $card['name'],
@@ -121,13 +125,45 @@ class UpdatesController extends Controller
                                                                     'status' => 'To Do',
                                                                     'url' => $card['url'],
                                                                     'from' => $action['data']['listBefore']['id'],
-                                                                    'labels' => $card['labels']
+                                                                    'labels' => $card['labels'],
+                                                                    'due_date' => $card['due'],
+                                                                    'type' => $action['type']
                                                                      );          
                                                         break;
                                                     }
+                                                }
+                                                else{
+                                                     $sample[] = array(
+                                                                    'cardid' => $card['id'],
+                                                                    'cardname' => $card['name'],
+                                                                    'listid' => $card['idList'],
+                                                                    'userid' => '',
+                                                                    'date_finished' => NULL,
+                                                                    'status' => 'To Do',
+                                                                    'url' => $card['url'],
+                                                                    'from' => $action['data']['listBefore']['id'],
+                                                                    'labels' => $card['labels'],
+                                                                    'due_date' => $card['due'],
+                                                                    'type' => $action['type']
+                                                                     );          
                                                 } 
                                             
                                         }
+                                        else{
+                                             $sample[] = array(
+                                                            'cardid' => $card['id'],
+                                                            'cardname' => $card['name'],
+                                                            'listid' => $card['idList'],
+                                                            'userid' => '',
+                                                            'date_finished' => NULL,
+                                                            'status' => 'To Do',
+                                                            'url' => $card['url'],
+                                                            'from' => $action['data']['listBefore']['id'],
+                                                            'labels' => $card['labels'],
+                                                            'due_date' => $card['due']
+                                                            );
+                                        }
+
                                     }
 
                                     else if($alltask->status_id == 2){
@@ -143,7 +179,8 @@ class UpdatesController extends Controller
                                                         'status' => 'Doing',
                                                         'url' => $card['url'],
                                                         'from' => $action['data']['listBefore']['id'],
-                                                        'labels' => $card['labels']
+                                                        'labels' => $card['labels'],
+                                                        'due_date' => $card['due']
                                                         );                                            break; 
                                                 }
                                             }
@@ -165,7 +202,8 @@ class UpdatesController extends Controller
                                                         'status' => 'For Review',
                                                         'url' => $card['url'],
                                                         'from' => $action['data']['listBefore']['id'],
-                                                        'labels' => $card['labels']
+                                                        'labels' => $card['labels'],
+                                                        'due_date' => $card['due']
                                                         );
                                                         break;                                           
                                                 }
@@ -186,7 +224,8 @@ class UpdatesController extends Controller
                                                         'status' => 'Done',
                                                         'url' => $card['url'],
                                                         'from' => $action['data']['listBefore']['id'],
-                                                        'labels' => $card['labels']
+                                                        'labels' => $card['labels'],
+                                                        'due_date' => $card['due']
                                                         );                                          break;
                                                 }
                                             }
@@ -194,7 +233,7 @@ class UpdatesController extends Controller
                                     }
 
                                 }
-                        }
+                        
                                 
                             
                         } 
@@ -204,7 +243,16 @@ class UpdatesController extends Controller
                 }            
                             
         
-    foreach ($sample as $key1 => $value) { 
+    foreach ($sample as $key1 => $value) {
+
+            $due_date = null;
+
+            if($value['due_date'] != null){
+                $due_date = Carbon::parse($value['due_date']);
+            }
+            else{
+                $due_date = null;
+            } 
 
             $date_started = NULL;
             if($value['date_finished'] == NULL){
@@ -296,10 +344,7 @@ class UpdatesController extends Controller
                     $m = $interval->i;
                     $s = $interval->s;
 
-                }
-
-
-               
+                }               
                 
         if(count($value['labels']) == 0){
             $ucard = Card::where('card_id','=', $value['cardid']);
@@ -308,8 +353,6 @@ class UpdatesController extends Controller
                    $id = $ucard->pluck('id');
                    $status = $ucard->pluck('status');
                    $time = $ucard->pluck('time_alloted');
-
-                    
 
 
                    $uc = Card::where('id',$id)->first();
@@ -323,16 +366,13 @@ class UpdatesController extends Controller
                    $uc->url = $value['url'];
                    $uc->from_list_id = $value['from'];
                    $uc->label = '';
+                   $uc->due_date = $due_date;
                    //$uc->time_start = $time_start;
                    $uc->time_stop = $time_stop;
                    //$uc->time_alloted = $time_alloted;
                    $uc->save();
-
-
-
-
-                  
-                   $timeupdate = Card::where('time_start','!=' ,'')->where('time_stop','!=' ,'')->get();
+  
+                $timeupdate = Card::where('time_start','!=' ,'')->where('time_stop','!=' ,'')->get();
                    foreach ($timeupdate as $tu) {
                        $up = Card::where('id',$tu['id'])->first();
                        $interval = date_diff(date_create($tu['time_stop']), date_create($tu['time_start']));
@@ -358,6 +398,7 @@ class UpdatesController extends Controller
                     $c->status = $value['status'];
                     $c->date_started =  $date_started;
                     $c->url = $value['url'];
+                    $c->due_date = $due_date;
                     $c->from_list_id = $value['from'];
                     $c->label = ' ';
                     $c->time_start = $time_start;
@@ -404,6 +445,7 @@ class UpdatesController extends Controller
                    $uc->from_list_id = $value['from'];
                    $uc->label = $label['name'];
                    $uc->time_start = $time_start;
+                   $uc->due_date = $due_date;
                    $uc->time_stop = $time_stop;
                    $uc->time_alloted = $time_alloted;
                    $uc->save();
@@ -421,6 +463,7 @@ class UpdatesController extends Controller
                     $c->url = $value['url'];
                     $c->from_list_id = $value['from'];
                     $c->label = $label['name'];
+                    $c->due_date = $due_date;
                     $c->time_start = $time_start;
                     $c->time_stop = $time_stop;
                     $c->time_alloted = $time_alloted;

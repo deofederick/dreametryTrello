@@ -10,28 +10,39 @@
                     <div class="h4 card-header">TASK REPORT</div>
                     <div class="card-body">
                     	<div class="col-md-12">
-                    		<div class="col-md-6">
-                @if(Auth::user()->role_id == 1)            		
+                        <div class="row">
+                          <div class="col-md-6">
+                             <input type="hidden" id="trelloId" name="userid" value="Content of the extra variable">
+                @if(Auth::user()->role_id == 1)               
                 <div class="form-group">
                 
-						    <div class="input-group input-group-lg">
-						      
-						      <select class= "form-control"  name="user" v-model="selected">
+                <div class="input-group input-group-lg">
+                  
+                  <select class= "form-control"  name="user" v-model="selected">
                     <option v-for="user in users" :value="user.trelloId">@{{ user.name }}</option>
                         </select>
                         
-							<span class="input-group-btn">
-						        <button class="btn bg-info text-white" type="submit" v-on:click="getalltasks">Search</button>
-						      </span>
-						  </div>
+              <span class="input-group-btn">
+                    <button class="btn bg-info text-white" type="submit" v-on:click="getalltasks">Search</button>
+                  </span>
+              </div>
 
-						 
-						  </div>
+             
+              </div>
               @else
               <div class=""></div>
               @endif
-						</div>
+            </div>
+            <div class="col-md-6"><button class="btn bg-primary text-white" type="submit" v-on:click="getdoing">Doing</button>
 
+              <button class="btn btn-warning" type="submit" v-on:click="getforreview">For Review</button>
+              <button class="btn btn-success" type="submit" v-on:click="getdone">Done</button>
+              <button class="btn btn-dark" type="submit" v-on:click="getalltasks">All</button>
+          </div>
+          
+
+                        </div>
+                    		
 						<div class="col-md-12">
                     	<table class="table">
                         
@@ -42,6 +53,7 @@
 						      <th scope="col">Url</th>
 						      <th scope="col">Date Finished</th>
 						      <th scope="col">Status</th>
+                  <th scope="col">Points</th>
 						    </tr>
 						  </thead>
               <tbody>
@@ -53,6 +65,7 @@
                     <td><a :href="task.url">@{{ task.cardname }}</a></td>
                     <td>@{{task.date_finished}}</td>
                     <td>@{{task.status}}</td>
+                    <td>@{{task.points}}</td>
                 </tr>
               </paginate>
               </tbody>
@@ -107,7 +120,9 @@
                     vm.loading = true;
                console.log('revisions');
                     vm.tasks = [];
-                   var page_url = page_url || '/search/?user='+this.selected;
+                    document.getElementById('trelloId').value = this.selected;
+                    var id =  document.getElementById('trelloId').value
+                   var page_url ='/search/?user='+id || '/search/?user='+this.selected;
                      vm.$http.get(page_url).then(function(response){
                       
                       var tasks = response.data.sample.data;
@@ -179,6 +194,102 @@
                     }).catch(function(error){
 
                     });          
+                  },
+
+                  getdone: function(){
+                    var vm = this;
+                    vm.loading = true;
+              
+                    vm.tasks = [];
+                    var id = document.getElementById("trelloId").value
+
+                     var page_url = page_url || '/search/?user='+id;
+                     vm.$http.get(page_url).then(function(response){
+                      
+                      var tasks = response.data.sample.data;
+
+                       tasks.forEach(function(key, value){
+                        if(key.status == 'Done'){
+                          vm.tasks.push({"cardname":key.cardname, "url": key.url, "date_started": key.date_started, "date_finished": key.date_finished, "status": key.status, "points": key.points})
+                        }
+
+                       });
+                    
+                        //vm.tasks = response.data.sample.data;
+                      
+                      
+                      vm.loading = false;
+
+                    //console.log(response.data.unRegBoards[0]);
+                    
+                    }).catch(function(error){
+
+                    });          
+                          
+                  },
+
+                   getforreview: function(){
+                    var vm = this;
+                    vm.loading = true;
+              
+                    vm.tasks = [];
+                    var id = document.getElementById("trelloId").value
+
+                     var page_url = page_url || '/search/?user='+id;
+                     vm.$http.get(page_url).then(function(response){
+                      
+                      var tasks = response.data.sample.data;
+
+                       tasks.forEach(function(key, value){
+                        if(key.status == 'For Review'){
+                          vm.tasks.push({"cardname":key.cardname, "url": key.url, "date_started": key.date_started, "date_finished": key.date_finished, "status": key.status, "points": key.points})
+                        }
+
+                       });
+                    
+                        //vm.tasks = response.data.sample.data;
+                      
+                      
+                      vm.loading = false;
+
+                    //console.log(response.data.unRegBoards[0]);
+                    
+                    }).catch(function(error){
+
+                    });          
+                          
+                  },
+
+                   getdoing: function(){
+                    var vm = this;
+                    vm.loading = true;
+              
+                    vm.tasks = [];
+                    var id = document.getElementById("trelloId").value
+
+                     var page_url = page_url || '/search/?user='+id;
+                     vm.$http.get(page_url).then(function(response){
+                      
+                      var tasks = response.data.sample.data;
+
+                       tasks.forEach(function(key, value){
+                        if(key.status == 'Doing'){
+                          vm.tasks.push({"cardname":key.cardname, "url": key.url, "date_started": key.date_started, "date_finished": key.date_finished, "status": key.status, "points": key.points})
+                        }
+
+                       });
+                    
+                        //vm.tasks = response.data.sample.data;
+                      
+                      
+                      vm.loading = false;
+
+                    //console.log(response.data.unRegBoards[0]);
+                    
+                    }).catch(function(error){
+
+                    });          
+                          
                   },
 
                movePages: function(amount) {

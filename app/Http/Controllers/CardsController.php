@@ -14,6 +14,7 @@ use App\boardList;
 use App\Status;
 use App\Actions;
 use App\Roles;
+use App\Labels;
 use Carbon\Carbon;
 use App\Authentications;
 use Illuminate\Support\Facades\Input;
@@ -466,36 +467,21 @@ class CardsController extends Controller
         \Log::info($currentuser);
 
     foreach ($allcards as $card => $cq) {
-        $action_url = 'https://api.trello.com/1/cards/'.$cq['card_id'].'/actions?key='.$key.'&token='.$token; // change to database call
-        $actionresponse = Curl::to($action_url)->get();
-        $actions = json_decode($actionresponse, TRUE);
-            foreach ((array)$actions as $action){
-                if($action['type'] == 'commentCard'){
-                    if(strpos( $action['data']['text'], "Working on" ) !== false && $action['memberCreator']['id'] == $cq['user_id']){
-                              $c = Card::where('card_id', '=', $cq['card_id'])->first();
-                              $c->date_started = Carbon::parse($action['date']);
-                              \Log::info("ok");
-                              $c->save();
-                            }
-                    else{
-                            \Log::info("not ok");
-                        }
-                    }
-                }*/
-        if($cq['status'] == 'For Review' || $cq['status'] == 'To Do'){
-             $sample[] = array(
-            'cardid' => $cq['card_id'],
-            'cardname' => $cq['card_name'],
-            'listid' => $cq['list_id'],
-            'userid' => $cq['user_id'],
-            'date_started' => $cq['date_started'],
-            'date_finished' => ' ',
-            'status' => $cq['status'],
-            'url' => $cq['url'],
-            );
+        $points = 0;
+        if($cq['status'] == 'Done'){
+            
+            if(strtotime($cq['due_date']) >= strtotime($cq['date_finished'])){
+                 $points = Labels::where('label_name','=', $cq['label'])->pluck('points');
+                 if($points == null){
+                     $points = 0;
+                 }
+            }
+            else{
+                 $points = Labels::where('label_name','=', $cq['label'])->pluck('deductions');
+            }
         }
         else{
-            $sample[] = array(
+           /* $sample[] = array(
             'cardid' => $cq['card_id'],
             'cardname' => $cq['card_name'],
             'listid' => $cq['list_id'],
@@ -504,8 +490,23 @@ class CardsController extends Controller
             'date_finished' => $cq['date_finished'],
             'status' => $cq['status'],
             'url' => $cq['url'],
-            );
+            'points' => '',
+            'due_date' => $cq['due_date']
+            );*/
         }
+        $sample[] = array(
+            'cardid' => $cq['card_id'],
+            'cardname' => $cq['card_name'],
+            'listid' => $cq['list_id'],
+            'userid' => $cq['user_id'],
+            'date_started' => $cq['date_started'],
+            'date_finished' => $cq['date_finished'],
+            'status' => $cq['status'],
+            'url' => $cq['url'],
+            'points' => $points,
+            'due_date' => $cq['due_date']
+            );
+        
        
 
     }

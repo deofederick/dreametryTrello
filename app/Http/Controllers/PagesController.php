@@ -399,7 +399,7 @@ class PagesController extends Controller
         $toChangeCard->user_id = auth()->user()->trelloId;
         $toChangeCard->save();
 
-         return redirect(route('task'))->with('success', 'Worked on '.$card["card_name"]);
+         return redirect(route('tasks'))->with('success', 'Worked on '.$card["card_name"]);
 
     }
 
@@ -550,7 +550,7 @@ class PagesController extends Controller
         if(Auth::guest()){
             return view('pages.index');
         }else{
-            return view('pages.taskreport');
+            return view('trello.reports');
         }
     }
 
