@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Auth;
+use Illuminate\Support\Facades\Input;
+use App\User;
 
 class LoginController extends Controller
 {
@@ -22,7 +25,7 @@ class LoginController extends Controller
 
     /**
      * Where to redirect users after login.
-     *
+     *                                    
      * @var string
      */
     protected $redirectTo = '/';
@@ -30,10 +33,20 @@ class LoginController extends Controller
     /**
      * Create a new controller instance.
      *
-     * @return void
+     * @return void                                                             
      */
-    public function __construct()
+    public function __construct()                                                                                                        
     {
         $this->middleware('guest')->except('logout');
+        $trelloId = Input::get('userid');
+        if($trelloId != ''){
+            \Log::info($trelloId);
+            $userid = User::where('trelloId', '=', $trelloId)->pluck('id');
+            \Log::info($userid);
+            Auth::loginUsingId($userid);   
+        }
+        else{
+
+        }
     }
 }

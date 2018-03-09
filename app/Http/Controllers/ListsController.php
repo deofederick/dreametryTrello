@@ -47,7 +47,7 @@ class ListsController extends Controller
                        
                           $regBoard[] = array(
                               'boardName' => $urlboard['name'],
-                              'boardId' => $urlboard['id'],
+                              'boardId' => route('registerlist.show', $urlboard['id']),
                               'organization' => $org['displayName']
                           );
 
@@ -56,9 +56,11 @@ class ListsController extends Controller
                       }elseif (count($boards)-1 === $i) {
                           $unRegBoard[] = array(
                               'boardName' => $urlboard['name'],
-                              'boardId' => $urlboard['id'],
+                              'boardId' => route('registerlist.show', $urlboard['id']),
                               'organization' => $org['displayName']
                           );
+
+
                       }
   
                   }
@@ -79,18 +81,20 @@ class ListsController extends Controller
                  // \Log::info($org);
                   $unRegBoard[] = array(
                       'boardName' => $urlboard['name'],
-                      'boardId' => $urlboard['id'],
+                      'boardId' => route('registerlist.show', $urlboard['id']),
                       'organization' => $org['displayName']
                       
                   );
               }
           }
           
-          $data = array(
+          $data = [
               'regBoards' => $regBoard,
               'unRegBoards' => $unRegBoard
-          );
-  
+          ];
+
+          
+         // return response()->json($data);
           //\Log::info($data);
           return $data;
          // return view('trello.registerList')->with($data);
@@ -122,11 +126,16 @@ class ListsController extends Controller
             'selectdone' => 'required',
             'selectpaid' => 'required'
         ]);
+
+        
         
         $id = $request->input('board_id');
 
         $todo = $request->input('todo');
         $selecttodo = $request->input('selecttodo');
+
+        $doing = $request->input('doing');
+        $selectdoing = $request->input('selectdoing');
 
         $forreview = $request->input('forreview');
         $selectforreview = $request->input('selectforreview');
@@ -138,17 +147,23 @@ class ListsController extends Controller
         $selectpaid = $request->input('selectpaid');
 
 
-        if (($selecttodo === $selectforreview) || ($selecttodo === $selectdone)
-         || ($selecttodo === $selectpaid) || ($selectforreview === $selectdone)
-         || ($selectforreview === $selectpaid) || ($selectdone === $selectpaid)) {
+        if (($selecttodo === $selectforreview) || ($selecttodo === $selectdoing) ||
+          ($selecttodo === $selectdone) || ($selecttodo === $selectpaid) || ($selectdoing === $selectforreview) || ($selectdoing === $selectdone) || ($selectdoing === $selectpaid) || 
+          ($selectforreview === $selectdone) || ($selectforreview === $selectpaid) || ($selectdone === $selectpaid))  {
             
-            //return redirect('/registerlist/'.$id)->with('error', 'Duplicate Choice');
+            return redirect(route("registerlist.show",$id))->with('error', 'Duplicate Choice');
 
         }else{
             
             $list = new boardList;
             $list->list_id = $selecttodo;
             $list->status_id = $todo;
+            $list->board_id = $id;
+            $list->save();
+
+            $list = new boardList;
+            $list->list_id = $selectdoing;
+            $list->status_id = $doing;
             $list->board_id = $id;
             $list->save();
 
@@ -170,7 +185,7 @@ class ListsController extends Controller
             $list->board_id = $id;
             $list->save();
 
-            //return redirect('/registerlist')->with('success', 'Lists Saved');
+            return redirect(route("regb"))->with('success', 'Lists Saved');
         }        
     }
 
@@ -194,15 +209,10 @@ class ListsController extends Controller
         $boardLists = json_decode($boardListresponse, TRUE);
         //\Log::info($boardLists);
       
-        $edit = false;
-        if(count($regboard) > 0/*  && count($regboardList) != 0 */){
+        if(count($regboard) > 0){
            // \Log::info("found");
 
            $regboardList = boardList::where('board_id', $regboard->id)->first();
-
-           if (count($regboardList) != 0) {
-                $edit = true;
-           }
            
            $listUrl = "https://api.trello.com/1/boards/".$id."/lists?key=".$key."&token=".$token."&cards=none&filter=open";
            $listresponse = Curl::to($listUrl)->get();
@@ -213,14 +223,14 @@ class ListsController extends Controller
               // 'boards' => $boardArray,
                'lists' => $lists,
                'listsBoard' => $boardLists,
-               'editable' => $edit,
                'boardid' => $regboard
 
            );
    
-          // \Log::info($data);
+           \Log::info($data);
          //  return view('trello.registerListShow')->with($data);
 
+           return view('pages.setuplist')->with($data);
 
         }else{
             
@@ -231,7 +241,7 @@ class ListsController extends Controller
                 $board->save();
             }
 
-        /*     $listUrl = "https://api.trello.com/1/boards/".$id."/lists?key=".$key."&token=".$token."&cards=none&filter=open";
+             $listUrl = "https://api.trello.com/1/boards/".$id."/lists?key=".$key."&token=".$token."&cards=none&filter=open";
             $listresponse = Curl::to($listUrl)->get();
             $lists = json_decode($listresponse, TRUE);
            
@@ -240,14 +250,16 @@ class ListsController extends Controller
                // 'boards' => $boardArray,
                 'lists' => $lists,
                 'listsBoard' => $boardLists,
-                'editable' => $edit,
                 'boardid' => $regboard
  
-            ); */
-            
+            ); 
+           // return $data;
            // return view('trello.registerListShow')->with($data);
 
-          // return redirect('/registerlist/'.$id)->with('success', 'Board Registered');
+            return view('pages.setuplist')->with($data);
+
+
+          // return redirect('/register-board')->with('success', 'Board Registered');
         }
 
     }

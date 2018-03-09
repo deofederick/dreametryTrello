@@ -8,6 +8,7 @@ use Ixudra\Curl\Facades\Curl;
 use Auth;
 use App\BoardList;
 use App\Board;
+use App\Card;
 
 
 class PagesController extends Controller
@@ -51,23 +52,26 @@ class PagesController extends Controller
                 $members = json_decode($response, TRUE);
               //  \Log::info($members);
 
-                foreach ($members as $member) {
-                    if ($idUser == $member['id']) {
+                foreach ((array)$members as $member) {
+                    if (is_array($member) && $idUser == $member['id']) {
                         $boardArray[] = [$board['board_name'], $board['board_id']];
                         $listUrl = "https://api.trello.com/1/boards/".$board['board_id']."/lists?key=".$key."&token=".$token."&cards=none&filter=open";
                         $listresponse = Curl::to($listUrl)->get();
                         $lists = json_decode($listresponse, TRUE);
                         // \Log::info($board['name']);
                         foreach ($lists as $list) {
-                            $cardsUrl = "https://api.trello.com/1/lists/".$list['id']."/cards?key=".$key."&token=".$token."&fields=name,desc,idMembers,shortUrl,labels,actions,idList";
+                            if (is_array($list)) {
+                                $cardsUrl = "https://api.trello.com/1/lists/".$list['id']."/cards?key=".$key."&token=".$token."&fields=name,desc,idMembers,shortUrl,labels,actions,idList";
+                            }
+                            
                             $cardsResponse = Curl::to($cardsUrl)->get();
                             $cards = json_decode($cardsResponse, TRUE);
                             $totalCards += count($cards);
                          //   \Log::info($cards);
 
                             
-                            foreach ($cards as $card) {
-                                if (count($card['idMembers']) > 0) {
+                            foreach ((array)$cards as $card) {
+                                if (is_array($card) && count($card['idMembers']) > 0) {
                                     for ($i=0; $i < count($card['idMembers']) ; $i++) { 
                                         if ($idUser === $card['idMembers'][$i]) {
                                             $totalOwnedCard++;
@@ -153,7 +157,7 @@ class PagesController extends Controller
 
             );
             
-            //  \Log::info($data);
+              \Log::info($data);
 
             return view('pages.index')->with($data);
 
@@ -351,10 +355,52 @@ class PagesController extends Controller
       //  \Log::info($data);
         
         $data = self::counttask();
-         return view('pages.task')->with($data);
+         return view('pages.tasks')->with($data);
 
        // return view('pages.task')->with('variable', $var);
        
+    }
+
+    public function opentask(){
+        if(Auth::guest()){
+            return view('pages.index');
+        }else{
+
+            $opencards = Card::where("user_id", "")->get();
+
+            $card = [];
+
+            foreach ($opencards as $opencard) {
+                $card[] = array(
+                    'id' => $opencard["card_id"],
+                    'cardname' => $opencard["card_name"],
+                    'url' => $opencard["url"]
+                );
+            }
+
+            $data = array(
+                "cards" => $card,
+                "totalopen" => count($opencards)
+            );
+
+            //return $data;
+            return view('pages.opentask')->with($data);
+        }
+    }
+
+    public function updatecarduser($card_id)
+    {
+        //\Log::info($card_id);
+        $card = Card::where("card_id", $card_id)->first();
+        $toChangeCard = Card::find($card->id);
+        \Log::info($card["id"]);
+
+        \Log::info(auth()->user()->trelloId);
+        $toChangeCard->user_id = auth()->user()->trelloId;
+        $toChangeCard->save();
+
+         return redirect(route('tasks'))->with('success', 'Worked on '.$card["card_name"]);
+
     }
 
     public function counttask(){
@@ -460,4 +506,77 @@ class PagesController extends Controller
         
         return $data;
     }
+
+    public function dashboard(){
+        if(Auth::guest()){
+            return view('pages.index');
+        }else{
+            return view('pages.dashboard');
+        }
+    }
+
+    public function boardreg(){
+         if(Auth::guest()){
+            return view('pages.index');
+        }else{
+            return view('pages.boardreg');
+        }
+    }
+
+    public function tasks(){
+         if(Auth::guest()){
+            return view('pages.index');
+        }else{
+            return view('pages.tasks');
+        }
+    }
+
+    public function setuplist(){
+         if(Auth::guest() || auth()->user()->role_id == 2){
+            return view('pages.index');
+        }else{
+            return view('pages.setuplist');
+        }
+    }
+
+    public function boardedit(){
+         if(Auth::guest() || auth()->user()->role_id == 2){
+            return view('pages.index');
+        }else{
+            return view('pages.boardedit');
+        }
+    }
+    public function taskreport(){
+        if(Auth::guest()){
+            return view('pages.index');
+        }else{
+            return view('trello.reports');
+        }
+    }
+
+    public function auths(){
+        if(Auth::guest() || auth()->user()->role_id == 2){
+            return view('pages.index');
+        }else{
+            return view('trello.authentication');
+        }
+    }
+
+    public function regboard(){
+        if(Auth::guest()){
+            return view('pages.index');
+        }else{
+            return view('pages.regboard');
+        }
+    }
+
+    public function livecounter(){
+        if(Auth::guest()){
+            return view('pages.index');
+        }else{
+            return view('pages.counter');
+        }
+    }
+
+
 }

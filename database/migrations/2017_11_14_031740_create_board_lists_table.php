@@ -13,13 +13,15 @@ class CreateBoardListsTable extends Migration
      */
     public function up()
     {
-        Schema::create('board_lists', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('list_id')->unique();
-            $table->integer('status_id');
-            $table->string('board_id');
-            $table->timestamps();
-        });
+        if(!Schema::hasTable('board_lists')){
+            Schema::create('board_lists', function (Blueprint $table) {
+                $table->increments('id');
+                $table->string('list_id')->unique();
+                $table->integer('status_id');
+                $table->string('board_id');
+                $table->timestamps();
+            });                                                                                                                                                                                                                                                                                                                                                              
+        }
     }
 
     /**

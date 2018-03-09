@@ -1,0 +1,78 @@
+body
+{
+	padding-top: 56px;
+}
+
+#paddingtop
+{
+	padding-top: 14px;
+}
+
+#overflows .list-group
+{
+	overflow-y: auto;
+	height: 20rem; 
+}
+
+#task-overflows .list-group
+{
+	overflow-y: auto;
+	height: 20rem; 
+}
+
+
+#tasktoday .centered
+{
+	position: absolute;
+    top: 31%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#counter 
+{
+	margin-top: 2rem;
+}
+
+#counter .container
+{
+	overflow-y: auto;
+	height: 20rem; 
+}
+
+#countercards
+{
+	margin-top: .5rem;
+}
+
+#livetable
+{
+	margin-top: 2rem;
+}
+
+[v-cloak] .v-cloak--block {
+  display: block;
+}
+[v-cloak] .v-cloak--inline {
+  display: inline;
+}
+[v-cloak] .v-cloak--inlineBlock {
+  display: inline-block;
+}
+[v-cloak] .v-cloak--hidden {
+  display: none;
+}
+[v-cloak] .v-cloak--invisible {
+  visibility: hidden;
+}
+.v-cloak--block,
+.v-cloak--inline,
+.v-cloak--inlineBlock {
+  display: none;
+}
+
+.card-group {
+  @include media-breakpoint-only(lg) {
+    column-count: 3;
+}
+}

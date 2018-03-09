@@ -7,7 +7,13 @@
 
 require('./bootstrap');
 
+//require('../../../node_modules/bootstrap/dist/js/bootstrap');
+
 window.Vue = require('vue');
+
+Vue.use(require('vue-resource'));
+Vue.use(require('vue-paginate'));
+Vue.use(require('vue-moment'));
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -17,6 +23,9 @@ window.Vue = require('vue');
 
 Vue.component('example', require('./components/Example.vue'));
 
-const app = new Vue({
+Vue.http.headers.common['X-CSRF-TOKEN'] = $('meta[name=_token]').attr('content');
+
+
+/*const app = new Vue({
     el: '#app'
-});
+});*/
