@@ -550,7 +550,7 @@ class PagesController extends Controller
         if(Auth::guest()){
             return view('pages.index');
         }else{
-            return view('pages.taskreport');
+            return view('trello.reports');
         }
     }
 

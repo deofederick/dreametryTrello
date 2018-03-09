@@ -9,7 +9,7 @@
      
 
         @if (Auth::guest())
-        <a class="navbar-brand" href="{{ url('/') }}">{{ config('app.name', 'Dreametry') }}</a>
+        <a class="navbar-brand" href="{{ url('/') }}">Dreametry Trello</a>
         <div class="collapse navbar-collapse justify-content-end" id="navbarsExampleDefault">
           <ul class="navbar-nav">
             <li class="nav-item"><a class="nav-link" href="{{ route('login') }}">Login</a></li>
@@ -18,7 +18,7 @@
           </div>
         @else
         <a class="navbar-brand" href="{{ route('home') }}">
-          {{ config('app.name', 'Dreametry') }}
+          Dreametry Trello
         </a>
         <!-- <div class="collapse navbar-collapse" id="navbarsExampleDefault">
           <ul class="navbar-nav">
